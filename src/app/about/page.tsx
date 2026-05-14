@@ -4,6 +4,8 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import RevealSection from '../components/RevealSection'
 import { MapPin, Calendar, Globe, Users, GraduationCap } from 'lucide-react'
+import AnimatedSkillBar from '../components/AnimatedSkillBar'
+import GitHubStats from '../components/GitHubStats'
 
 const education = [
   {
@@ -662,164 +664,30 @@ export default function AboutPage() {
                     Core Skills
                   </h2>
                   {skillBars.map((skill) => (
-                    <div key={skill.label} style={{ marginBottom: '20px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '7px' }}>
-                        <span style={{ fontSize: '0.85rem', color: 'var(--text-2)' }}>{skill.label}</span>
-                        <span
-                          style={{
-                            fontSize: '0.75rem',
-                            fontWeight: 600,
-                            color: skill.cat === 'primary' ? 'var(--accent)' : skill.cat === 'code' ? '#60a5fa' : 'var(--warm)',
-                          }}
-                        >
-                          {skill.level}%
-                        </span>
-                      </div>
-                      <div
-                        style={{
-                          height: '3px',
-                          backgroundColor: 'var(--border)',
-                          borderRadius: '2px',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        <div
-                          style={{
-                            height: '100%',
-                            width: `${skill.level}%`,
-                            backgroundColor:
-                              skill.cat === 'primary'
-                                ? 'var(--accent)'
-                                : skill.cat === 'code'
-                                ? '#60a5fa'
-                                : 'var(--warm)',
-                            borderRadius: '2px',
-                          }}
-                        />
-                      </div>
-                    </div>
+                    <AnimatedSkillBar
+                      key={skill.label}
+                      label={skill.label}
+                      level={skill.level}
+                      color={
+                        skill.cat === 'primary'
+                          ? 'var(--accent)'
+                          : skill.cat === 'code'
+                          ? '#60a5fa'
+                          : 'var(--warm)'
+                      }
+                    />
                   ))}
                 </div>
 
-                {/* GitHub + Languages */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                  <div>
+                {/* GitHub stats — live from API */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0' }}>
+                  <div style={{ marginBottom: '28px' }}>
                     <p className="section-label">Open Source</p>
-                    <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)', marginBottom: '28px' }}>
+                    <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
                       GitHub Activity
                     </h2>
                   </div>
-                  <div
-                    style={{
-                      backgroundColor: 'var(--bg-card)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '6px',
-                      padding: '28px',
-                    }}
-                  >
-                    <div
-                      style={{
-                        display: 'flex',
-                        justifyContent: 'space-around',
-                        marginBottom: '24px',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {[
-                        { num: '9', label: 'Public Repos' },
-                        { num: '2', label: 'QGIS Plugins' },
-                        { num: '3', label: 'Languages' },
-                      ].map(({ num, label }) => (
-                        <div key={label}>
-                          <div className="font-display font-bold" style={{ fontSize: '1.5rem', color: 'var(--accent)' }}>
-                            {num}
-                          </div>
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '2px' }}>{label}</div>
-                        </div>
-                      ))}
-                    </div>
-                    <a
-                      href="https://github.com/Osman-Geomatics93"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '8px',
-                        width: '100%',
-                        justifyContent: 'center',
-                        fontSize: '0.85rem',
-                        color: 'var(--text-2)',
-                        border: '1px solid var(--border)',
-                        borderRadius: '6px',
-                        padding: '10px 16px',
-                        transition: 'border-color 0.2s ease, color 0.2s ease',
-                      }}
-                      onMouseEnter={(e) => {
-                        const el = e.currentTarget as HTMLElement
-                        el.style.borderColor = 'var(--accent)'
-                        el.style.color = 'var(--accent)'
-                      }}
-                      onMouseLeave={(e) => {
-                        const el = e.currentTarget as HTMLElement
-                        el.style.borderColor = 'var(--border)'
-                        el.style.color = 'var(--text-2)'
-                      }}
-                    >
-                      View GitHub Profile →
-                    </a>
-                  </div>
-
-                  {/* Languages */}
-                  <div
-                    style={{
-                      backgroundColor: 'var(--bg-card)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '6px',
-                      padding: '24px',
-                    }}
-                  >
-                    <div
-                      style={{
-                        fontSize: '0.7rem',
-                        color: 'var(--text-3)',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.08em',
-                        marginBottom: '16px',
-                      }}
-                    >
-                      Spoken Languages
-                    </div>
-                    {[
-                      { lang: 'Arabic', level: 'Native', pct: 100 },
-                      { lang: 'English', level: 'Professional', pct: 90 },
-                      { lang: 'Turkish', level: 'Intermediate', pct: 60 },
-                    ].map(({ lang, level, pct }) => (
-                      <div key={lang} style={{ marginBottom: '14px' }}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-2)' }}>{lang}</span>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>{level}</span>
-                        </div>
-                        <div
-                          style={{
-                            height: '3px',
-                            backgroundColor: 'var(--border)',
-                            borderRadius: '2px',
-                            overflow: 'hidden',
-                          }}
-                        >
-                          <div
-                            style={{
-                              height: '100%',
-                              width: `${pct}%`,
-                              backgroundColor: 'var(--accent)',
-                              borderRadius: '2px',
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
+                  <GitHubStats />
                 </div>
               </div>
             </div>

@@ -5,6 +5,7 @@ import Footer from './components/Footer'
 import RevealSection from './components/RevealSection'
 import { MapPin, Mail, Phone, Linkedin, Github, Download, ExternalLink } from 'lucide-react'
 import AnimatedCounter from './components/AnimatedCounter'
+import Typewriter from './components/Typewriter'
 
 const expertiseAreas = [
   {
@@ -30,6 +31,12 @@ const expertiseAreas = [
 ]
 
 const ossProjects = [
+  {
+    name: 'MapLayout Pro',
+    description: 'Chrome extension that turns your browser into a cartographic layout studio — auto-generates north arrow, scale bar, legend & inset maps. Export PDF / PNG 600 DPI / SVG.',
+    url: 'https://chromewebstore.google.com/detail/maplayout-pro/flgjppmpdkhjpokcgdglnacnopoedbnh',
+    tags: ['Chrome Extension', 'MapLibre GL JS', 'TypeScript'],
+  },
   {
     name: 'wapor-water-productivity',
     description: 'QGIS plugin for FAO WaPOR water productivity analysis and reporting',
@@ -140,6 +147,19 @@ export default function Home() {
                   <span style={{ color: 'var(--accent)' }}>&amp; Research Scientist</span>
                 </h1>
 
+                {/* Typewriter role cycling */}
+                <div className="animate-hero-3" style={{ marginTop: '16px' }}>
+                  <Typewriter
+                    style={{
+                      fontSize: '1.05rem',
+                      color: 'var(--accent)',
+                      fontWeight: 600,
+                      fontFamily: 'var(--font-display, inherit)',
+                      letterSpacing: '0.01em',
+                    }}
+                  />
+                </div>
+
                 <p
                   className="animate-hero-3"
                   style={{
@@ -147,7 +167,7 @@ export default function Home() {
                     fontSize: '1.1rem',
                     lineHeight: 1.7,
                     maxWidth: '560px',
-                    marginTop: '24px',
+                    marginTop: '16px',
                   }}
                 >
                   8+ years transforming satellite data into actionable insights for water

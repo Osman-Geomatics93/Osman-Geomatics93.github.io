@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import RevealSection from '../components/RevealSection'
-import { ExternalLink } from 'lucide-react'
+import { ExternalLink, X, Maximize2 } from 'lucide-react'
 
 interface Cert {
   title: string
@@ -142,7 +142,6 @@ const certifications: Cert[] = [
 
 const categories = ['All', 'Remote Sensing', 'GIS', 'Programming', 'AI / Deep Learning', 'Hydraulics', 'Professional']
 
-// Category left-border accent colors — subtle, no rainbow
 const catBorderColor: Record<string, string> = {
   'Remote Sensing': '#10b981',
   'GIS': '#7e9ab5',
@@ -161,8 +160,29 @@ const catTagColor: Record<string, { bg: string; text: string; border: string }> 
   'Professional': { bg: 'rgba(167,139,250,0.1)', text: '#a78bfa', border: 'rgba(167,139,250,0.25)' },
 }
 
+function toEmbedUrl(link: string): string {
+  if (link.includes('drive.google.com')) {
+    return link.replace(/\/view(\?.*)?$/, '/preview')
+  }
+  return link
+}
+
 export default function CertificationsPage() {
   const [activeCategory, setActiveCategory] = useState('All')
+  const [selectedCert, setSelectedCert] = useState<Cert | null>(null)
+
+  const closeLightbox = useCallback(() => setSelectedCert(null), [])
+
+  useEffect(() => {
+    if (!selectedCert) return
+    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') closeLightbox() }
+    document.addEventListener('keydown', onKey)
+    document.body.style.overflow = 'hidden'
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.body.style.overflow = ''
+    }
+  }, [selectedCert, closeLightbox])
 
   const filtered =
     activeCategory === 'All'
@@ -207,9 +227,7 @@ export default function CertificationsPage() {
             </p>
 
             {/* Stats */}
-            <div
-              style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', marginTop: '40px' }}
-            >
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', marginTop: '40px' }}>
               {[
                 { num: '17', label: 'Certifications' },
                 { num: '10', label: 'Institutions' },
@@ -229,6 +247,12 @@ export default function CertificationsPage() {
                 </div>
               ))}
             </div>
+
+            {/* Lightbox hint */}
+            <p style={{ fontSize: '0.78rem', color: 'var(--text-3)', marginTop: '24px', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <Maximize2 size={13} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+              Click any certificate card to view it full-size
+            </p>
           </div>
         </section>
 
@@ -275,12 +299,7 @@ export default function CertificationsPage() {
         </div>
 
         {/* ===================== CERTIFICATIONS GRID ===================== */}
-        <section
-          style={{
-            padding: '48px 24px 96px',
-            backgroundColor: 'var(--bg)',
-          }}
-        >
+        <section style={{ padding: '48px 24px 96px', backgroundColor: 'var(--bg)' }}>
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
             <div
               style={{
@@ -297,7 +316,6 @@ export default function CertificationsPage() {
                   border: 'rgba(126,154,181,0.25)',
                 }
 
-                // Initials badge
                 const initials = cert.org
                   .split(/[\s,&/-]+/)
                   .filter(Boolean)
@@ -308,6 +326,7 @@ export default function CertificationsPage() {
                 return (
                   <div
                     key={cert.title}
+                    onClick={() => setSelectedCert(cert)}
                     style={{
                       backgroundColor: 'var(--bg-card)',
                       border: '1px solid var(--border)',
@@ -318,17 +337,24 @@ export default function CertificationsPage() {
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '10px',
-                      transition: 'border-color 0.25s ease',
+                      transition: 'border-color 0.25s ease, transform 0.2s ease, box-shadow 0.2s ease',
+                      cursor: 'pointer',
                     }}
                     onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderTopColor = 'var(--border-bright)'
-                      ;(e.currentTarget as HTMLElement).style.borderRightColor = 'var(--border-bright)'
-                      ;(e.currentTarget as HTMLElement).style.borderBottomColor = 'var(--border-bright)'
+                      const el = e.currentTarget as HTMLElement
+                      el.style.borderTopColor = 'var(--border-bright)'
+                      el.style.borderRightColor = 'var(--border-bright)'
+                      el.style.borderBottomColor = 'var(--border-bright)'
+                      el.style.transform = 'translateY(-2px)'
+                      el.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3)'
                     }}
                     onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLElement).style.borderTopColor = 'var(--border)'
-                      ;(e.currentTarget as HTMLElement).style.borderRightColor = 'var(--border)'
-                      ;(e.currentTarget as HTMLElement).style.borderBottomColor = 'var(--border)'
+                      const el = e.currentTarget as HTMLElement
+                      el.style.borderTopColor = 'var(--border)'
+                      el.style.borderRightColor = 'var(--border)'
+                      el.style.borderBottomColor = 'var(--border)'
+                      el.style.transform = 'translateY(0)'
+                      el.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)'
                     }}
                   >
                     {/* Org badge + category */}
@@ -387,28 +413,31 @@ export default function CertificationsPage() {
                       <p style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '2px' }}>{cert.year}</p>
                     </div>
 
-                    {/* Link */}
-                    {cert.link && (
-                      <a
-                        href={cert.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '5px',
-                          fontSize: '0.78rem',
-                          color: 'var(--accent)',
-                          marginTop: 'auto',
-                          transition: 'opacity 0.2s ease',
-                        }}
-                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '0.7' }}
-                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
-                      >
-                        <ExternalLink size={12} />
-                        View Certificate
-                      </a>
-                    )}
+                    {/* Footer: preview indicator or "no preview" note */}
+                    <div style={{ marginTop: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      {cert.link ? (
+                        <span
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '5px',
+                            fontSize: '0.78rem',
+                            color: 'var(--accent)',
+                          }}
+                        >
+                          <Maximize2 size={12} />
+                          Preview Certificate
+                        </span>
+                      ) : (
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-3)' }}>
+                          Physical certificate
+                        </span>
+                      )}
+                      <ExternalLink
+                        size={12}
+                        style={{ color: 'var(--text-3)', flexShrink: 0 }}
+                      />
+                    </div>
                   </div>
                 )
               })}
@@ -514,13 +543,7 @@ export default function CertificationsPage() {
                   to knowledge transfer and capacity building in geospatial technologies
                   across the Hydraulics Research Center and partner organizations.&rdquo;
                 </p>
-                <p
-                  style={{
-                    fontSize: '0.8rem',
-                    color: 'var(--text-3)',
-                    marginTop: '12px',
-                  }}
-                >
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-3)', marginTop: '12px' }}>
                   — Hydraulics Research Center, Sudan
                 </p>
               </div>
@@ -530,6 +553,183 @@ export default function CertificationsPage() {
       </main>
 
       <Footer />
+
+      {/* ===================== LIGHTBOX MODAL ===================== */}
+      {selectedCert && (
+        <div
+          onClick={closeLightbox}
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(7, 12, 20, 0.88)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px',
+            animation: 'fadeIn 0.2s ease',
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: 'var(--bg-card)',
+              border: '1px solid var(--border-bright)',
+              borderTop: `3px solid ${catBorderColor[selectedCert.category] || 'var(--accent)'}`,
+              borderRadius: '10px',
+              width: '100%',
+              maxWidth: '900px',
+              maxHeight: '90vh',
+              display: 'flex',
+              flexDirection: 'column',
+              overflow: 'hidden',
+              boxShadow: '0 32px 80px rgba(0,0,0,0.6)',
+              animation: 'slideUp 0.25s ease',
+            }}
+          >
+            {/* Modal header */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'flex-start',
+                justifyContent: 'space-between',
+                gap: '16px',
+                padding: '20px 24px',
+                borderBottom: '1px solid var(--border)',
+                flexShrink: 0,
+              }}
+            >
+              <div>
+                <p style={{ fontSize: '0.72rem', color: 'var(--text-3)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
+                  {selectedCert.category} · {selectedCert.year}
+                </p>
+                <h3
+                  className="font-display"
+                  style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.35 }}
+                >
+                  {selectedCert.title}
+                </h3>
+                <p style={{ fontSize: '0.83rem', color: 'var(--text-2)', marginTop: '4px' }}>
+                  {selectedCert.org}
+                </p>
+              </div>
+              <button
+                onClick={closeLightbox}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border)',
+                  backgroundColor: 'var(--bg-surface)',
+                  color: 'var(--text-2)',
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  transition: 'background-color 0.15s ease',
+                }}
+                onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--bg)' }}
+                onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = 'var(--bg-surface)' }}
+                aria-label="Close preview"
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Modal body */}
+            <div style={{ flex: 1, overflow: 'hidden', position: 'relative', minHeight: '400px' }}>
+              {selectedCert.link ? (
+                <iframe
+                  src={toEmbedUrl(selectedCert.link)}
+                  style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                  title={selectedCert.title}
+                  allow="fullscreen"
+                />
+              ) : (
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    height: '100%',
+                    gap: '16px',
+                    padding: '48px 24px',
+                    textAlign: 'center',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '64px',
+                      height: '64px',
+                      borderRadius: '50%',
+                      backgroundColor: 'var(--bg-surface)',
+                      border: '1px solid var(--border)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span style={{ fontSize: '1.5rem' }}>📜</span>
+                  </div>
+                  <div>
+                    <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-1)', marginBottom: '8px' }}>
+                      Physical Certificate
+                    </p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-2)', maxWidth: '320px', lineHeight: 1.6 }}>
+                      This certificate is held in physical form and is not available for online preview.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Modal footer */}
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '14px 24px',
+                borderTop: '1px solid var(--border)',
+                flexShrink: 0,
+                backgroundColor: 'var(--bg-surface)',
+                gap: '12px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>
+                Press <kbd style={{ backgroundColor: 'var(--bg)', border: '1px solid var(--border)', borderRadius: '3px', padding: '1px 5px', fontSize: '0.7rem', color: 'var(--text-2)' }}>Esc</kbd> or click outside to close
+              </p>
+              {selectedCert.link && (
+                <a
+                  href={selectedCert.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    fontSize: '0.8rem',
+                    color: 'var(--accent)',
+                    fontWeight: 500,
+                  }}
+                >
+                  <ExternalLink size={13} />
+                  Open in new tab
+                </a>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        @keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(16px) } to { opacity: 1; transform: translateY(0) } }
+      `}</style>
     </>
   )
 }

@@ -11,6 +11,7 @@ interface MarkerData {
   org: string
   desc: string
   slug: string
+  color?: string
 }
 
 interface LeafletMapProps {
@@ -51,12 +52,13 @@ export default function LeafletMap({ markers }: LeafletMapProps) {
       }).addTo(map)
 
       markers.forEach((proj) => {
+        const c = proj.color || '#10b981'
         const icon = L.divIcon({
           html: `<div style="
             width:14px;height:14px;border-radius:50%;
-            background:#10b981;
-            border:2px solid rgba(16,185,129,0.3);
-            box-shadow:0 0 0 4px rgba(16,185,129,0.15), 0 0 16px rgba(16,185,129,0.5);
+            background:${c};
+            border:2px solid ${c}55;
+            box-shadow:0 0 0 4px ${c}25, 0 0 16px ${c}80;
             cursor:pointer;
           "></div>`,
           className: '',
@@ -69,7 +71,7 @@ export default function LeafletMap({ markers }: LeafletMapProps) {
           .addTo(map)
           .bindPopup(
             `<div style="font-family:system-ui,sans-serif;padding:4px 2px;min-width:210px;">
-              <div style="font-size:0.62rem;font-weight:700;color:#10b981;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;">
+              <div style="font-size:0.62rem;font-weight:700;color:${c};text-transform:uppercase;letter-spacing:0.08em;margin-bottom:5px;">
                 ${proj.type}
               </div>
               <div style="font-size:0.88rem;font-weight:700;color:#111827;line-height:1.35;margin-bottom:3px;">
@@ -81,7 +83,7 @@ export default function LeafletMap({ markers }: LeafletMapProps) {
               <p style="margin:0;font-size:0.78rem;color:#374151;line-height:1.55;">
                 ${proj.desc.length > 120 ? proj.desc.slice(0, 120) + '…' : proj.desc}
               </p>
-              <a href="/projects/${proj.slug}" style="display:inline-block;margin-top:10px;font-size:0.75rem;color:#10b981;font-weight:600;text-decoration:none;">
+              <a href="/projects/${proj.slug}" style="display:inline-block;margin-top:10px;font-size:0.75rem;color:${c};font-weight:600;text-decoration:none;">
                 View details →
               </a>
             </div>`,

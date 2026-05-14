@@ -354,17 +354,38 @@ export default function ProjectsPage() {
                 </p>
               </div>
             </div>
+            {/* Legend */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', marginBottom: '16px' }}>
+              {[
+                { label: 'Water Resources', color: '#10b981' },
+                { label: 'Crop Monitoring', color: '#f59e0b' },
+                { label: 'Hydrology', color: '#60a5fa' },
+              ].map(({ label, color }) => (
+                <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                  <div style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: color, boxShadow: `0 0 6px ${color}80`, flexShrink: 0 }} />
+                  <span style={{ fontSize: '0.78rem', color: 'var(--text-3)' }}>{label}</span>
+                </div>
+              ))}
+            </div>
             <LeafletMap
-              markers={projectsData.map((p) => ({
-                lat: p.coordinates[0],
-                lng: p.coordinates[1],
-                name: p.location,
-                type: p.category,
-                year: p.period,
-                org: p.org,
-                desc: p.description,
-                slug: p.slug,
-              }))}
+              markers={projectsData.map((p) => {
+                const catColor: Record<string, string> = {
+                  'Water Resources': '#10b981',
+                  'Crop Monitoring': '#f59e0b',
+                  'Hydrology': '#60a5fa',
+                }
+                return {
+                  lat: p.coordinates[0],
+                  lng: p.coordinates[1],
+                  name: p.location,
+                  type: p.category,
+                  year: p.period,
+                  org: p.org,
+                  desc: p.description,
+                  slug: p.slug,
+                  color: catColor[p.category] || '#10b981',
+                }
+              })}
             />
           </div>
         </section>
@@ -718,6 +739,658 @@ export default function ProjectsPage() {
                       <div style={{ marginTop: '10px', fontSize: '0.75rem', color: '#a78bfa', fontWeight: 600 }}>
                         — Osman Ibrahim, Founder
                       </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== CHROME EXTENSION — MAPLAYOUT PRO ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg)',
+              borderTop: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border)',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Ambient glow */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(ellipse 50% 60% at 10% 50%, rgba(14,165,233,0.09) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative' }}>
+              {/* Label row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <p className="section-label" style={{ color: '#0ea5e9', marginBottom: 0 }}>
+                  Chrome Extension
+                </p>
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    color: '#fff',
+                    backgroundColor: '#0284c7',
+                    borderRadius: '20px',
+                    padding: '2px 9px',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  v1.3.2 · Published
+                </span>
+              </div>
+
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)', marginBottom: '48px' }}
+              >
+                Browser-Based Cartographic Tool
+              </h2>
+
+              {/* Main card */}
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid rgba(14,165,233,0.25)',
+                  borderLeft: '4px solid #0ea5e9',
+                  borderRadius: '8px',
+                  padding: '40px',
+                  boxShadow: '0 0 48px rgba(14,165,233,0.07), 0 2px 16px rgba(0,0,0,0.25)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: '56px',
+                    alignItems: 'start',
+                  }}
+                >
+                  {/* ── Left: description + features + CTAs ── */}
+                  <div>
+                    {/* Badges */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          color: '#0ea5e9',
+                          backgroundColor: 'rgba(14,165,233,0.1)',
+                          border: '1px solid rgba(14,165,233,0.3)',
+                          borderRadius: '4px',
+                          padding: '3px 8px',
+                        }}
+                      >
+                        Chrome Extension
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          color: 'var(--text-3)',
+                          backgroundColor: 'var(--bg-surface)',
+                          border: '1px solid var(--border)',
+                          borderRadius: '4px',
+                          padding: '3px 8px',
+                        }}
+                      >
+                        Cartography · GIS
+                      </span>
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          fontSize: '0.7rem',
+                          color: '#f59e0b',
+                          backgroundColor: 'rgba(245,158,11,0.1)',
+                          border: '1px solid rgba(245,158,11,0.25)',
+                          borderRadius: '4px',
+                          padding: '3px 8px',
+                        }}
+                      >
+                        ★★★★★ 5.0
+                      </span>
+                    </div>
+
+                    <h3
+                      className="font-display"
+                      style={{
+                        fontSize: '1.5rem',
+                        fontWeight: 800,
+                        color: 'var(--text-1)',
+                        lineHeight: 1.2,
+                        marginBottom: '6px',
+                      }}
+                    >
+                      MapLayout Pro
+                    </h3>
+                    <a
+                      href="https://chromewebstore.google.com/detail/maplayout-pro/flgjppmpdkhjpokcgdglnacnopoedbnh"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: '0.82rem',
+                        color: '#0ea5e9',
+                        textDecoration: 'none',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        transition: 'color 0.2s',
+                      }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#38bdf8' }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#0ea5e9' }}
+                    >
+                      chromewebstore.google.com
+                      <ExternalLink size={11} />
+                    </a>
+
+                    <p
+                      style={{
+                        color: 'var(--text-2)',
+                        fontSize: '0.9rem',
+                        lineHeight: 1.75,
+                        marginTop: '16px',
+                        marginBottom: '24px',
+                      }}
+                    >
+                      A full cartographic layout studio that runs entirely inside your
+                      browser — no desktop GIS required. Load spatial data, auto-generate
+                      professional map layouts with north arrow, scale bar, legend and
+                      inset maps, then export publication-ready PDFs or high-DPI PNGs in
+                      minutes.
+                    </p>
+
+                    {/* Feature list */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginBottom: '24px' }}>
+                      {[
+                        '10+ basemap options: OSM, Satellite, Terrain, Dark, and more',
+                        'Auto-generate north arrow, scale bar, inset maps & legend',
+                        'Drag-and-drop layout editor — no coding required',
+                        'Import GeoJSON, KML, KMZ, GPX and Shapefiles',
+                        'Export PDF, PNG (up to 600 DPI), and SVG',
+                        'Coordinate grid with DMS labels',
+                        'Drawing tools: lines, arrows, circles, text annotations',
+                      ].map((feat) => (
+                        <div
+                          key={feat}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '8px',
+                            fontSize: '0.855rem',
+                            color: 'var(--text-2)',
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          <span style={{ color: '#0ea5e9', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tech stack */}
+                    <div style={{ marginBottom: '28px' }}>
+                      <div
+                        style={{
+                          fontSize: '0.7rem',
+                          color: 'var(--text-3)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.1em',
+                          fontWeight: 600,
+                          marginBottom: '10px',
+                        }}
+                      >
+                        Built With
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                        {['MapLibre GL JS', 'TypeScript', 'Custom SVG Engine', 'Chrome Extension API', '1:1 mm Print Scale'].map((tech) => (
+                          <span
+                            key={tech}
+                            style={{
+                              fontSize: '0.72rem',
+                              color: '#0ea5e9',
+                              backgroundColor: 'rgba(14,165,233,0.1)',
+                              border: '1px solid rgba(14,165,233,0.25)',
+                              borderRadius: '4px',
+                              padding: '3px 8px',
+                              fontWeight: 500,
+                            }}
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* CTAs */}
+                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                      <a
+                        href="https://chromewebstore.google.com/detail/maplayout-pro/flgjppmpdkhjpokcgdglnacnopoedbnh"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          backgroundColor: '#0284c7',
+                          color: '#fff',
+                          fontWeight: 600,
+                          fontSize: '0.875rem',
+                          padding: '11px 22px',
+                          borderRadius: '6px',
+                          transition: 'background-color 0.2s ease, transform 0.2s ease',
+                          textDecoration: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.backgroundColor = '#0369a1'
+                          el.style.transform = 'translateY(-2px)'
+                        }}
+                        onMouseLeave={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.backgroundColor = '#0284c7'
+                          el.style.transform = 'translateY(0)'
+                        }}
+                      >
+                        {/* Chrome icon */}
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                          <circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" strokeWidth="2"/>
+                          <circle cx="12" cy="12" r="2.5"/>
+                          <path d="M12 8h9.5M5.3 17l4.75-8.25M5.3 7l4.75 8.25" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round"/>
+                        </svg>
+                        Get on Chrome Store
+                      </a>
+                      <a
+                        href="https://github.com/Osman-Geomatics93"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          border: '1px solid rgba(14,165,233,0.35)',
+                          color: '#0ea5e9',
+                          fontWeight: 500,
+                          fontSize: '0.875rem',
+                          padding: '11px 22px',
+                          borderRadius: '6px',
+                          transition: 'border-color 0.2s ease, color 0.2s ease, transform 0.2s ease',
+                          textDecoration: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.borderColor = '#0ea5e9'
+                          el.style.color = '#38bdf8'
+                          el.style.transform = 'translateY(-2px)'
+                        }}
+                        onMouseLeave={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.borderColor = 'rgba(14,165,233,0.35)'
+                          el.style.color = '#0ea5e9'
+                          el.style.transform = 'translateY(0)'
+                        }}
+                      >
+                        <Github size={14} />
+                        View Source
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* ── Right: stats + browser mockup ── */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                    {/* Stats grid */}
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '12px',
+                      }}
+                    >
+                      {[
+                        { num: '97+', label: 'Chrome Store Users', color: '#0ea5e9' },
+                        { num: '5.0★', label: 'Average Rating', color: '#f59e0b' },
+                        { num: '10+', label: 'Basemap Options', color: '#0ea5e9' },
+                        { num: '600 DPI', label: 'Max Export Quality', color: '#10b981' },
+                      ].map(({ num, label, color }) => (
+                        <div
+                          key={label}
+                          style={{
+                            backgroundColor: 'var(--bg-surface)',
+                            border: '1px solid var(--border)',
+                            borderRadius: '8px',
+                            padding: '18px',
+                            textAlign: 'center',
+                          }}
+                        >
+                          <div
+                            className="font-display font-bold"
+                            style={{ fontSize: '1.3rem', color }}
+                          >
+                            {num}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: '0.72rem',
+                              color: 'var(--text-3)',
+                              marginTop: '4px',
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            {label}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Browser extension mockup */}
+                    <div
+                      style={{
+                        borderRadius: '10px',
+                        overflow: 'hidden',
+                        border: '1px solid rgba(14,165,233,0.25)',
+                        boxShadow: '0 0 40px rgba(14,165,233,0.12), 0 4px 24px rgba(0,0,0,0.4)',
+                      }}
+                    >
+                      {/* Browser chrome */}
+                      <div
+                        style={{
+                          backgroundColor: '#0c1929',
+                          padding: '8px 12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          borderBottom: '1px solid rgba(14,165,233,0.15)',
+                        }}
+                      >
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          {['#ff5f57', '#febc2e', '#28c840'].map((c) => (
+                            <div key={c} style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: c }} />
+                          ))}
+                        </div>
+                        <div
+                          style={{
+                            flex: 1,
+                            backgroundColor: '#162032',
+                            borderRadius: '4px',
+                            padding: '3px 8px',
+                            fontSize: '0.6rem',
+                            color: '#0ea5e9',
+                            marginLeft: '4px',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          🔒 MapLayout Pro · Cartographic Studio
+                        </div>
+                        {/* Extension icon pill */}
+                        <div
+                          style={{
+                            backgroundColor: '#0284c7',
+                            borderRadius: '4px',
+                            padding: '2px 7px',
+                            fontSize: '0.55rem',
+                            fontWeight: 700,
+                            color: '#fff',
+                            flexShrink: 0,
+                          }}
+                        >
+                          EXT
+                        </div>
+                      </div>
+
+                      {/* Toolbar */}
+                      <div
+                        style={{
+                          backgroundColor: '#0d1f35',
+                          padding: '6px 12px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          borderBottom: '1px solid rgba(14,165,233,0.1)',
+                          flexWrap: 'wrap',
+                        }}
+                      >
+                        {['OSM', 'Satellite', 'Dark', 'Terrain'].map((b, i) => (
+                          <div
+                            key={b}
+                            style={{
+                              fontSize: '0.5rem',
+                              color: i === 2 ? '#0d1f35' : '#7e9ab5',
+                              backgroundColor: i === 2 ? '#0ea5e9' : '#162032',
+                              borderRadius: '3px',
+                              padding: '2px 6px',
+                              fontWeight: 600,
+                            }}
+                          >
+                            {b}
+                          </div>
+                        ))}
+                        <div style={{ marginLeft: 'auto', display: 'flex', gap: '5px' }}>
+                          {['⬆ Import', '⬇ Export'].map((lbl) => (
+                            <div
+                              key={lbl}
+                              style={{
+                                fontSize: '0.48rem',
+                                color: '#0ea5e9',
+                                backgroundColor: 'rgba(14,165,233,0.12)',
+                                border: '1px solid rgba(14,165,233,0.3)',
+                                borderRadius: '3px',
+                                padding: '2px 6px',
+                                fontWeight: 600,
+                              }}
+                            >
+                              {lbl}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Map canvas */}
+                      <div
+                        style={{
+                          backgroundColor: '#0a1525',
+                          padding: '12px',
+                          position: 'relative',
+                          minHeight: '200px',
+                        }}
+                      >
+                        {/* Grid overlay */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            backgroundImage:
+                              'linear-gradient(rgba(14,165,233,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(14,165,233,0.05) 1px, transparent 1px)',
+                            backgroundSize: '32px 32px',
+                          }}
+                        />
+
+                        {/* Main map frame */}
+                        <div
+                          style={{
+                            position: 'relative',
+                            border: '1.5px solid rgba(14,165,233,0.4)',
+                            borderRadius: '4px',
+                            overflow: 'hidden',
+                            margin: '0 0 8px 0',
+                            height: '110px',
+                            background: 'linear-gradient(135deg, #0d2137 0%, #0a1a2e 50%, #0d2137 100%)',
+                          }}
+                        >
+                          {/* Simulated map shapes */}
+                          <svg
+                            style={{ position: 'absolute', inset: 0, width: '100%', height: '100%' }}
+                            viewBox="0 0 300 110"
+                            preserveAspectRatio="xMidYMid slice"
+                          >
+                            <polygon points="40,20 140,15 160,35 120,55 50,50" fill="rgba(14,165,233,0.18)" stroke="rgba(14,165,233,0.5)" strokeWidth="0.8"/>
+                            <polygon points="130,30 210,25 230,55 180,70 120,60" fill="rgba(16,185,129,0.15)" stroke="rgba(16,185,129,0.4)" strokeWidth="0.8"/>
+                            <polygon points="50,55 130,60 110,85 40,80" fill="rgba(245,158,11,0.12)" stroke="rgba(245,158,11,0.35)" strokeWidth="0.8"/>
+                            <polyline points="20,60 80,50 130,65 200,55 270,60" stroke="rgba(14,165,233,0.6)" strokeWidth="1.5" fill="none"/>
+                            {/* Grid lines */}
+                            {[0,1,2,3,4].map(i => (
+                              <line key={i} x1={i*75} y1="0" x2={i*75} y2="110" stroke="rgba(14,165,233,0.1)" strokeWidth="0.5"/>
+                            ))}
+                            {[0,1,2].map(i => (
+                              <line key={i} x1="0" y1={i*55} x2="300" y2={i*55} stroke="rgba(14,165,233,0.1)" strokeWidth="0.5"/>
+                            ))}
+                          </svg>
+
+                          {/* Title block */}
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: '6px',
+                              left: '6px',
+                              backgroundColor: 'rgba(10,21,37,0.85)',
+                              border: '1px solid rgba(14,165,233,0.3)',
+                              borderRadius: '3px',
+                              padding: '3px 6px',
+                            }}
+                          >
+                            <div style={{ fontSize: '0.48rem', color: '#e8f0fe', fontWeight: 700 }}>Gezira Irrigation Scheme</div>
+                            <div style={{ fontSize: '0.42rem', color: '#7e9ab5' }}>Sudan · WGS84 · 1:250,000</div>
+                          </div>
+
+                          {/* North arrow */}
+                          <div
+                            style={{
+                              position: 'absolute',
+                              top: '6px',
+                              right: '6px',
+                              width: '18px',
+                              height: '18px',
+                              backgroundColor: 'rgba(10,21,37,0.85)',
+                              border: '1px solid rgba(14,165,233,0.3)',
+                              borderRadius: '50%',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '0.55rem',
+                              color: '#0ea5e9',
+                              fontWeight: 700,
+                            }}
+                          >
+                            N
+                          </div>
+                        </div>
+
+                        {/* Bottom row: scale bar + inset + legend */}
+                        <div style={{ display: 'flex', gap: '8px', alignItems: 'stretch' }}>
+                          {/* Scale bar */}
+                          <div
+                            style={{
+                              flex: 1,
+                              backgroundColor: 'rgba(10,21,37,0.8)',
+                              border: '1px solid rgba(14,165,233,0.2)',
+                              borderRadius: '3px',
+                              padding: '4px 6px',
+                            }}
+                          >
+                            <div style={{ fontSize: '0.42rem', color: '#7e9ab5', marginBottom: '3px' }}>Scale</div>
+                            <div style={{ display: 'flex', gap: '1px', alignItems: 'center' }}>
+                              {[1,0,1,0,1].map((dark, i) => (
+                                <div key={i} style={{ flex: 1, height: '4px', backgroundColor: dark ? '#0ea5e9' : '#162032' }} />
+                              ))}
+                            </div>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '1px' }}>
+                              {['0', '25', '50 km'].map(t => (
+                                <div key={t} style={{ fontSize: '0.38rem', color: '#3d5470' }}>{t}</div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Inset map */}
+                          <div
+                            style={{
+                              width: '52px',
+                              backgroundColor: 'rgba(10,21,37,0.8)',
+                              border: '1px solid rgba(14,165,233,0.2)',
+                              borderRadius: '3px',
+                              padding: '3px',
+                              display: 'flex',
+                              flexDirection: 'column',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                          >
+                            <div style={{ fontSize: '0.38rem', color: '#7e9ab5', marginBottom: '2px' }}>Inset</div>
+                            <svg width="42" height="28" viewBox="0 0 42 28">
+                              <rect width="42" height="28" fill="#0d2137"/>
+                              <polygon points="5,8 25,5 30,15 20,22 5,18" fill="rgba(14,165,233,0.25)" stroke="rgba(14,165,233,0.5)" strokeWidth="0.5"/>
+                              <rect x="15" y="8" width="8" height="8" fill="none" stroke="#f59e0b" strokeWidth="0.8" strokeDasharray="1"/>
+                            </svg>
+                          </div>
+
+                          {/* Legend */}
+                          <div
+                            style={{
+                              width: '62px',
+                              backgroundColor: 'rgba(10,21,37,0.8)',
+                              border: '1px solid rgba(14,165,233,0.2)',
+                              borderRadius: '3px',
+                              padding: '4px 5px',
+                            }}
+                          >
+                            <div style={{ fontSize: '0.4rem', color: '#7e9ab5', marginBottom: '3px', fontWeight: 700 }}>LEGEND</div>
+                            {[
+                              { color: 'rgba(14,165,233,0.6)', label: 'Irrigated' },
+                              { color: 'rgba(16,185,129,0.5)', label: 'Cropland' },
+                              { color: 'rgba(245,158,11,0.45)', label: 'Fallow' },
+                            ].map(({ color, label }) => (
+                              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '3px', marginBottom: '2px' }}>
+                                <div style={{ width: '7px', height: '7px', backgroundColor: color, borderRadius: '1px', flexShrink: 0 }} />
+                                <span style={{ fontSize: '0.38rem', color: '#7e9ab5' }}>{label}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* "No GIS software needed" label */}
+                        <div
+                          style={{
+                            marginTop: '8px',
+                            textAlign: 'center',
+                            fontSize: '0.48rem',
+                            color: '#3d5470',
+                            letterSpacing: '0.06em',
+                          }}
+                        >
+                          Publication-ready · Export PDF / PNG 600 DPI / SVG
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Privacy note */}
+                    <div
+                      style={{
+                        backgroundColor: 'rgba(14,165,233,0.06)',
+                        border: '1px solid rgba(14,165,233,0.15)',
+                        borderRadius: '6px',
+                        padding: '12px 16px',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '10px',
+                      }}
+                    >
+                      <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>🔒</span>
+                      <p style={{ fontSize: '0.78rem', color: 'var(--text-3)', lineHeight: 1.55, margin: 0 }}>
+                        <strong style={{ color: 'var(--text-2)' }}>Zero data collection.</strong>
+                        {' '}All processing happens locally in your browser. No spatial data is
+                        transmitted to any server.
+                      </p>
                     </div>
                   </div>
                 </div>
