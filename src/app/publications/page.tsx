@@ -7,25 +7,34 @@ import { BookOpen, Code2, FileText, Award, ExternalLink } from 'lucide-react'
 
 const thesis = {
   title:
-    'Remote Sensing-Based Evaluation of Agricultural Water Productivity in the Gezira Irrigation Scheme Using WaPOR Data',
+    'The Use of Remote Sensing for Monitoring Agricultural Products in the Gezira Irrigation Scheme, Sudan',
+  turkishTitle:
+    'Gezira Sulama Projesi\'ndeki (Sudan) Tarimsal Ürünlerin İzlenmesinde Uzaktan Algilama Kullanimi',
   institution: 'Karadeniz Technical University (KTU)',
-  department: 'Department of Geomatics Engineering',
+  department: 'Harita Mühendisliği Anabilim Dalı (Geomatics Engineering)',
   year: '2024',
   type: 'M.Sc. Thesis',
-  supervisor: 'Assoc. Prof. Volkan Yilmaz',
+  language: 'English',
+  subjectField: 'Agriculture / Remote Sensing',
+  supervisor: 'Doç. Dr. Volkan Yılmaz',
+  thesisNo: '898245',
+  yokUrl:
+    'https://tez.yok.gov.tr/UlusalTezMerkezi/TezGoster?key=UjlM15wKZGQW6TLC0pvCtwMFnlAmGjYcYyByKQoi-QT6k_7-2lwLvOsvmy0NimyP',
   abstract:
-    'This thesis developed a multi-scale remote sensing framework for evaluating agricultural water productivity across the Gezira Irrigation Scheme — the world\'s largest contiguous irrigation project (8.4 M ha, central Sudan). FAO WaPOR Level 2 and 3 satellite products were combined with Sentinel-2 10 m imagery and an SVM/OBIA crop classification pipeline to produce field-level water productivity maps (WP = Y/ETa) for 3 consecutive growing seasons. The methodology improved WaPOR accuracy assessment by 15% versus prior approaches, and identified spatial patterns of water use inefficiency guiding targeted management interventions. A QGIS plugin and Python pipeline were released as open-source tools.',
+    'This study investigates the application of remote sensing and GIS techniques for monitoring agricultural water productivity in the Gezira Irrigation Scheme — the world\'s largest contiguous irrigation project (8.4 M ha, central Sudan). Support Vector Machine (SVM) and Object-Based Image Analysis (OBIA) were applied to multi-temporal Sentinel-2 10 m imagery for crop classification and wheat yield estimation. Integration of FAO WaPOR Level 2 and Level 3 satellite products improved water productivity accuracy assessment by 15% versus prior approaches, identifying spatial patterns of water use inefficiency guiding targeted management interventions across three administrative offices and three consecutive growing seasons. Two QGIS plugins and a Python pipeline were released as open-source tools for the geospatial community.',
   keywords: [
-    'WaPOR',
     'Remote Sensing',
+    'WaPOR',
     'Water Productivity',
-    'SVM Classification',
-    'Gezira Scheme',
-    'FAO',
+    'SVM',
     'OBIA',
-    'Irrigation Management',
-    'Sudan',
+    'Gezira Irrigation Scheme',
+    'FAO',
     'Sentinel-2',
+    'Crop Monitoring',
+    'Sudan',
+    'Machine Learning',
+    'GIS',
   ],
   gpa: '3.50 / 4.00',
 }
@@ -247,66 +256,109 @@ export default function PublicationsPage() {
                   marginTop: '40px',
                   backgroundColor: 'var(--bg-card)',
                   border: '1px solid var(--border)',
-                  borderLeft: '3px solid var(--accent)',
+                  borderTop: '3px solid var(--warm)',
                   borderRadius: '6px',
                   padding: '36px',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                  boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '20px' }}>
-                  <BookOpen size={22} style={{ color: 'var(--accent)', marginTop: '3px', flexShrink: 0 }} />
+                {/* Badge row */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', marginBottom: '18px' }}>
+                  <span style={{ fontSize: '0.7rem', fontWeight: 700, color: '#f59e0b', backgroundColor: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: '4px', padding: '3px 9px', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>
+                    {thesis.type} · {thesis.year}
+                  </span>
+                  <a
+                    href={thesis.yokUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', fontSize: '0.7rem', fontWeight: 700, color: '#10b981', backgroundColor: 'rgba(16,185,129,0.1)', border: '1px solid rgba(16,185,129,0.3)', borderRadius: '4px', padding: '3px 9px', textDecoration: 'none' }}
+                  >
+                    <span>✓</span> Verified on YÖK National Thesis Centre
+                  </a>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-3)', fontFamily: 'monospace' }}>
+                    No: {thesis.thesisNo}
+                  </span>
+                </div>
+
+                {/* Title */}
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px', marginBottom: '8px' }}>
+                  <BookOpen size={22} style={{ color: 'var(--warm)', marginTop: '3px', flexShrink: 0 }} />
                   <div>
-                    <div style={{ fontSize: '0.72rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '6px' }}>
-                      {thesis.type} &nbsp;·&nbsp; {thesis.year} &nbsp;·&nbsp; GPA {thesis.gpa}
-                    </div>
                     <h3
                       className="font-display"
-                      style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.4, marginBottom: '8px' }}
+                      style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.4, marginBottom: '6px' }}
                     >
                       {thesis.title}
                     </h3>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-2)' }}>
-                      {thesis.institution} &nbsp;·&nbsp; {thesis.department}
-                    </p>
-                    <p style={{ fontSize: '0.82rem', color: 'var(--text-3)', marginTop: '3px' }}>
-                      Supervised by {thesis.supervisor}
+                    <p style={{ fontSize: '0.78rem', color: 'var(--text-3)', fontStyle: 'italic' }}>
+                      {thesis.turkishTitle}
                     </p>
                   </div>
                 </div>
 
-                <div
-                  style={{
-                    backgroundColor: 'var(--bg-surface)',
-                    border: '1px solid var(--border)',
-                    borderRadius: '6px',
-                    padding: '20px 24px',
-                    marginBottom: '20px',
-                  }}
-                >
-                  <div style={{ fontSize: '0.7rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '8px' }}>
+                {/* Metadata grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(180px, 1fr))', gap: '10px', margin: '20px 0 24px' }}>
+                  {[
+                    { label: 'Institution', value: thesis.institution },
+                    { label: 'Department', value: thesis.department },
+                    { label: 'Supervisor', value: thesis.supervisor },
+                    { label: 'Language', value: thesis.language },
+                    { label: 'Subject', value: thesis.subjectField },
+                    { label: 'GPA', value: thesis.gpa },
+                  ].map(({ label, value }) => (
+                    <div key={label} style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '5px', padding: '10px 12px' }}>
+                      <div style={{ fontSize: '0.62rem', color: 'var(--text-3)', textTransform: 'uppercase' as const, letterSpacing: '0.08em', fontWeight: 600, marginBottom: '3px' }}>
+                        {label}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-1)', fontWeight: 500, lineHeight: 1.3 }}>
+                        {value}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Abstract */}
+                <div style={{ backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border)', borderRadius: '6px', padding: '20px 24px', marginBottom: '20px' }}>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-3)', textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: '10px', fontWeight: 700 }}>
                     Abstract
                   </div>
-                  <p style={{ fontSize: '0.875rem', color: 'var(--text-2)', lineHeight: 1.75 }}>
+                  <p style={{ fontSize: '0.875rem', color: 'var(--text-2)', lineHeight: 1.8, borderLeft: '2px solid var(--warm)', paddingLeft: '14px', margin: 0 }}>
                     {thesis.abstract}
                   </p>
                 </div>
 
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                  {thesis.keywords.map((kw) => (
-                    <span
-                      key={kw}
-                      style={{
-                        fontSize: '0.72rem',
-                        color: 'var(--accent)',
-                        backgroundColor: 'rgba(16,185,129,0.08)',
-                        border: '1px solid rgba(16,185,129,0.2)',
-                        borderRadius: '4px',
-                        padding: '3px 8px',
-                      }}
-                    >
-                      {kw}
-                    </span>
-                  ))}
+                {/* Keywords */}
+                <div style={{ marginBottom: '24px' }}>
+                  <div style={{ fontSize: '0.7rem', color: 'var(--text-3)', textTransform: 'uppercase' as const, letterSpacing: '0.08em', marginBottom: '10px', fontWeight: 700 }}>
+                    Keywords
+                  </div>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                    {thesis.keywords.map((kw) => (
+                      <span key={kw} style={{ fontSize: '0.72rem', color: 'var(--warm)', backgroundColor: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.22)', borderRadius: '4px', padding: '3px 8px' }}>
+                        {kw}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* CTAs */}
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', paddingTop: '20px', borderTop: '1px solid var(--border)' }}>
+                  <a
+                    href={thesis.yokUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', backgroundColor: 'var(--accent)', color: '#070c14', fontWeight: 600, fontSize: '0.875rem', padding: '10px 22px', borderRadius: '6px', transition: 'background-color 0.2s ease, transform 0.2s ease', textDecoration: 'none' }}
+                    onMouseEnter={(e) => { const el = e.currentTarget as HTMLElement; el.style.backgroundColor = 'var(--accent-hover)'; el.style.transform = 'translateY(-1px)' }}
+                    onMouseLeave={(e) => { const el = e.currentTarget as HTMLElement; el.style.backgroundColor = 'var(--accent)'; el.style.transform = 'translateY(0)' }}
+                  >
+                    <ExternalLink size={13} />
+                    View on YÖK National Thesis Centre →
+                  </a>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.8rem', color: 'var(--text-3)' }}>
+                    <span style={{ fontFamily: 'monospace' }}>Thesis No: {thesis.thesisNo}</span>
+                    <span>·</span>
+                    <span>GPA {thesis.gpa}</span>
+                  </div>
                 </div>
               </div>
             </div>

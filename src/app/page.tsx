@@ -484,70 +484,315 @@ export default function Home() {
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">Research</p>
               <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
-                Master&apos;s Research
+                Master&apos;s Thesis
               </h2>
 
+              {/* Main thesis card */}
               <div
                 style={{
                   marginTop: '40px',
                   backgroundColor: 'var(--bg-card)',
                   border: '1px solid var(--border)',
+                  borderTop: '3px solid var(--warm)',
                   borderRadius: '6px',
                   padding: '40px',
-                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                  boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
                 }}
               >
+                {/* Badge row */}
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '10px',
+                    flexWrap: 'wrap',
+                    marginBottom: '20px',
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      color: '#f59e0b',
+                      backgroundColor: 'rgba(245,158,11,0.1)',
+                      border: '1px solid rgba(245,158,11,0.3)',
+                      borderRadius: '4px',
+                      padding: '3px 9px',
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                    }}
+                  >
+                    M.Sc. Thesis · 2024
+                  </span>
+                  <a
+                    href="https://tez.yok.gov.tr/UlusalTezMerkezi/TezGoster?key=UjlM15wKZGQW6TLC0pvCtwMFnlAmGjYcYyByKQoi-QT6k_7-2lwLvOsvmy0NimyP"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontSize: '0.7rem',
+                      fontWeight: 700,
+                      color: '#10b981',
+                      backgroundColor: 'rgba(16,185,129,0.1)',
+                      border: '1px solid rgba(16,185,129,0.3)',
+                      borderRadius: '4px',
+                      padding: '3px 9px',
+                      textDecoration: 'none',
+                      transition: 'background-color 0.2s',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(16,185,129,0.2)'
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.backgroundColor = 'rgba(16,185,129,0.1)'
+                    }}
+                  >
+                    <span style={{ fontSize: '0.85rem' }}>✓</span> Verified on YÖK National Thesis Centre
+                  </a>
+                  <span
+                    style={{
+                      fontSize: '0.7rem',
+                      color: 'var(--text-3)',
+                      fontFamily: 'monospace',
+                      letterSpacing: '0.04em',
+                    }}
+                  >
+                    Thesis No: 898245
+                  </span>
+                </div>
+
+                {/* Official title */}
+                <h3
+                  className="font-display"
+                  style={{
+                    fontSize: 'clamp(1.1rem, 2.5vw, 1.4rem)',
+                    fontWeight: 700,
+                    color: 'var(--text-1)',
+                    lineHeight: 1.4,
+                    marginBottom: '32px',
+                    maxWidth: '860px',
+                  }}
+                >
+                  The Use of Remote Sensing for Monitoring Agricultural Products in the
+                  Gezira Irrigation Scheme, Sudan
+                </h3>
+
+                {/* Two-column body */}
                 <div
                   style={{
                     display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-                    gap: '40px',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                    gap: '48px',
                     alignItems: 'start',
                   }}
                 >
+                  {/* Left: metadata + abstract + keywords */}
                   <div>
-                    <h3
-                      className="font-display"
-                      style={{
-                        fontSize: '1.2rem',
-                        fontWeight: 700,
-                        color: 'var(--text-1)',
-                        lineHeight: 1.4,
-                        marginBottom: '16px',
-                      }}
-                    >
-                      The Use of Remote Sensing for Monitoring Agricultural Products in the
-                      Gezira Irrigation Scheme, Sudan
-                    </h3>
-                    <p
-                      style={{
-                        color: 'var(--text-2)',
-                        fontSize: '0.9rem',
-                        lineHeight: 1.7,
-                      }}
-                    >
-                      M.Sc. Geomatics Engineering — Karadeniz Technical University, Turkey (2024).
-                      Developed SVM + OBIA crop classification pipelines and novel wheat yield
-                      estimation algorithms. Enhanced WaPOR accuracy by 15% across three
-                      administrative offices covering 8.4 million hectares.
-                    </p>
+                    {/* Metadata grid */}
                     <div
-                      style={{ display: 'flex', gap: '12px', marginTop: '24px', flexWrap: 'wrap' }}
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '10px',
+                        marginBottom: '28px',
+                      }}
                     >
+                      {[
+                        { label: 'Institution', value: 'Karadeniz Technical University' },
+                        { label: 'Year', value: '2024' },
+                        { label: 'Supervisor', value: 'Doç. Dr. Volkan Yılmaz' },
+                        { label: 'Department', value: 'Harita Mühendisliği' },
+                        { label: 'Language', value: 'English' },
+                        { label: 'Field', value: 'Agriculture / Remote Sensing' },
+                      ].map(({ label, value }) => (
+                        <div
+                          key={label}
+                          style={{
+                            backgroundColor: 'var(--bg-surface)',
+                            border: '1px solid var(--border)',
+                            borderRadius: '5px',
+                            padding: '10px 12px',
+                          }}
+                        >
+                          <div
+                            style={{
+                              fontSize: '0.65rem',
+                              color: 'var(--text-3)',
+                              textTransform: 'uppercase',
+                              letterSpacing: '0.08em',
+                              fontWeight: 600,
+                              marginBottom: '3px',
+                            }}
+                          >
+                            {label}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: '0.82rem',
+                              color: 'var(--text-1)',
+                              fontWeight: 500,
+                              lineHeight: 1.3,
+                            }}
+                          >
+                            {value}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Abstract */}
+                    <div style={{ marginBottom: '22px' }}>
+                      <div
+                        style={{
+                          fontSize: '0.65rem',
+                          color: 'var(--text-3)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.1em',
+                          fontWeight: 700,
+                          marginBottom: '10px',
+                        }}
+                      >
+                        Abstract
+                      </div>
+                      <p
+                        style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--text-2)',
+                          lineHeight: 1.75,
+                          margin: 0,
+                          borderLeft: '2px solid var(--warm)',
+                          paddingLeft: '14px',
+                        }}
+                      >
+                        This study investigates remote sensing and GIS techniques for monitoring
+                        agricultural water productivity in the Gezira Irrigation Scheme — the
+                        world&apos;s largest contiguous irrigation project (8.4 M ha, central
+                        Sudan). SVM and OBIA were applied to multi-temporal Sentinel-2 imagery for
+                        crop classification and wheat yield estimation. Integration of FAO WaPOR
+                        satellite products improved accuracy assessment by 15%, identifying
+                        spatial patterns of water use inefficiency across three growing seasons.
+                        Open-source QGIS plugins were released as reproducible tools.
+                      </p>
+                    </div>
+
+                    {/* Keywords */}
+                    <div>
+                      <div
+                        style={{
+                          fontSize: '0.65rem',
+                          color: 'var(--text-3)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.1em',
+                          fontWeight: 700,
+                          marginBottom: '10px',
+                        }}
+                      >
+                        Keywords
+                      </div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                        {[
+                          'Remote Sensing', 'WaPOR', 'Gezira Scheme', 'SVM', 'OBIA',
+                          'Water Productivity', 'Sentinel-2', 'FAO', 'Sudan',
+                          'Crop Monitoring', 'Machine Learning', 'GIS',
+                        ].map((kw) => (
+                          <span
+                            key={kw}
+                            style={{
+                              fontSize: '0.72rem',
+                              color: 'var(--warm)',
+                              backgroundColor: 'var(--warm-dim)',
+                              border: '1px solid rgba(245,158,11,0.25)',
+                              borderRadius: '4px',
+                              padding: '3px 8px',
+                            }}
+                          >
+                            {kw}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: results + CTAs */}
+                  <div>
+                    {/* Key results */}
+                    <div
+                      style={{
+                        fontSize: '0.65rem',
+                        color: 'var(--text-3)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                        fontWeight: 700,
+                        marginBottom: '14px',
+                      }}
+                    >
+                      Key Results
+                    </div>
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '12px',
+                        marginBottom: '32px',
+                      }}
+                    >
+                      {[
+                        { number: '15%', label: 'WaPOR Accuracy Improvement', color: 'var(--accent)' },
+                        { number: '8.4M', label: 'Hectares Study Area', color: 'var(--accent)' },
+                        { number: '3', label: 'Growing Seasons Assessed', color: 'var(--warm)' },
+                        { number: '3.50', label: 'GPA / 4.00', color: 'var(--warm)' },
+                      ].map(({ number, label, color }) => (
+                        <div
+                          key={label}
+                          style={{
+                            backgroundColor: 'var(--bg-surface)',
+                            border: '1px solid var(--border)',
+                            borderRadius: '6px',
+                            padding: '18px',
+                            textAlign: 'center',
+                          }}
+                        >
+                          <div
+                            className="font-display font-bold"
+                            style={{ fontSize: '1.5rem', color }}
+                          >
+                            {number}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: '0.72rem',
+                              color: 'var(--text-3)',
+                              marginTop: '4px',
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            {label}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* CTAs */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                       <a
-                        href="/msc-thesis.pdf"
-                        download="Osman_Ibrahim_MSc_Thesis.pdf"
+                        href="https://tez.yok.gov.tr/UlusalTezMerkezi/TezGoster?key=UjlM15wKZGQW6TLC0pvCtwMFnlAmGjYcYyByKQoi-QT6k_7-2lwLvOsvmy0NimyP"
+                        target="_blank"
+                        rel="noopener noreferrer"
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
+                          justifyContent: 'center',
                           gap: '8px',
                           backgroundColor: 'var(--accent)',
                           color: '#070c14',
                           fontWeight: 600,
-                          fontSize: '0.85rem',
-                          padding: '10px 22px',
+                          fontSize: '0.875rem',
+                          padding: '12px 20px',
                           borderRadius: '6px',
                           transition: 'background-color 0.2s ease, transform 0.2s ease',
+                          textDecoration: 'none',
                         }}
                         onMouseEnter={(e) => {
                           const el = e.currentTarget as HTMLElement
@@ -560,28 +805,30 @@ export default function Home() {
                           el.style.transform = 'translateY(0)'
                         }}
                       >
-                        <Download size={14} />
-                        Download Thesis
+                        <ExternalLink size={14} />
+                        View Official Record on YÖK →
                       </a>
                       <a
-                        href="/msc-presentation.pdf"
-                        download="Osman_Ibrahim_Research_Presentation.pdf"
+                        href="/msc-thesis.pdf"
+                        download="Osman_Ibrahim_MSc_Thesis_2024.pdf"
                         style={{
                           display: 'inline-flex',
                           alignItems: 'center',
+                          justifyContent: 'center',
                           gap: '8px',
                           border: '1px solid var(--border-bright)',
                           color: 'var(--text-2)',
                           fontWeight: 500,
-                          fontSize: '0.85rem',
-                          padding: '10px 22px',
+                          fontSize: '0.875rem',
+                          padding: '11px 20px',
                           borderRadius: '6px',
                           transition: 'border-color 0.2s ease, color 0.2s ease',
+                          textDecoration: 'none',
                         }}
                         onMouseEnter={(e) => {
                           const el = e.currentTarget as HTMLElement
-                          el.style.borderColor = 'var(--accent)'
-                          el.style.color = 'var(--accent)'
+                          el.style.borderColor = 'var(--warm)'
+                          el.style.color = 'var(--warm)'
                         }}
                         onMouseLeave={(e) => {
                           const el = e.currentTarget as HTMLElement
@@ -590,53 +837,50 @@ export default function Home() {
                         }}
                       >
                         <Download size={14} />
-                        Presentation Slides
+                        Download Full Thesis (PDF)
                       </a>
                     </div>
-                  </div>
 
-                  {/* Key stats */}
-                  <div
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '1fr 1fr',
-                      gap: '16px',
-                    }}
-                  >
-                    {[
-                      { number: '15%', label: 'WaPOR Accuracy Improvement' },
-                      { number: '8.4M', label: 'Hectares Study Area' },
-                      { number: '3', label: 'Administrative Offices' },
-                      { number: '3.50', label: 'GPA (out of 4.00)' },
-                    ].map(({ number, label }) => (
+                    {/* Citation hint */}
+                    <div
+                      style={{
+                        marginTop: '20px',
+                        backgroundColor: 'var(--bg-surface)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '6px',
+                        padding: '14px 16px',
+                      }}
+                    >
                       <div
-                        key={label}
                         style={{
-                          backgroundColor: 'var(--bg-surface)',
-                          border: '1px solid var(--border)',
-                          borderRadius: '6px',
-                          padding: '20px',
-                          textAlign: 'center',
+                          fontSize: '0.65rem',
+                          color: 'var(--text-3)',
+                          textTransform: 'uppercase',
+                          letterSpacing: '0.08em',
+                          fontWeight: 700,
+                          marginBottom: '8px',
                         }}
                       >
-                        <div
-                          className="font-display font-bold"
-                          style={{ fontSize: '1.5rem', color: 'var(--warm)' }}
-                        >
-                          {number}
-                        </div>
-                        <div
-                          style={{
-                            fontSize: '0.75rem',
-                            color: 'var(--text-3)',
-                            marginTop: '4px',
-                            lineHeight: 1.4,
-                          }}
-                        >
-                          {label}
-                        </div>
+                        Citation
                       </div>
-                    ))}
+                      <p
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'var(--text-3)',
+                          lineHeight: 1.6,
+                          fontStyle: 'italic',
+                          margin: 0,
+                        }}
+                      >
+                        Ibrahim, O. O. A. (2024).{' '}
+                        <span style={{ color: 'var(--text-2)' }}>
+                          The use of remote sensing for monitoring agricultural products in the
+                          Gezira Irrigation Scheme, Sudan
+                        </span>{' '}
+                        [Master&apos;s thesis, Karadeniz Technical University]. YÖK Ulusal Tez
+                        Merkezi. No: 898245.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
