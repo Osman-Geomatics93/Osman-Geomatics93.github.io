@@ -6,8 +6,8 @@ import Footer from '../components/Footer'
 import { Mail, Phone, MapPin, Linkedin, Github, Send, CheckCircle, AlertCircle } from 'lucide-react'
 
 const inputStyle: React.CSSProperties = {
-  backgroundColor: '#111f35',
-  border: '1px solid #1a2d45',
+  backgroundColor: 'var(--bg-card)',
+  border: '1px solid var(--border)',
   borderRadius: '6px',
   padding: '12px 16px',
   color: '#e8f0fe',
@@ -43,37 +43,20 @@ export default function ContactPage() {
     setError(null)
 
     try {
-      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
-      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
-      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+      const res = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      })
 
-      if (!serviceId || !templateId || !publicKey) {
-        // Fallback: open mailto link if EmailJS is not configured
-        const subject = encodeURIComponent(`Portfolio contact: ${formData.subject}`)
-        const body = encodeURIComponent(
-          `From: ${formData.name} (${formData.email})\nOrg: ${formData.company}\n\n${formData.message}`
-        )
-        window.location.href = `mailto:osmangeomatics93@gmail.com?subject=${subject}&body=${body}`
-        setIsSubmitted(true)
-        return
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        throw new Error((data as { error?: string }).error || 'Request failed')
       }
 
-      const emailjs = await import('@emailjs/browser')
-      await emailjs.send(
-        serviceId,
-        templateId,
-        {
-          from_name: formData.name,
-          from_email: formData.email,
-          company: formData.company || 'Not provided',
-          subject: formData.subject,
-          message: formData.message,
-        },
-        publicKey
-      )
       setIsSubmitted(true)
     } catch (err) {
-      console.error('Email send error:', err)
+      console.error('Contact form error:', err)
       setError('Failed to send. Please email me directly at osmangeomatics93@gmail.com')
     } finally {
       setIsSubmitting(false)
@@ -82,7 +65,7 @@ export default function ContactPage() {
 
   const fieldStyle = (name: string): React.CSSProperties => ({
     ...inputStyle,
-    borderColor: focusedField === name ? '#10b981' : '#1a2d45',
+    borderColor: focusedField === name ? 'var(--accent)' : 'var(--border)',
   })
 
   return (
@@ -92,15 +75,15 @@ export default function ContactPage() {
       <main style={{ paddingTop: '64px' }}>
         {/* ===================== HERO ===================== */}
         <section
-          className="dot-grid"
-          style={{ backgroundColor: 'var(--bg)', padding: '96px 24px 64px' }}
+          className="dot-grid resp-section"
+          style={{ backgroundColor: 'var(--bg)', padding: '0 24px 80px' }}
         >
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
             <p className="section-label">Contact</p>
             <h1
               className="font-display font-extrabold"
               style={{
-                fontSize: 'clamp(2.25rem, 5vw, 4rem)',
+                fontSize: 'clamp(3rem, 6vw, 5rem)',
                 color: 'var(--text-1)',
                 lineHeight: 1.1,
                 marginTop: '16px',
@@ -126,7 +109,7 @@ export default function ContactPage() {
         {/* ===================== FORM + DETAILS ===================== */}
         <section
           style={{
-            padding: '64px 24px 96px',
+            padding: '0 24px 128px',
             backgroundColor: 'var(--bg)',
           }}
         >
@@ -271,12 +254,12 @@ export default function ContactPage() {
                         cursor: 'pointer',
                       }}
                     >
-                      <option value="" style={{ backgroundColor: '#111f35' }}>Select a topic...</option>
-                      <option value="Research Collaboration" style={{ backgroundColor: '#111f35' }}>Research Collaboration</option>
-                      <option value="Consulting / Freelance" style={{ backgroundColor: '#111f35' }}>Consulting / Freelance</option>
-                      <option value="Full-time Position" style={{ backgroundColor: '#111f35' }}>Full-time Position</option>
-                      <option value="Training / Workshop" style={{ backgroundColor: '#111f35' }}>Training / Workshop</option>
-                      <option value="Other" style={{ backgroundColor: '#111f35' }}>Other</option>
+                      <option value="" style={{ backgroundColor: 'var(--bg-card)' }}>Select a topic...</option>
+                      <option value="Research Collaboration" style={{ backgroundColor: 'var(--bg-card)' }}>Research Collaboration</option>
+                      <option value="Consulting / Freelance" style={{ backgroundColor: 'var(--bg-card)' }}>Consulting / Freelance</option>
+                      <option value="Full-time Position" style={{ backgroundColor: 'var(--bg-card)' }}>Full-time Position</option>
+                      <option value="Training / Workshop" style={{ backgroundColor: 'var(--bg-card)' }}>Training / Workshop</option>
+                      <option value="Other" style={{ backgroundColor: 'var(--bg-card)' }}>Other</option>
                     </select>
                   </div>
 

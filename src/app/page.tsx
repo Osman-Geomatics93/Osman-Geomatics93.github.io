@@ -6,6 +6,11 @@ import RevealSection from './components/RevealSection'
 import { MapPin, Mail, Phone, Linkedin, Github, Download, ExternalLink } from 'lucide-react'
 import AnimatedCounter from './components/AnimatedCounter'
 import Typewriter from './components/Typewriter'
+import TiltCard from './components/TiltCard'
+import StatusBadge from './components/StatusBadge'
+import MagneticButton from './components/MagneticButton'
+import SkillsRadar from './components/SkillsRadar'
+import { showToast } from './components/Toast'
 
 const expertiseAreas = [
   {
@@ -110,11 +115,9 @@ export default function Home() {
       <main style={{ paddingTop: '64px' }}>
         {/* ===================== HERO ===================== */}
         <section
-          className="dot-grid"
+          className="dot-grid resp-section"
           style={{
             backgroundColor: 'var(--bg)',
-            paddingTop: '96px',
-            paddingBottom: '96px',
           }}
         >
           <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
@@ -133,10 +136,12 @@ export default function Home() {
                   Remote Sensing &amp; GIS Expert
                 </p>
 
+                <StatusBadge />
+
                 <h1
                   className="font-display font-extrabold animate-hero-2"
                   style={{
-                    fontSize: 'clamp(2.5rem, 5vw, 4.5rem)',
+                    fontSize: 'clamp(3rem, 6vw, 5.5rem)',
                     lineHeight: 1.1,
                     marginTop: '16px',
                     color: 'var(--text-1)',
@@ -186,19 +191,44 @@ export default function Home() {
                   }}
                 >
                   {[
-                    { Icon: MapPin, text: 'Trabzon, Turkey' },
-                    { Icon: Mail, text: 'osmangeomatics93@gmail.com' },
-                    { Icon: Phone, text: '+90 531 946 44 05' },
-                  ].map(({ Icon, text }) => (
+                    { Icon: MapPin,  text: 'Trabzon, Turkey',              copy: false },
+                    { Icon: Mail,    text: 'osmangeomatics93@gmail.com',   copy: true  },
+                    { Icon: Phone,   text: '+90 531 946 44 05',            copy: false },
+                  ].map(({ Icon, text, copy }) => (
                     <span
                       key={text}
+                      role={copy ? 'button' : undefined}
+                      tabIndex={copy ? 0 : undefined}
+                      title={copy ? 'Click to copy email' : undefined}
+                      onClick={
+                        copy
+                          ? () => {
+                              navigator.clipboard.writeText(text)
+                              showToast('Email copied to clipboard!')
+                            }
+                          : undefined
+                      }
+                      onKeyDown={
+                        copy
+                          ? (e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                navigator.clipboard.writeText(text)
+                                showToast('Email copied to clipboard!')
+                              }
+                            }
+                          : undefined
+                      }
                       style={{
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: '6px',
                         fontSize: '0.85rem',
                         color: 'var(--text-3)',
+                        cursor: copy ? 'pointer' : 'default',
+                        transition: copy ? 'color 0.2s ease' : undefined,
                       }}
+                      onMouseEnter={copy ? (e) => { (e.currentTarget as HTMLElement).style.color = 'var(--accent)' } : undefined}
+                      onMouseLeave={copy ? (e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-3)' } : undefined}
                     >
                       <Icon size={14} style={{ color: 'var(--accent)', flexShrink: 0 }} />
                       {text}
@@ -211,65 +241,69 @@ export default function Home() {
                   className="animate-hero-5"
                   style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', marginTop: '32px' }}
                 >
-                  <a
-                    href="/cv"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      backgroundColor: 'var(--accent)',
-                      color: '#070c14',
-                      fontWeight: 600,
-                      fontSize: '0.9rem',
-                      padding: '12px 28px',
-                      borderRadius: '6px',
-                      transition: 'background-color 0.2s ease, transform 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.backgroundColor = 'var(--accent-hover)'
-                      el.style.transform = 'translateY(-2px)'
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.backgroundColor = 'var(--accent)'
-                      el.style.transform = 'translateY(0)'
-                    }}
-                  >
-                    <Download size={16} />
-                    Download CV
-                  </a>
-                  <a
-                    href="/projects"
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      border: '1px solid var(--border-bright)',
-                      color: 'var(--text-2)',
-                      fontWeight: 500,
-                      fontSize: '0.9rem',
-                      padding: '12px 28px',
-                      borderRadius: '6px',
-                      transition: 'border-color 0.2s ease, color 0.2s ease, transform 0.2s ease',
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.borderColor = 'var(--accent)'
-                      el.style.color = 'var(--accent)'
-                      el.style.transform = 'translateY(-2px)'
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.borderColor = 'var(--border-bright)'
-                      el.style.color = 'var(--text-2)'
-                      el.style.transform = 'translateY(0)'
-                    }}
-                  >
-                    View Projects →
-                  </a>
+                  <MagneticButton>
+                    <a
+                      href="/cv"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        backgroundColor: 'var(--accent)',
+                        color: '#070c14',
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        padding: '12px 28px',
+                        borderRadius: '6px',
+                        transition: 'background-color 0.2s ease, transform 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.backgroundColor = 'var(--accent-hover)'
+                        el.style.transform = 'translateY(-2px)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.backgroundColor = 'var(--accent)'
+                        el.style.transform = 'translateY(0)'
+                      }}
+                    >
+                      <Download size={16} />
+                      Download CV
+                    </a>
+                  </MagneticButton>
+                  <MagneticButton>
+                    <a
+                      href="/projects"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        border: '1px solid var(--border-bright)',
+                        color: 'var(--text-2)',
+                        fontWeight: 500,
+                        fontSize: '0.9rem',
+                        padding: '12px 28px',
+                        borderRadius: '6px',
+                        transition: 'border-color 0.2s ease, color 0.2s ease, transform 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'var(--accent)'
+                        el.style.color = 'var(--accent)'
+                        el.style.transform = 'translateY(-2px)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'var(--border-bright)'
+                        el.style.color = 'var(--text-2)'
+                        el.style.transform = 'translateY(0)'
+                      }}
+                    >
+                      View Projects →
+                    </a>
+                  </MagneticButton>
                 </div>
 
                 {/* Social links */}
@@ -349,17 +383,11 @@ export default function Home() {
             borderTop: '1px solid var(--border)',
             borderBottom: '1px solid var(--border)',
             padding: '32px 24px',
-            backgroundColor: 'var(--bg-surface)',
+            backgroundColor: 'var(--bg)',
           }}
         >
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(4, 1fr)',
-                textAlign: 'center',
-              }}
-            >
+            <div className="stats-grid-4">
               {[
                 { to: 8,   suffix: '+', label: 'Years Experience' },
                 { to: 15,  suffix: '+', label: 'International Projects' },
@@ -391,7 +419,7 @@ export default function Home() {
 
         {/* ===================== EXPERTISE ===================== */}
         <RevealSection>
-          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)' }}>
+          <section className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">Capabilities</p>
               <h2
@@ -421,15 +449,15 @@ export default function Home() {
                 }}
               >
                 {expertiseAreas.map((area) => (
+                  <TiltCard key={area.title} intensity={6}>
                   <div
-                    key={area.title}
                     style={{
                       backgroundColor: 'var(--bg-card)',
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
                       padding: '28px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
-                      transition: 'border-color 0.25s ease, transform 0.25s ease',
+                      height: '100%',
+                      transition: 'border-color 0.25s ease',
                       borderBottomColor: 'var(--accent-border)',
                       borderBottomWidth: '2px',
                     }}
@@ -437,13 +465,11 @@ export default function Home() {
                       const el = e.currentTarget as HTMLElement
                       el.style.borderColor = 'var(--border-bright)'
                       el.style.borderBottomColor = 'var(--accent)'
-                      el.style.transform = 'translateY(-2px)'
                     }}
                     onMouseLeave={(e) => {
                       const el = e.currentTarget as HTMLElement
                       el.style.borderColor = 'var(--border)'
                       el.style.borderBottomColor = 'var(--accent-border)'
-                      el.style.transform = 'translateY(0)'
                     }}
                   >
                     <h3
@@ -485,7 +511,84 @@ export default function Home() {
                       ))}
                     </div>
                   </div>
+                  </TiltCard>
                 ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== SKILLS RADAR ===================== */}
+        <RevealSection>
+          <section
+            className="resp-section"
+            style={{
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
+              borderTop: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '64px',
+                  alignItems: 'center',
+                }}
+              >
+                {/* Left: heading + skill bars */}
+                <div>
+                  <p className="section-label">Skill Profile</p>
+                  <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
+                    Domain Expertise
+                  </h2>
+                  <p style={{ color: 'var(--text-2)', maxWidth: '420px', marginTop: '12px', lineHeight: 1.7 }}>
+                    Eight years of applied field and research work, across six core geospatial competency domains.
+                  </p>
+
+                  <div style={{ marginTop: '40px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {[
+                      { label: 'Remote Sensing', value: 95 },
+                      { label: 'GIS Tools',      value: 93 },
+                      { label: 'Field Surveying', value: 90 },
+                      { label: 'Programming',    value: 88 },
+                      { label: 'ML / AI',        value: 87 },
+                      { label: 'Hydrology',      value: 85 },
+                    ].map(({ label, value }) => (
+                      <div key={label}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '7px' }}>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-2)', fontWeight: 500 }}>{label}</span>
+                          <span style={{ fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 700, fontFamily: 'monospace' }}>
+                            {value}%
+                          </span>
+                        </div>
+                        <div
+                          style={{
+                            height: '3px',
+                            backgroundColor: 'var(--border)',
+                            borderRadius: '2px',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <div
+                            style={{
+                              height: '100%',
+                              width: `${value}%`,
+                              background: 'linear-gradient(90deg, var(--accent), #059669)',
+                              borderRadius: '2px',
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right: radar chart */}
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                  <SkillsRadar />
+                </div>
               </div>
             </div>
           </section>
@@ -494,9 +597,10 @@ export default function Home() {
         {/* ===================== MSC RESEARCH ===================== */}
         <RevealSection>
           <section
+            className="resp-section"
             style={{
-              padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
               borderBottom: '1px solid var(--border)',
             }}
@@ -516,7 +620,6 @@ export default function Home() {
                   borderTop: '3px solid var(--warm)',
                   borderRadius: '6px',
                   padding: '40px',
-                  boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
                 }}
               >
                 {/* Badge row */}
@@ -910,7 +1013,7 @@ export default function Home() {
 
         {/* ===================== OPEN SOURCE ===================== */}
         <RevealSection>
-          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)' }}>
+          <section className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">Open Source</p>
               <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
@@ -948,7 +1051,6 @@ export default function Home() {
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
                       padding: '24px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                       transition: 'border-color 0.25s ease, transform 0.25s ease',
                       textDecoration: 'none',
                     }}
@@ -1058,9 +1160,10 @@ export default function Home() {
         {/* ===================== VOLUNTEER / SOCIAL IMPACT ===================== */}
         <RevealSection>
           <section
+            className="resp-section"
             style={{
-              padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
               borderBottom: '1px solid var(--border)',
               position: 'relative',
@@ -1529,9 +1632,10 @@ export default function Home() {
         {/* ===================== CERTIFICATIONS PREVIEW ===================== */}
         <RevealSection>
           <section
+            className="resp-section"
             style={{
-              padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
               borderBottom: '1px solid var(--border)',
             }}
@@ -1559,7 +1663,6 @@ export default function Home() {
                       borderLeft: '3px solid var(--accent)',
                       borderRadius: '6px',
                       padding: '24px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }}
                   >
                     <span

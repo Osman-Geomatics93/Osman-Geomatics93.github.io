@@ -1,6 +1,12 @@
 import type { Metadata } from 'next'
 import { Manrope, DM_Sans } from 'next/font/google'
 import './globals.css'
+import CursorGlow from './components/CursorGlow'
+import ScrollProgress from './components/ScrollProgress'
+import CommandPalette from './components/CommandPalette'
+import Toast from './components/Toast'
+import FilmGrain from './components/FilmGrain'
+import BackToTop from './components/BackToTop'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -115,7 +121,15 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className={dmSans.className}>{children}</body>
+      <body className={dmSans.className}>
+        <CursorGlow />
+        <ScrollProgress />
+        <FilmGrain />
+        <CommandPalette />
+        <Toast />
+        <BackToTop />
+        {children}
+      </body>
     </html>
   )
 }

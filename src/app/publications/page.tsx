@@ -187,15 +187,15 @@ export default function PublicationsPage() {
       <main style={{ paddingTop: '64px' }}>
         {/* ===================== HERO ===================== */}
         <section
-          className="dot-grid"
-          style={{ backgroundColor: 'var(--bg)', padding: '96px 24px 64px' }}
+          className="dot-grid resp-section"
+          style={{ backgroundColor: 'var(--bg)', padding: '0 24px 80px' }}
         >
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
             <p className="section-label">Research</p>
             <h1
               className="font-display font-extrabold"
               style={{
-                fontSize: 'clamp(2.25rem, 5vw, 4rem)',
+                fontSize: 'clamp(3rem, 6vw, 5rem)',
                 color: 'var(--text-1)',
                 lineHeight: 1.1,
                 marginTop: '16px',
@@ -241,7 +241,7 @@ export default function PublicationsPage() {
           <section
             style={{
               padding: '80px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
             }}
           >
@@ -259,7 +259,6 @@ export default function PublicationsPage() {
                   borderTop: '3px solid var(--warm)',
                   borderRadius: '6px',
                   padding: '36px',
-                  boxShadow: '0 2px 16px rgba(0,0,0,0.25)',
                 }}
               >
                 {/* Badge row */}
@@ -392,7 +391,6 @@ export default function PublicationsPage() {
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
                       padding: '28px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '14px' }}>
@@ -441,9 +439,10 @@ export default function PublicationsPage() {
         {/* ===================== OPEN SOURCE ===================== */}
         <RevealSection>
           <section
+            className="resp-section"
             style={{
-              padding: '80px 24px 96px',
-              backgroundColor: 'var(--bg-surface)',
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
             }}
           >

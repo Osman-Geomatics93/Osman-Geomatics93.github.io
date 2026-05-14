@@ -21,7 +21,6 @@ const certifications: Cert[] = [
     org: 'UNSW Sydney & IEEE Geoscience and Remote Sensing Society',
     year: '2023',
     category: 'Remote Sensing',
-    link: 'https://coursera.org/verify/certificate_id',
   },
   {
     title: 'Spatial Analysis and Satellite Imagery in a GIS',
@@ -57,7 +56,6 @@ const certifications: Cert[] = [
     org: 'University of California, Davis',
     year: '2023',
     category: 'GIS',
-    link: 'https://coursera.org/verify/certificate_id',
   },
   {
     title: 'Geographic Information System (GIS) using QGIS',
@@ -167,6 +165,10 @@ function toEmbedUrl(link: string): string {
   return link
 }
 
+function isEmbeddable(link: string): boolean {
+  return link.includes('drive.google.com')
+}
+
 export default function CertificationsPage() {
   const [activeCategory, setActiveCategory] = useState('All')
   const [selectedCert, setSelectedCert] = useState<Cert | null>(null)
@@ -196,15 +198,15 @@ export default function CertificationsPage() {
       <main style={{ paddingTop: '64px' }}>
         {/* ===================== HERO ===================== */}
         <section
-          className="dot-grid"
-          style={{ backgroundColor: 'var(--bg)', padding: '96px 24px 64px' }}
+          className="dot-grid resp-section"
+          style={{ backgroundColor: 'var(--bg)', padding: '0 24px 80px' }}
         >
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
             <p className="section-label">Credentials</p>
             <h1
               className="font-display font-extrabold"
               style={{
-                fontSize: 'clamp(2.25rem, 5vw, 4rem)',
+                fontSize: 'clamp(3rem, 6vw, 5rem)',
                 color: 'var(--text-1)',
                 lineHeight: 1.1,
                 marginTop: '16px',
@@ -299,7 +301,7 @@ export default function CertificationsPage() {
         </div>
 
         {/* ===================== CERTIFICATIONS GRID ===================== */}
-        <section style={{ padding: '48px 24px 96px', backgroundColor: 'var(--bg)' }}>
+        <section style={{ padding: '48px 24px 128px', backgroundColor: 'var(--bg)' }}>
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
             <div
               style={{
@@ -333,7 +335,6 @@ export default function CertificationsPage() {
                       borderLeft: `3px solid ${borderLeft}`,
                       borderRadius: '6px',
                       padding: '24px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                       display: 'flex',
                       flexDirection: 'column',
                       gap: '10px',
@@ -354,7 +355,6 @@ export default function CertificationsPage() {
                       el.style.borderRightColor = 'var(--border)'
                       el.style.borderBottomColor = 'var(--border)'
                       el.style.transform = 'translateY(0)'
-                      el.style.boxShadow = '0 1px 3px rgba(0,0,0,0.2)'
                     }}
                   >
                     {/* Org badge + category */}
@@ -456,7 +456,7 @@ export default function CertificationsPage() {
           <section
             style={{
               padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
             }}
           >
@@ -503,7 +503,6 @@ export default function CertificationsPage() {
                       borderRadius: '6px',
                       padding: '24px',
                       textAlign: 'center',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }}
                   >
                     <div
@@ -641,12 +640,87 @@ export default function CertificationsPage() {
             {/* Modal body */}
             <div style={{ flex: 1, overflow: 'hidden', position: 'relative', minHeight: '400px' }}>
               {selectedCert.link ? (
-                <iframe
-                  src={toEmbedUrl(selectedCert.link)}
-                  style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
-                  title={selectedCert.title}
-                  allow="fullscreen"
-                />
+                isEmbeddable(selectedCert.link) ? (
+                  <iframe
+                    src={toEmbedUrl(selectedCert.link)}
+                    style={{ width: '100%', height: '100%', border: 'none', display: 'block' }}
+                    title={selectedCert.title}
+                    allow="fullscreen"
+                  />
+                ) : (
+                  /* External cert (Coursera, etc.) — blocked by X-Frame-Options, open externally */
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
+                      gap: '24px',
+                      padding: '48px 32px',
+                      textAlign: 'center',
+                    }}
+                  >
+                    {/* Certificate badge */}
+                    <div
+                      style={{
+                        width: '80px',
+                        height: '80px',
+                        borderRadius: '50%',
+                        background: 'radial-gradient(circle, rgba(16,185,129,0.15) 0%, rgba(16,185,129,0.04) 70%)',
+                        border: '1px solid rgba(16,185,129,0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="8" r="4"/>
+                        <path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/>
+                        <polyline points="9 11 12 14 22 4" stroke="#10b981" strokeWidth="1.5"/>
+                      </svg>
+                    </div>
+
+                    <div style={{ maxWidth: '360px' }}>
+                      <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-1)', marginBottom: '8px' }}>
+                        {selectedCert.title}
+                      </p>
+                      <p style={{ fontSize: '0.85rem', color: 'var(--text-2)', lineHeight: 1.65, marginBottom: '28px' }}>
+                        This certificate is hosted on an external platform. Click below to verify and view it directly on the issuer&apos;s website.
+                      </p>
+                      <a
+                        href={selectedCert.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '8px',
+                          backgroundColor: 'var(--accent)',
+                          color: '#070c14',
+                          fontWeight: 700,
+                          fontSize: '0.875rem',
+                          padding: '12px 28px',
+                          borderRadius: '6px',
+                          textDecoration: 'none',
+                          letterSpacing: '0.01em',
+                        }}
+                      >
+                        <ExternalLink size={15} />
+                        Verify Certificate
+                      </a>
+                    </div>
+
+                    {/* Issuer hint */}
+                    {selectedCert.org && (
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '4px' }}>
+                        Issued by {selectedCert.org}
+                        {selectedCert.year ? ` · ${selectedCert.year}` : ''}
+                      </p>
+                    )}
+                  </div>
+                )
               ) : (
                 <div
                   style={{
@@ -655,33 +729,72 @@ export default function CertificationsPage() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     height: '100%',
-                    gap: '16px',
-                    padding: '48px 24px',
+                    gap: '28px',
+                    padding: '48px 32px',
                     textAlign: 'center',
                   }}
                 >
+                  {/* Icon */}
                   <div
                     style={{
-                      width: '64px',
-                      height: '64px',
+                      width: '80px',
+                      height: '80px',
                       borderRadius: '50%',
-                      backgroundColor: 'var(--bg-surface)',
-                      border: '1px solid var(--border)',
+                      background: 'radial-gradient(circle, rgba(16,185,129,0.12) 0%, rgba(16,185,129,0.03) 70%)',
+                      border: '1px solid rgba(16,185,129,0.25)',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
+                      flexShrink: 0,
                     }}
                   >
-                    <span style={{ fontSize: '1.5rem' }}>📜</span>
+                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="3" width="18" height="14" rx="2"/>
+                      <path d="M8 21h8M12 17v4"/>
+                      <path d="M7 8h10M7 11h6"/>
+                    </svg>
                   </div>
-                  <div>
-                    <p style={{ fontSize: '0.95rem', fontWeight: 600, color: 'var(--text-1)', marginBottom: '8px' }}>
-                      Physical Certificate
+
+                  {/* Cert info */}
+                  <div style={{ maxWidth: '360px' }}>
+                    <p style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-1)', marginBottom: '6px', lineHeight: 1.4 }}>
+                      {selectedCert.title}
                     </p>
-                    <p style={{ fontSize: '0.85rem', color: 'var(--text-2)', maxWidth: '320px', lineHeight: 1.6 }}>
-                      This certificate is held in physical form and is not available for online preview.
+                    <p style={{ fontSize: '0.8rem', color: 'var(--accent)', fontWeight: 600, marginBottom: '16px' }}>
+                      {selectedCert.org} · {selectedCert.year}
+                    </p>
+                    <p style={{ fontSize: '0.85rem', color: 'var(--text-2)', lineHeight: 1.65 }}>
+                      Online preview is not available for this certificate. The credential is on file and can be provided upon request.
                     </p>
                   </div>
+
+                  {/* Divider + contact hint */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', width: '100%', maxWidth: '280px' }}>
+                    <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
+                    <span style={{ fontSize: '0.72rem', color: 'var(--text-3)', whiteSpace: 'nowrap', letterSpacing: '0.06em', textTransform: 'uppercase' }}>Request a copy</span>
+                    <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--border)' }} />
+                  </div>
+                  <a
+                    href="mailto:osmangeomatics93@gmail.com?subject=Certificate Request — Osman Ibrahim"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '8px',
+                      border: '1px solid var(--border-bright)',
+                      color: 'var(--text-2)',
+                      fontWeight: 500,
+                      fontSize: '0.85rem',
+                      padding: '10px 22px',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                    }}
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="4" width="20" height="16" rx="2"/>
+                      <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                    </svg>
+                    osmangeomatics93@gmail.com
+                  </a>
                 </div>
               )}
             </div>

@@ -6,6 +6,7 @@ import RevealSection from '../components/RevealSection'
 import { MapPin, Calendar, Globe, Users, GraduationCap } from 'lucide-react'
 import AnimatedSkillBar from '../components/AnimatedSkillBar'
 import GitHubStats from '../components/GitHubStats'
+import TiltCard from '../components/TiltCard'
 
 const education = [
   {
@@ -188,10 +189,10 @@ export default function AboutPage() {
       <main style={{ paddingTop: '64px' }}>
         {/* ===================== HERO ===================== */}
         <section
-          className="dot-grid"
+          className="dot-grid resp-section"
           style={{
             backgroundColor: 'var(--bg)',
-            padding: '96px 24px',
+            padding: '0 24px',
           }}
         >
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -212,7 +213,7 @@ export default function AboutPage() {
                 <h1
                   className="font-display font-extrabold"
                   style={{
-                    fontSize: 'clamp(2rem, 4vw, 3.25rem)',
+                    fontSize: 'clamp(2.75rem, 5vw, 4.5rem)',
                     color: 'var(--text-1)',
                     lineHeight: 1.15,
                     marginBottom: '24px',
@@ -299,7 +300,6 @@ export default function AboutPage() {
                     aspectRatio: '4/5',
                     width: '100%',
                     maxWidth: '340px',
-                    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                   }}
                 >
                   <img
@@ -324,9 +324,8 @@ export default function AboutPage() {
           <section
             style={{
               padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
-              borderBottom: '1px solid var(--border)',
             }}
           >
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
@@ -354,7 +353,6 @@ export default function AboutPage() {
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
                       padding: '32px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }}
                   >
                     <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
@@ -417,7 +415,7 @@ export default function AboutPage() {
 
         {/* ===================== CAREER TIMELINE ===================== */}
         <RevealSection>
-          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)' }}>
+          <section className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">Experience</p>
               <h2
@@ -481,8 +479,7 @@ export default function AboutPage() {
                         borderLeft: `3px solid ${entry.color}`,
                         borderRadius: '6px',
                         padding: '22px 24px',
-                        boxShadow: `0 1px 8px rgba(0,0,0,0.25), 0 0 0 0 ${entry.color}`,
-                        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                        transition: 'transform 0.2s ease, border-color 0.2s ease',
                         textAlign: 'left',
                       }}
                       onMouseEnter={(e) => {
@@ -573,7 +570,7 @@ export default function AboutPage() {
 
         {/* ===================== TESTIMONIALS ===================== */}
         <RevealSection>
-          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border)' }}>
+          <section className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border)' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">References</p>
               <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
@@ -587,53 +584,88 @@ export default function AboutPage() {
                   marginTop: '48px',
                 }}
               >
-                {testimonials.map((t) => (
+                {testimonials.map((t) => {
+                  const initials = t.name.split(' ').filter(Boolean).slice(0, 2).map(w => w[0]).join('')
+                  return (
+                  <TiltCard key={t.name} intensity={5}>
                   <div
-                    key={t.name}
                     style={{
                       backgroundColor: 'var(--bg-card)',
                       border: '1px solid var(--border)',
+                      borderTop: '3px solid var(--accent)',
                       borderRadius: '6px',
                       padding: '32px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                      height: '100%',
+                      display: 'flex',
+                      flexDirection: 'column',
                     }}
                   >
+                    {/* Large decorative quote */}
                     <div
                       style={{
-                        fontSize: '3.5rem',
-                        lineHeight: 1,
-                        marginBottom: '16px',
+                        fontSize: '4rem',
+                        lineHeight: 0.8,
+                        marginBottom: '20px',
                         color: 'var(--accent)',
-                        opacity: 0.35,
+                        opacity: 0.25,
                         fontFamily: 'Georgia, serif',
+                        userSelect: 'none',
                       }}
                     >
                       &ldquo;
                     </div>
+
                     <p
                       style={{
-                        fontSize: '0.9rem',
+                        fontSize: '0.92rem',
                         color: 'var(--text-2)',
-                        lineHeight: 1.75,
-                        marginBottom: '24px',
+                        lineHeight: 1.8,
+                        marginBottom: '28px',
                         fontStyle: 'italic',
+                        flex: 1,
                       }}
                     >
                       {t.quote}
                     </p>
-                    <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
-                      <div className="font-display" style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-1)' }}>
-                        {t.name}
+
+                    {/* Author row */}
+                    <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+                      {/* Initials avatar */}
+                      <div
+                        style={{
+                          width: '44px',
+                          height: '44px',
+                          borderRadius: '50%',
+                          backgroundColor: 'var(--accent-dim)',
+                          border: '1px solid var(--accent-border)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                          fontSize: '0.85rem',
+                          fontWeight: 700,
+                          color: 'var(--accent)',
+                          fontFamily: 'var(--font-manrope), system-ui, sans-serif',
+                        }}
+                      >
+                        {initials}
                       </div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--accent)', marginTop: '3px' }}>
-                        {t.role}
-                      </div>
-                      <div style={{ fontSize: '0.78rem', color: 'var(--text-3)', marginTop: '2px' }}>
-                        {t.institution}
+                      <div>
+                        <div className="font-display" style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-1)' }}>
+                          {t.name}
+                        </div>
+                        <div style={{ fontSize: '0.78rem', color: 'var(--accent)', marginTop: '2px', fontWeight: 500 }}>
+                          {t.role}
+                        </div>
+                        <div style={{ fontSize: '0.74rem', color: 'var(--text-3)', marginTop: '2px', lineHeight: 1.4 }}>
+                          {t.institution}
+                        </div>
                       </div>
                     </div>
                   </div>
-                ))}
+                  </TiltCard>
+                  )
+                })}
               </div>
             </div>
           </section>
@@ -644,7 +676,7 @@ export default function AboutPage() {
           <section
             style={{
               padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
             }}
           >
@@ -699,7 +731,7 @@ export default function AboutPage() {
           <section
             style={{
               padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
               borderBottom: '1px solid var(--border)',
             }}
@@ -740,7 +772,6 @@ export default function AboutPage() {
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
                       padding: '20px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                     }}
                   >
                     <div
@@ -774,7 +805,7 @@ export default function AboutPage() {
 
         {/* ===================== VALUES ===================== */}
         <RevealSection>
-          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)' }}>
+          <section className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">Approach</p>
               <h2
@@ -800,7 +831,6 @@ export default function AboutPage() {
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
                       padding: '32px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                       transition: 'border-color 0.25s ease',
                     }}
                     onMouseEnter={(e) => {
@@ -841,7 +871,7 @@ export default function AboutPage() {
         <RevealSection>
           <section
             style={{
-              padding: '80px 24px',
+              padding: '96px 24px',
               backgroundColor: 'var(--bg-surface)',
               borderTop: '1px solid var(--border)',
               textAlign: 'center',

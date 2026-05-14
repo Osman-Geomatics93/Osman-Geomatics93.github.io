@@ -218,15 +218,15 @@ export default function ProjectsPage() {
       <main style={{ paddingTop: '64px' }}>
         {/* ===================== HERO ===================== */}
         <section
-          className="dot-grid"
-          style={{ backgroundColor: 'var(--bg)', padding: '96px 24px 64px' }}
+          className="dot-grid resp-section"
+          style={{ backgroundColor: 'var(--bg)', padding: '0 24px' }}
         >
           <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
             <p className="section-label">Work</p>
             <h1
               className="font-display font-extrabold"
               style={{
-                fontSize: 'clamp(2.25rem, 5vw, 4rem)',
+                fontSize: 'clamp(3rem, 6vw, 5rem)',
                 color: 'var(--text-1)',
                 lineHeight: 1.1,
                 marginTop: '16px',
@@ -428,9 +428,10 @@ export default function ProjectsPage() {
         {/* ===================== VOLUNTEER / SOCIAL IMPACT ===================== */}
         <RevealSection>
           <section
+            className="resp-section"
             style={{
-              padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
               borderBottom: '1px solid var(--border)',
               position: 'relative',
@@ -483,7 +484,7 @@ export default function ProjectsPage() {
                   borderLeft: '4px solid #7c3aed',
                   borderRadius: '8px',
                   padding: '40px',
-                  boxShadow: '0 0 40px rgba(139,92,246,0.08), 0 2px 12px rgba(0,0,0,0.2)',
+                  boxShadow: '0 0 40px rgba(139,92,246,0.06)',
                 }}
               >
                 <div
@@ -687,7 +688,7 @@ export default function ProjectsPage() {
                         <div
                           key={label}
                           style={{
-                            backgroundColor: 'var(--bg-surface)',
+                            backgroundColor: 'var(--bg-card)',
                             border: '1px solid var(--border)',
                             borderRadius: '8px',
                             padding: '18px',
@@ -750,8 +751,9 @@ export default function ProjectsPage() {
         {/* ===================== CHROME EXTENSION — MAPLAYOUT PRO ===================== */}
         <RevealSection>
           <section
+            className="resp-section"
             style={{
-              padding: '96px 24px',
+              padding: '0 24px',
               backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
               borderBottom: '1px solid var(--border)',
@@ -806,7 +808,7 @@ export default function ProjectsPage() {
                   borderLeft: '4px solid #0ea5e9',
                   borderRadius: '8px',
                   padding: '40px',
-                  boxShadow: '0 0 48px rgba(14,165,233,0.07), 0 2px 16px rgba(0,0,0,0.25)',
+                  boxShadow: '0 0 40px rgba(14,165,233,0.06)',
                 }}
               >
                 <div
@@ -1402,9 +1404,10 @@ export default function ProjectsPage() {
         {/* ===================== OPEN SOURCE ===================== */}
         <RevealSection>
           <section
+            className="resp-section"
             style={{
-              padding: '96px 24px',
-              backgroundColor: 'var(--bg-surface)',
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
               borderTop: '1px solid var(--border)',
             }}
           >
@@ -1448,7 +1451,6 @@ export default function ProjectsPage() {
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
                       padding: '24px',
-                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                       transition: 'border-color 0.25s ease, transform 0.25s ease',
                       textDecoration: 'none',
                     }}
@@ -1546,12 +1548,12 @@ function ProjectCard({ proj, fullWidth = false }: { proj: ProjectData; fullWidth
 
   return (
     <div
+      className={fullWidth ? 'card-row' : ''}
       style={{
         backgroundColor: 'var(--bg-card)',
         border: '1px solid var(--border)',
         borderRadius: '6px',
         padding: fullWidth ? '36px' : '28px',
-        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
         transition: 'border-color 0.25s ease, transform 0.25s ease',
         display: 'flex',
         flexDirection: fullWidth ? 'row' : 'column',
@@ -1681,6 +1683,7 @@ function ProjectCard({ proj, fullWidth = false }: { proj: ProjectData; fullWidth
 
       {/* Achievement highlight (shown as sidebar on featured) */}
       <div
+        className={fullWidth ? 'card-row-achievement' : ''}
         style={{
           minWidth: fullWidth ? '240px' : 'auto',
           maxWidth: fullWidth ? '280px' : 'none',
