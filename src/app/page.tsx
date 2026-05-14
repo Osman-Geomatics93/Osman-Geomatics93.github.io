@@ -17,6 +17,8 @@ import HorizontalScroll from './components/HorizontalScroll'
 import dynamic from 'next/dynamic'
 
 const ProjectMap = dynamic(() => import('./components/ProjectMap'), { ssr: false })
+const EarthGlobe = dynamic(() => import('./components/EarthGlobe'), { ssr: false })
+const ParticleField = dynamic(() => import('./components/ParticleField'), { ssr: false })
 
 const expertiseAreas = [
   {
@@ -131,7 +133,8 @@ export default function Home() {
           }}
         >
           <AuroraBackground />
-          <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
+          <ParticleField />
+          <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 2 }}>
             <div
               style={{
                 display: 'grid',
@@ -1196,18 +1199,19 @@ export default function Home() {
                 Project Locations
               </h2>
               <p style={{ color: 'var(--text-2)', maxWidth: '520px', lineHeight: 1.7, marginBottom: '36px', fontSize: '0.95rem' }}>
-                From the Nile Basin to the Black Sea coast — click any marker to explore the project.
+                A live 3D globe showing all field sites — with real-time Sentinel-2 and Landsat-9 orbital positions updated every 15 seconds.
               </p>
               <div
                 style={{
-                  height: '480px',
-                  borderRadius: '10px',
+                  height: '520px',
+                  borderRadius: '12px',
                   overflow: 'hidden',
                   border: '1px solid var(--border)',
-                  boxShadow: '0 4px 32px rgba(0,0,0,0.4)',
+                  boxShadow: '0 4px 48px rgba(0,0,0,0.6)',
+                  background: '#050d1a',
                 }}
               >
-                <ProjectMap />
+                <EarthGlobe />
               </div>
             </div>
           </section>
