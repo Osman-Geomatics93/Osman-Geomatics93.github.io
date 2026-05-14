@@ -401,6 +401,328 @@ export default function ProjectsPage() {
           </div>
         </section>
 
+        {/* ===================== VOLUNTEER / SOCIAL IMPACT ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border)',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(ellipse 55% 50% at 90% 50%, rgba(139,92,246,0.1) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }}
+            />
+            <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <p
+                  className="section-label"
+                  style={{ color: '#a78bfa', marginBottom: 0 }}
+                >
+                  Volunteer Work
+                </p>
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    color: '#fff',
+                    backgroundColor: '#10b981',
+                    borderRadius: '20px',
+                    padding: '2px 9px',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  ● LIVE
+                </span>
+              </div>
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)', marginBottom: '48px' }}
+              >
+                Social Impact &amp; Volunteer Projects
+              </h2>
+
+              {/* Featured volunteer project card */}
+              <div
+                style={{
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid rgba(139,92,246,0.3)',
+                  borderLeft: '4px solid #7c3aed',
+                  borderRadius: '8px',
+                  padding: '40px',
+                  boxShadow: '0 0 40px rgba(139,92,246,0.08), 0 2px 12px rgba(0,0,0,0.2)',
+                }}
+              >
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                    gap: '48px',
+                    alignItems: 'start',
+                  }}
+                >
+                  {/* Left */}
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px', flexWrap: 'wrap' }}>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          color: '#a78bfa',
+                          backgroundColor: 'rgba(139,92,246,0.1)',
+                          border: '1px solid rgba(139,92,246,0.3)',
+                          borderRadius: '4px',
+                          padding: '3px 8px',
+                        }}
+                      >
+                        Web Platform
+                      </span>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          color: 'var(--text-3)',
+                          backgroundColor: 'var(--bg-surface)',
+                          border: '1px solid var(--border)',
+                          borderRadius: '4px',
+                          padding: '3px 8px',
+                        }}
+                      >
+                        Social Impact
+                      </span>
+                    </div>
+
+                    <h3
+                      className="font-display"
+                      style={{ fontSize: '1.35rem', fontWeight: 800, color: 'var(--text-1)', lineHeight: 1.2, marginBottom: '6px' }}
+                    >
+                      Sudan Scholars Hub
+                    </h3>
+                    <a
+                      href="https://www.deltaroots.store"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{ fontSize: '0.82rem', color: '#a78bfa', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                    >
+                      deltaroots.store <ExternalLink size={11} />
+                    </a>
+
+                    <p
+                      style={{
+                        color: 'var(--text-2)',
+                        fontSize: '0.9rem',
+                        lineHeight: 1.75,
+                        marginTop: '16px',
+                        marginBottom: '24px',
+                      }}
+                    >
+                      A free bilingual scholarship discovery platform designed to empower
+                      Sudanese students worldwide. Users can search 300+ international
+                      scholarships, track their applications, and compare up to three
+                      opportunities side-by-side — in both English and Arabic with full
+                      RTL layout support.
+                    </p>
+
+                    {/* Features */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '7px', marginBottom: '24px' }}>
+                      {[
+                        'Bilingual (English + Arabic) with full RTL support',
+                        'Scholarship search, filter, save & application tracking',
+                        'Google OAuth + OTP email authentication',
+                        'Admin CMS dashboard for content management',
+                        'Side-by-side scholarship comparison tool',
+                        'System-aware dark mode',
+                      ].map((feat) => (
+                        <div
+                          key={feat}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '8px',
+                            fontSize: '0.85rem',
+                            color: 'var(--text-2)',
+                          }}
+                        >
+                          <span style={{ color: '#a78bfa', fontWeight: 700, flexShrink: 0 }}>✓</span>
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Tech stack */}
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '28px' }}>
+                      {['Next.js 14', 'TypeScript', 'PostgreSQL', 'Prisma ORM', 'NextAuth.js v5', 'next-intl', 'Tailwind CSS', 'Resend', 'Zod'].map((tech) => (
+                        <span
+                          key={tech}
+                          style={{
+                            fontSize: '0.7rem',
+                            color: '#a78bfa',
+                            backgroundColor: 'rgba(139,92,246,0.1)',
+                            border: '1px solid rgba(139,92,246,0.25)',
+                            borderRadius: '4px',
+                            padding: '2px 7px',
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                      <a
+                        href="https://www.deltaroots.store"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '7px',
+                          backgroundColor: '#7c3aed',
+                          color: '#fff',
+                          fontWeight: 600,
+                          fontSize: '0.875rem',
+                          padding: '10px 22px',
+                          borderRadius: '6px',
+                          transition: 'background-color 0.2s ease, transform 0.2s ease',
+                          textDecoration: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.backgroundColor = '#6d28d9'
+                          el.style.transform = 'translateY(-2px)'
+                        }}
+                        onMouseLeave={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.backgroundColor = '#7c3aed'
+                          el.style.transform = 'translateY(0)'
+                        }}
+                      >
+                        <ExternalLink size={14} />
+                        Visit Live Site
+                      </a>
+                      <a
+                        href="https://github.com/Osman-Geomatics93/sudan-scholars-hub"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '7px',
+                          border: '1px solid rgba(139,92,246,0.4)',
+                          color: '#a78bfa',
+                          fontWeight: 500,
+                          fontSize: '0.875rem',
+                          padding: '10px 22px',
+                          borderRadius: '6px',
+                          transition: 'border-color 0.2s ease, color 0.2s ease, transform 0.2s ease',
+                          textDecoration: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.borderColor = '#a78bfa'
+                          el.style.color = '#c4b5fd'
+                          el.style.transform = 'translateY(-2px)'
+                        }}
+                        onMouseLeave={(e) => {
+                          const el = e.currentTarget as HTMLElement
+                          el.style.borderColor = 'rgba(139,92,246,0.4)'
+                          el.style.color = '#a78bfa'
+                          el.style.transform = 'translateY(0)'
+                        }}
+                      >
+                        <Github size={14} />
+                        View on GitHub
+                      </a>
+                    </div>
+                  </div>
+
+                  {/* Right: stats + mini mockup */}
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                    {/* Impact stats */}
+                    <div
+                      style={{
+                        display: 'grid',
+                        gridTemplateColumns: '1fr 1fr',
+                        gap: '12px',
+                      }}
+                    >
+                      {[
+                        { num: '300+', label: 'Scholarships Indexed', color: '#a78bfa' },
+                        { num: '2', label: 'Languages (AR + EN)', color: '#a78bfa' },
+                        { num: '100%', label: 'Free for Students', color: '#10b981' },
+                        { num: '↔', label: 'Side-by-side Comparison', color: '#f59e0b' },
+                      ].map(({ num, label, color }) => (
+                        <div
+                          key={label}
+                          style={{
+                            backgroundColor: 'var(--bg-surface)',
+                            border: '1px solid var(--border)',
+                            borderRadius: '8px',
+                            padding: '18px',
+                            textAlign: 'center',
+                          }}
+                        >
+                          <div
+                            className="font-display font-bold"
+                            style={{ fontSize: '1.4rem', color }}
+                          >
+                            {num}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: '0.72rem',
+                              color: 'var(--text-3)',
+                              marginTop: '4px',
+                              lineHeight: 1.4,
+                            }}
+                          >
+                            {label}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Quote/mission */}
+                    <div
+                      style={{
+                        backgroundColor: 'rgba(139,92,246,0.06)',
+                        border: '1px solid rgba(139,92,246,0.2)',
+                        borderRadius: '8px',
+                        padding: '20px',
+                      }}
+                    >
+                      <div style={{ fontSize: '1.5rem', color: '#7c3aed', lineHeight: 1, marginBottom: '10px' }}>"</div>
+                      <p
+                        style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--text-2)',
+                          lineHeight: 1.65,
+                          fontStyle: 'italic',
+                        }}
+                      >
+                        Built entirely as a volunteer initiative — no funding, no team —
+                        to give every Sudanese student equal access to international
+                        education opportunities.
+                      </p>
+                      <div style={{ marginTop: '10px', fontSize: '0.75rem', color: '#a78bfa', fontWeight: 600 }}>
+                        — Osman Ibrahim, Founder
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
         {/* ===================== OPEN SOURCE ===================== */}
         <RevealSection>
           <section

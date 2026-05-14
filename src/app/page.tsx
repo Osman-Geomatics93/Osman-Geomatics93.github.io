@@ -789,6 +789,477 @@ export default function Home() {
           </section>
         </RevealSection>
 
+        {/* ===================== VOLUNTEER / SOCIAL IMPACT ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border)',
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            {/* Ambient glow */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background:
+                  'radial-gradient(ellipse 55% 50% at 90% 50%, rgba(139,92,246,0.1) 0%, transparent 70%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            <div style={{ maxWidth: '1280px', margin: '0 auto', position: 'relative' }}>
+              {/* Label row */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                <p
+                  className="section-label"
+                  style={{ color: '#a78bfa', marginBottom: 0, letterSpacing: '0.12em' }}
+                >
+                  Volunteer Work
+                </p>
+                <span
+                  style={{
+                    fontSize: '0.65rem',
+                    fontWeight: 700,
+                    color: '#fff',
+                    backgroundColor: '#10b981',
+                    borderRadius: '20px',
+                    padding: '2px 9px',
+                    letterSpacing: '0.05em',
+                  }}
+                >
+                  ● LIVE
+                </span>
+              </div>
+
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+              >
+                Social Impact Project
+              </h2>
+
+              {/* Two-column layout */}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '56px',
+                  marginTop: '48px',
+                  alignItems: 'center',
+                }}
+              >
+                {/* ── Left: content ── */}
+                <div>
+                  {/* Project name + URL */}
+                  <div style={{ marginBottom: '8px' }}>
+                    <h3
+                      className="font-display"
+                      style={{
+                        fontSize: '1.6rem',
+                        fontWeight: 800,
+                        color: 'var(--text-1)',
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      Sudan Scholars Hub
+                    </h3>
+                    <a
+                      href="https://www.deltaroots.store"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: '0.85rem',
+                        color: '#a78bfa',
+                        textDecoration: 'none',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        marginTop: '4px',
+                        transition: 'color 0.2s',
+                      }}
+                      onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#c4b5fd' }}
+                      onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#a78bfa' }}
+                    >
+                      deltaroots.store
+                      <ExternalLink size={12} />
+                    </a>
+                  </div>
+
+                  <p
+                    style={{
+                      color: 'var(--text-2)',
+                      fontSize: '0.95rem',
+                      lineHeight: 1.75,
+                      marginTop: '16px',
+                      marginBottom: '28px',
+                    }}
+                  >
+                    A free, bilingual (English / Arabic) scholarship discovery platform built
+                    to help Sudanese students worldwide navigate the complex landscape of
+                    international funding opportunities — from application tracking to
+                    side-by-side scholarship comparison.
+                  </p>
+
+                  {/* Impact stats */}
+                  <div
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(2, 1fr)',
+                      gap: '12px',
+                      marginBottom: '28px',
+                    }}
+                  >
+                    {[
+                      { num: '300+', label: 'Scholarships indexed' },
+                      { num: '2', label: 'Languages (AR + EN)' },
+                      { num: '100%', label: 'Free for students' },
+                      { num: 'RTL', label: 'Full Arabic support' },
+                    ].map(({ num, label }) => (
+                      <div
+                        key={label}
+                        style={{
+                          backgroundColor: 'rgba(139,92,246,0.08)',
+                          border: '1px solid rgba(139,92,246,0.2)',
+                          borderRadius: '6px',
+                          padding: '14px 18px',
+                        }}
+                      >
+                        <div
+                          className="font-display font-bold"
+                          style={{ fontSize: '1.25rem', color: '#a78bfa' }}
+                        >
+                          {num}
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '2px' }}>
+                          {label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Features list */}
+                  <div style={{ marginBottom: '28px' }}>
+                    <div
+                      style={{
+                        fontSize: '0.72rem',
+                        color: 'var(--text-3)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                        marginBottom: '12px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Key Features
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {[
+                        'Bilingual UI with full RTL Arabic layout',
+                        'Scholarship search, filter & category browse',
+                        'User accounts — save & track applications',
+                        'Side-by-side comparison (up to 3 scholarships)',
+                        'Admin CMS dashboard for content management',
+                        'Google OAuth + OTP email authentication',
+                      ].map((feat) => (
+                        <div
+                          key={feat}
+                          style={{
+                            display: 'flex',
+                            alignItems: 'flex-start',
+                            gap: '8px',
+                            fontSize: '0.875rem',
+                            color: 'var(--text-2)',
+                            lineHeight: 1.5,
+                          }}
+                        >
+                          <span style={{ color: '#a78bfa', fontWeight: 700, flexShrink: 0, marginTop: '1px' }}>✓</span>
+                          {feat}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Tech stack */}
+                  <div style={{ marginBottom: '28px' }}>
+                    <div
+                      style={{
+                        fontSize: '0.72rem',
+                        color: 'var(--text-3)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.1em',
+                        marginBottom: '10px',
+                        fontWeight: 600,
+                      }}
+                    >
+                      Built With
+                    </div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      {[
+                        'Next.js 14', 'TypeScript', 'PostgreSQL', 'Prisma ORM',
+                        'NextAuth.js v5', 'next-intl', 'Tailwind CSS', 'Resend', 'Zod',
+                      ].map((tech) => (
+                        <span
+                          key={tech}
+                          style={{
+                            fontSize: '0.72rem',
+                            color: '#a78bfa',
+                            backgroundColor: 'rgba(139,92,246,0.1)',
+                            border: '1px solid rgba(139,92,246,0.25)',
+                            borderRadius: '4px',
+                            padding: '3px 8px',
+                            fontWeight: 500,
+                          }}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* CTAs */}
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <a
+                      href="https://www.deltaroots.store"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        backgroundColor: '#7c3aed',
+                        color: '#fff',
+                        fontWeight: 600,
+                        fontSize: '0.9rem',
+                        padding: '11px 24px',
+                        borderRadius: '6px',
+                        transition: 'background-color 0.2s ease, transform 0.2s ease',
+                        textDecoration: 'none',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.backgroundColor = '#6d28d9'
+                        el.style.transform = 'translateY(-2px)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.backgroundColor = '#7c3aed'
+                        el.style.transform = 'translateY(0)'
+                      }}
+                    >
+                      <ExternalLink size={15} />
+                      Visit Live Site
+                    </a>
+                    <a
+                      href="https://github.com/Osman-Geomatics93/sudan-scholars-hub"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        border: '1px solid rgba(139,92,246,0.4)',
+                        color: '#a78bfa',
+                        fontWeight: 500,
+                        fontSize: '0.9rem',
+                        padding: '11px 24px',
+                        borderRadius: '6px',
+                        transition: 'border-color 0.2s ease, color 0.2s ease, transform 0.2s ease',
+                        textDecoration: 'none',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = '#a78bfa'
+                        el.style.color = '#c4b5fd'
+                        el.style.transform = 'translateY(-2px)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'rgba(139,92,246,0.4)'
+                        el.style.color = '#a78bfa'
+                        el.style.transform = 'translateY(0)'
+                      }}
+                    >
+                      <Github size={15} />
+                      View on GitHub
+                    </a>
+                  </div>
+                </div>
+
+                {/* ── Right: Browser mockup ── */}
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                  <div
+                    style={{
+                      width: '100%',
+                      maxWidth: '480px',
+                      borderRadius: '10px',
+                      overflow: 'hidden',
+                      border: '1px solid rgba(139,92,246,0.3)',
+                      boxShadow: '0 0 60px rgba(139,92,246,0.15), 0 4px 24px rgba(0,0,0,0.4)',
+                    }}
+                  >
+                    {/* Browser chrome */}
+                    <div
+                      style={{
+                        backgroundColor: '#1e1b2e',
+                        padding: '10px 14px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        borderBottom: '1px solid rgba(139,92,246,0.2)',
+                      }}
+                    >
+                      <div style={{ display: 'flex', gap: '5px' }}>
+                        {['#ff5f57', '#febc2e', '#28c840'].map((c) => (
+                          <div
+                            key={c}
+                            style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: c }}
+                          />
+                        ))}
+                      </div>
+                      <div
+                        style={{
+                          flex: 1,
+                          backgroundColor: '#2d2a40',
+                          borderRadius: '4px',
+                          padding: '4px 10px',
+                          fontSize: '0.7rem',
+                          color: '#a78bfa',
+                          marginLeft: '6px',
+                          overflow: 'hidden',
+                          whiteSpace: 'nowrap',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        🔒 deltaroots.store/en
+                      </div>
+                    </div>
+
+                    {/* Simulated site content */}
+                    <div style={{ backgroundColor: '#0f0d1a', padding: '20px' }}>
+                      {/* Nav bar */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          marginBottom: '20px',
+                        }}
+                      >
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          <div style={{ width: '22px', height: '22px', backgroundColor: '#7c3aed', borderRadius: '5px' }} />
+                          <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#e2e8f0' }}>
+                            Sudan Scholars Hub
+                          </div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '8px' }}>
+                          <div style={{ width: '28px', height: '8px', backgroundColor: '#2d2a40', borderRadius: '4px' }} />
+                          <div style={{ width: '28px', height: '8px', backgroundColor: '#2d2a40', borderRadius: '4px' }} />
+                          <div style={{ width: '36px', height: '16px', backgroundColor: '#7c3aed', borderRadius: '4px' }} />
+                        </div>
+                      </div>
+
+                      {/* Hero */}
+                      <div
+                        style={{
+                          background: 'linear-gradient(135deg, #1a1133 0%, #2d1b69 100%)',
+                          borderRadius: '8px',
+                          padding: '18px',
+                          marginBottom: '14px',
+                          border: '1px solid rgba(139,92,246,0.2)',
+                        }}
+                      >
+                        <div style={{ fontSize: '0.65rem', color: '#c4b5fd', marginBottom: '6px', fontWeight: 700 }}>
+                          منصة المنح الدراسية للطلاب السودانيين
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#e2e8f0', fontWeight: 700, marginBottom: '10px' }}>
+                          Find Your Path to Education
+                        </div>
+                        <div
+                          style={{
+                            backgroundColor: '#2d2a40',
+                            borderRadius: '5px',
+                            padding: '6px 10px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                          }}
+                        >
+                          <div style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#a78bfa' }} />
+                          <div style={{ flex: 1, height: '5px', backgroundColor: '#3d3660', borderRadius: '3px' }} />
+                          <div style={{ width: '40px', height: '18px', backgroundColor: '#7c3aed', borderRadius: '4px' }} />
+                        </div>
+                      </div>
+
+                      {/* Scholarship cards */}
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px', marginBottom: '12px' }}>
+                        {[
+                          { flag: '🇩🇪', name: 'DAAD Scholarship', country: 'Germany', color: '#fbbf24' },
+                          { flag: '🇬🇧', name: 'Chevening Award', country: 'United Kingdom', color: '#34d399' },
+                          { flag: '🇹🇷', name: 'Türkiye Burslari', country: 'Turkey', color: '#60a5fa' },
+                          { flag: '🇯🇵', name: 'MEXT Scholarship', country: 'Japan', color: '#f87171' },
+                        ].map((s) => (
+                          <div
+                            key={s.name}
+                            style={{
+                              backgroundColor: '#1a1733',
+                              border: '1px solid #2d2a40',
+                              borderRadius: '6px',
+                              padding: '10px',
+                            }}
+                          >
+                            <div style={{ fontSize: '1rem', marginBottom: '4px' }}>{s.flag}</div>
+                            <div style={{ fontSize: '0.55rem', fontWeight: 700, color: '#e2e8f0', marginBottom: '2px', lineHeight: 1.3 }}>
+                              {s.name}
+                            </div>
+                            <div style={{ fontSize: '0.5rem', color: '#6b7280' }}>{s.country}</div>
+                            <div
+                              style={{
+                                marginTop: '6px',
+                                fontSize: '0.5rem',
+                                color: s.color,
+                                backgroundColor: `${s.color}15`,
+                                border: `1px solid ${s.color}30`,
+                                borderRadius: '3px',
+                                padding: '1px 5px',
+                                display: 'inline-block',
+                              }}
+                            >
+                              Open
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Bottom bar */}
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          padding: '8px 0 0',
+                          borderTop: '1px solid #1e1b2e',
+                        }}
+                      >
+                        <div style={{ fontSize: '0.55rem', color: '#6b7280' }}>300+ scholarships available</div>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          <div style={{ width: '16px', height: '8px', backgroundColor: '#7c3aed', borderRadius: '3px' }} />
+                          <div style={{ width: '8px', height: '8px', backgroundColor: '#2d2a40', borderRadius: '3px' }} />
+                          <div style={{ width: '8px', height: '8px', backgroundColor: '#2d2a40', borderRadius: '3px' }} />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
         {/* ===================== CERTIFICATIONS PREVIEW ===================== */}
         <RevealSection>
           <section
