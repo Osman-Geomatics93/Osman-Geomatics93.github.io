@@ -11,6 +11,10 @@ import StatusBadge from './components/StatusBadge'
 import MagneticButton from './components/MagneticButton'
 import SkillsRadar from './components/SkillsRadar'
 import { showToast } from './components/Toast'
+import SectionDots from './components/SectionDots'
+import dynamic from 'next/dynamic'
+
+const ProjectMap = dynamic(() => import('./components/ProjectMap'), { ssr: false })
 
 const expertiseAreas = [
   {
@@ -112,9 +116,11 @@ export default function Home() {
     <>
       <Nav activePage="home" />
 
+      <SectionDots />
       <main style={{ paddingTop: '64px' }}>
         {/* ===================== HERO ===================== */}
         <section
+          id="hero"
           className="dot-grid resp-section"
           style={{
             backgroundColor: 'var(--bg)',
@@ -379,6 +385,7 @@ export default function Home() {
 
         {/* ===================== STATS STRIP ===================== */}
         <div
+          id="stats"
           style={{
             borderTop: '1px solid var(--border)',
             borderBottom: '1px solid var(--border)',
@@ -419,7 +426,7 @@ export default function Home() {
 
         {/* ===================== EXPERTISE ===================== */}
         <RevealSection>
-          <section className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
+          <section id="expertise" className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">Capabilities</p>
               <h2
@@ -521,6 +528,7 @@ export default function Home() {
         {/* ===================== SKILLS RADAR ===================== */}
         <RevealSection>
           <section
+            id="skills"
             className="resp-section"
             style={{
               padding: '0 24px',
@@ -597,6 +605,7 @@ export default function Home() {
         {/* ===================== MSC RESEARCH ===================== */}
         <RevealSection>
           <section
+            id="research"
             className="resp-section"
             style={{
               padding: '0 24px',
@@ -1013,7 +1022,7 @@ export default function Home() {
 
         {/* ===================== OPEN SOURCE ===================== */}
         <RevealSection>
-          <section className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
+          <section id="oss" className="resp-section" style={{ padding: '0 24px', backgroundColor: 'var(--bg)' }}>
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
               <p className="section-label">Open Source</p>
               <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
@@ -1152,6 +1161,39 @@ export default function Home() {
                   <Github size={16} />
                   View all repositories on GitHub →
                 </a>
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== PROJECT MAP ===================== */}
+        <RevealSection>
+          <section
+            className="resp-section"
+            style={{
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
+              borderTop: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Field Work</p>
+              <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)', marginBottom: '12px' }}>
+                Project Locations
+              </h2>
+              <p style={{ color: 'var(--text-2)', maxWidth: '520px', lineHeight: 1.7, marginBottom: '36px', fontSize: '0.95rem' }}>
+                From the Nile Basin to the Black Sea coast — click any marker to explore the project.
+              </p>
+              <div
+                style={{
+                  height: '480px',
+                  borderRadius: '10px',
+                  overflow: 'hidden',
+                  border: '1px solid var(--border)',
+                  boxShadow: '0 4px 32px rgba(0,0,0,0.4)',
+                }}
+              >
+                <ProjectMap />
               </div>
             </div>
           </section>

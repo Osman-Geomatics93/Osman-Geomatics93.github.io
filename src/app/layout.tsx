@@ -7,6 +7,9 @@ import CommandPalette from './components/CommandPalette'
 import Toast from './components/Toast'
 import FilmGrain from './components/FilmGrain'
 import BackToTop from './components/BackToTop'
+import PageTransition from './components/PageTransition'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -128,7 +131,9 @@ export default function RootLayout({
         <CommandPalette />
         <Toast />
         <BackToTop />
-        {children}
+        <PageTransition>{children}</PageTransition>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )
