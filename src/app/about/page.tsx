@@ -1,409 +1,969 @@
-// src/app/about/page.tsx
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { MapPin, GraduationCap, Award, Globe, Users, Calendar, ArrowRight, Heart, Target, Lightbulb, Star, Sparkles } from 'lucide-react'
+import Nav from '../components/Nav'
+import Footer from '../components/Footer'
+import RevealSection from '../components/RevealSection'
+import { MapPin, Calendar, Globe, Users, GraduationCap, Briefcase } from 'lucide-react'
+
+const education = [
+  {
+    degree: 'M.Sc. Geomatics Engineering',
+    field: 'Remote Sensing & GIS',
+    institution: 'Karadeniz Technical University',
+    location: 'Trabzon, Turkey',
+    year: 'Aug 2024',
+    gpa: 'GPA 3.50 / 4.00',
+    highlights: [
+      'Thesis: Remote Sensing for Agricultural Monitoring in the Gezira Irrigation Scheme',
+      'SVM + OBIA crop classification methodology',
+      'WaPOR accuracy enhancement by 15%',
+      'FAO-aligned water productivity assessment framework',
+    ],
+  },
+  {
+    degree: 'B.Sc. Surveying Engineering',
+    field: 'First Class Honours',
+    institution: 'Omdurman Islamic University',
+    location: 'Omdurman, Sudan',
+    year: '2017',
+    gpa: 'First Class Honours',
+    highlights: [
+      'Core geodesy, photogrammetry, and land surveying curriculum',
+      'GPS, total station, and level instrument proficiency',
+      'GIS fundamentals and cartographic principles',
+      'Foundation for professional career in geomatics',
+    ],
+  },
+]
+
+const timeline = [
+  {
+    role: 'Research Assistant / Remote Sensing Expert',
+    org: 'Hydraulics Research Center (HRC)',
+    location: 'Sudan',
+    period: '2018 — Present',
+    duration: '8+ years',
+    description:
+      'Led GIS and remote sensing initiatives for water resource management, crop monitoring, and flood risk assessment. Managed international projects funded by FAO, IFAD, and ZOA across East Africa.',
+    highlights: [
+      'Led FAO-funded crop monitoring — 15% productivity improvement',
+      'Managed IFAD water productivity assessment, Gash Scheme',
+      'Designed Nile gauging station network — Sudan/Egypt border',
+      'Trained 200+ professionals in GIS and remote sensing',
+    ],
+  },
+  {
+    role: 'Land Surveyor',
+    org: 'Ministry of Infrastructure & Transport',
+    location: 'Sudan',
+    period: '2017 — 2018',
+    duration: '1 year',
+    description:
+      'Conducted precision land surveys for infrastructure projects including road alignments, topographic mapping, and boundary demarcation using GPS-RTK and total station equipment.',
+    highlights: [
+      'GPS-RTK field surveys for road infrastructure',
+      'Topographic mapping and boundary demarcation',
+      'AutoCAD Civil 3D processing and report production',
+      'Coordination with engineering and legal teams',
+    ],
+  },
+]
+
+const partners = [
+  { name: 'FAO', full: 'Food & Agriculture Organization', type: 'UN Agency' },
+  { name: 'IFAD', full: 'Intl. Fund for Agricultural Development', type: 'UN Agency' },
+  { name: 'UNESCO', full: 'UN Educational, Scientific & Cultural Org.', type: 'UN Agency' },
+  { name: 'ZOA', full: 'ZOA International', type: 'INGO' },
+  { name: 'KTU', full: 'Karadeniz Technical University', type: 'Academic' },
+  { name: 'WES Sudan', full: 'Water, Engineering & Sanitation Sudan', type: 'Government' },
+  { name: 'UNAMID', full: 'AU-UN Hybrid Mission in Darfur', type: 'UN Mission' },
+  { name: 'IOM', full: 'International Organization for Migration', type: 'UN Agency' },
+]
+
+const values = [
+  {
+    title: 'Evidence-Based Practice',
+    description:
+      'Every decision is grounded in data. Whether classifying crops from 10-meter Sentinel-2 imagery or selecting river gauging sites, rigorous statistical validation underpins all outputs.',
+  },
+  {
+    title: 'Field-to-Pixel Integration',
+    description:
+      'Remote sensing without ground truth is speculation. Years of field work with GPS-RTK and ODK Collect inform how satellite products are interpreted and validated.',
+  },
+  {
+    title: 'Open & Reproducible Science',
+    description:
+      'All major tools and pipelines are released as open-source QGIS plugins and GitHub repositories — making geospatial science accessible to practitioners across Africa and beyond.',
+  },
+]
+
+const testimonials = [
+  {
+    quote:
+      'Osman demonstrated exceptional capability in applying advanced remote sensing methods to real-world irrigation management challenges. His thesis work on WaPOR-based water productivity assessment produced results that are directly applicable to FAO field programmes.',
+    name: 'Assoc. Prof. Volkan Yilmaz',
+    role: 'M.Sc. Thesis Supervisor',
+    institution: 'Karadeniz Technical University, Turkey',
+    contact: 'volkanyilmaz.jdz@ktu.edu.tr',
+  },
+  {
+    quote:
+      'His technical contributions to our FAO and IFAD-funded projects were outstanding. Osman\'s ability to translate satellite data into actionable management insights — and to communicate results clearly to non-technical stakeholders — is a rare combination in our field.',
+    name: 'Assoc. Prof. Younis A. Gismalla',
+    role: 'Head of Remote Sensing Division',
+    institution: 'Hydraulics Research Center, Sudan',
+    contact: 'hrs_younis@hotmail.com',
+  },
+]
+
+const skillBars = [
+  { label: 'Remote Sensing & Earth Observation', level: 95, cat: 'primary' },
+  { label: 'GIS Analysis (QGIS / ArcGIS)', level: 95, cat: 'primary' },
+  { label: 'WaPOR / FAO Water Productivity', level: 92, cat: 'primary' },
+  { label: 'Google Earth Engine (GEE)', level: 90, cat: 'primary' },
+  { label: 'Python (GeoPandas / Rasterio / ML)', level: 88, cat: 'code' },
+  { label: 'Machine Learning & Deep Learning', level: 85, cat: 'code' },
+  { label: 'R Statistical Analysis', level: 80, cat: 'code' },
+  { label: 'Field Surveys (GPS-RTK / ADCP)', level: 88, cat: 'field' },
+]
 
 export default function AboutPage() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [activeSection, setActiveSection] = useState(0)
-  const [particles, setParticles] = useState([])
-
-  useEffect(() => {
-    setIsVisible(true)
-    
-    // Generate particles on client side only to avoid hydration mismatch
-    const newParticles = Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 5,
-      animationDuration: 3 + Math.random() * 2
-    }))
-    setParticles(newParticles)
-    
-    // Auto-advance through sections for demo effect
-    const interval = setInterval(() => {
-      setActiveSection(prev => (prev + 1) % 3)
-    }, 4000)
-    
-    return () => clearInterval(interval)
-  }, [])
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '4s'}}></div>
-      </div>
+    <>
+      <Nav activePage="about" />
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-2 h-2 bg-white rounded-full opacity-20 animate-ping"
-            style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              animationDelay: `${particle.animationDelay}s`,
-              animationDuration: `${particle.animationDuration}s`
-            }}
-          />
-        ))}
-      </div>
+      <main style={{ paddingTop: '64px' }}>
+        {/* ===================== HERO ===================== */}
+        <section
+          className="dot-grid"
+          style={{
+            backgroundColor: 'var(--bg)',
+            padding: '96px 24px',
+          }}
+        >
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <p className="section-label">About</p>
 
-      {/* Navigation */}
-      <nav className="bg-white/10 backdrop-blur-md shadow-lg border-b border-white/20 relative z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent hover:from-pink-400 hover:to-purple-400 transition-all duration-300">
-                Osman O. A. Ibrahim
-              </a>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              {[
-                { name: 'Home', href: '/', active: false },
-                { name: 'About', href: '/about', active: true },
-                { name: 'Projects', href: '/projects', active: false },
-                { name: 'Certifications', href: '/certifications', active: false },
-                { name: 'Contact', href: '/contact', active: false }
-              ].map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={`transition-all duration-300 hover:scale-110 relative group ${
-                    item.active 
-                      ? 'text-purple-300 font-medium' 
-                      : 'text-white/80 hover:text-white'
-                  }`}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '64px',
+                alignItems: 'center',
+                marginTop: '16px',
+              }}
+              className="lg:grid-cols-2"
+            >
+              {/* Left */}
+              <div>
+                <h1
+                  className="font-display font-extrabold"
+                  style={{
+                    fontSize: 'clamp(2rem, 4vw, 3.25rem)',
+                    color: 'var(--text-1)',
+                    lineHeight: 1.15,
+                    marginBottom: '24px',
+                  }}
                 >
-                  {item.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 ${
-                    item.active ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
-                </a>
-              ))}
+                  From Sudan to Global Geoscience
+                </h1>
+
+                <p
+                  style={{
+                    color: 'var(--text-2)',
+                    lineHeight: 1.75,
+                    marginBottom: '18px',
+                    fontSize: '1rem',
+                  }}
+                >
+                  Born and trained in Sudan, I built my career at the Hydraulics Research Center
+                  — one of East Africa&apos;s leading water and land research institutions. Over
+                  eight years, I grew from a field surveyor into a senior remote sensing expert
+                  managing FAO- and IFAD-funded projects that span millions of hectares.
+                </p>
+                <p
+                  style={{
+                    color: 'var(--text-2)',
+                    lineHeight: 1.75,
+                    marginBottom: '24px',
+                    fontSize: '1rem',
+                  }}
+                >
+                  My M.Sc. at Karadeniz Technical University in Turkey deepened my expertise in
+                  machine learning for geospatial analysis — combining SVM, OBIA, and deep
+                  learning with WaPOR satellite products to monitor the Gezira Irrigation Scheme,
+                  the world&apos;s largest irrigation project.
+                </p>
+
+                {/* Quick facts */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '12px',
+                    marginTop: '8px',
+                  }}
+                >
+                  {[
+                    { Icon: MapPin, label: 'Location', value: 'Trabzon, Turkey' },
+                    { Icon: Calendar, label: 'Experience', value: '8+ years' },
+                    { Icon: Globe, label: 'Languages', value: 'Arabic, English, Turkish' },
+                    { Icon: Users, label: 'Trained', value: '200+ professionals' },
+                  ].map(({ Icon, label, value }) => (
+                    <div
+                      key={label}
+                      style={{
+                        backgroundColor: 'var(--bg-card)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '6px',
+                        padding: '14px 16px',
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '10px',
+                      }}
+                    >
+                      <Icon size={15} style={{ color: 'var(--accent)', marginTop: '2px', flexShrink: 0 }} />
+                      <div>
+                        <div style={{ fontSize: '0.7rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+                          {label}
+                        </div>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-1)', fontWeight: 500, marginTop: '2px' }}>
+                          {value}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right — photo */}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div
+                  style={{
+                    border: '1px solid var(--border-bright)',
+                    borderRadius: '6px',
+                    overflow: 'hidden',
+                    aspectRatio: '4/5',
+                    width: '100%',
+                    maxWidth: '340px',
+                    boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  <img
+                    src="https://i.imgur.com/1QHqofS.jpg"
+                    alt="Osman Ibrahim — Geomatics Engineer"
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      filter: 'grayscale(20%) contrast(1.05)',
+                      display: 'block',
+                    }}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </nav>
+        </section>
 
-      {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            {/* Left Column - Text */}
-            <div className={`space-y-8 transform transition-all duration-1000 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
-              <div className="space-y-4">
-                <h1 className="text-4xl lg:text-5xl font-bold text-white leading-tight">
-                  About <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">Me</span>
-                </h1>
-                <p className="text-xl bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent">
-                  From Sudan to Turkey, building bridges through technology
-                </p>
-              </div>
+        {/* ===================== EDUCATION ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Education</p>
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+              >
+                Educational Foundation
+              </h2>
 
-              <div className="space-y-6 text-lg text-gray-300 leading-relaxed">
-                <p className="hover:text-white transition-colors duration-300">
-                  I'm <strong className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Osman Osama Ahmed Ibrahim</strong>, a Senior Surveying & Geomatics Engineer 
-                  with over 8 years of experience transforming landscapes through cutting-edge geospatial technology.
-                </p>
-                <p className="hover:text-white transition-colors duration-300">
-                  Born in <strong className="text-yellow-400">Khartoum, Sudan</strong>, my journey has taken me from the banks of the Nile to the 
-                  mountains of Turkey, where I've dedicated my career to solving complex water resource challenges 
-                  that impact millions of lives.
-                </p>
-                <p className="hover:text-white transition-colors duration-300">
-                  Currently based in <strong className="text-purple-400">Trabzon, Turkey</strong>, I bridge the gap between traditional 
-                  surveying methods and modern remote sensing technologies, helping organizations like 
-                  <strong className="text-green-400"> FAO</strong>, <strong className="text-blue-400">IFAD</strong>, 
-                  and <strong className="text-purple-400"> UNESCO</strong> make data-driven decisions for 
-                  sustainable development.
-                </p>
-              </div>
-
-              {/* Quick Facts */}
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { icon: MapPin, label: "Location", value: "Trabzon, Turkey", color: "blue" },
-                  { icon: Calendar, label: "Experience", value: "8+ Years", color: "green" },
-                  { icon: Globe, label: "Projects", value: "15+ International", color: "purple" },
-                  { icon: Users, label: "Languages", value: "Arabic, English, Turkish", color: "orange" }
-                ].map((fact, index) => (
-                  <div 
-                    key={index}
-                    className={`bg-white/10 backdrop-blur-sm p-4 rounded-lg hover:bg-white/20 transition-all duration-500 transform hover:scale-105 group`}
-                    style={{ animationDelay: `${index * 200}ms` }}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '24px',
+                  marginTop: '48px',
+                }}
+              >
+                {education.map((edu) => (
+                  <div
+                    key={edu.degree}
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '32px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    }}
                   >
-                    <div className="flex items-center space-x-2 mb-2">
-                      <fact.icon className={`w-5 h-5 text-${fact.color}-400 group-hover:animate-bounce`} />
-                      <span className="font-semibold text-white">{fact.label}</span>
+                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '16px' }}>
+                      <GraduationCap size={20} style={{ color: 'var(--accent)', marginTop: '2px', flexShrink: 0 }} />
+                      <div>
+                        <h3
+                          className="font-display"
+                          style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.3 }}
+                        >
+                          {edu.degree}
+                        </h3>
+                        <p style={{ fontSize: '0.85rem', color: 'var(--accent)', marginTop: '2px' }}>
+                          {edu.field}
+                        </p>
+                      </div>
                     </div>
-                    <p className="text-gray-300 group-hover:text-white transition-colors">{fact.value}</p>
+
+                    <div style={{ marginBottom: '16px' }}>
+                      <p style={{ fontSize: '0.9rem', color: 'var(--text-1)', fontWeight: 500 }}>
+                        {edu.institution}
+                      </p>
+                      <p style={{ fontSize: '0.8rem', color: 'var(--text-3)', marginTop: '2px' }}>
+                        {edu.location} &middot; {edu.year} &middot; {edu.gpa}
+                      </p>
+                    </div>
+
+                    <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                      {edu.highlights.map((h) => (
+                        <li
+                          key={h}
+                          style={{
+                            fontSize: '0.82rem',
+                            color: 'var(--text-2)',
+                            paddingLeft: '14px',
+                            position: 'relative',
+                            marginBottom: '6px',
+                            lineHeight: 1.6,
+                          }}
+                        >
+                          <span
+                            style={{
+                              position: 'absolute',
+                              left: 0,
+                              top: '8px',
+                              width: '4px',
+                              height: '1px',
+                              backgroundColor: 'var(--accent)',
+                            }}
+                          />
+                          {h}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
                 ))}
               </div>
             </div>
+          </section>
+        </RevealSection>
 
-            {/* Right Column - Professional Photo */}
-            <div className={`flex justify-center transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
-              <div className="relative group">
-                <div className="w-96 h-96 rounded-2xl shadow-2xl overflow-hidden bg-gradient-to-br from-purple-400 via-pink-400 to-blue-400 p-3 transform group-hover:scale-105 transition-all duration-500 animate-pulse">
-                  <div className="w-full h-full rounded-xl overflow-hidden">
-                    <img
-                      src="https://i.imgur.com/1QHqofS.jpg"
-                      alt="Osman Osama Ahmed Ibrahim"
-                      className="w-full h-full object-cover group-hover:scale-110 transition-all duration-500"
-                    />
+        {/* ===================== CAREER TIMELINE ===================== */}
+        <RevealSection>
+          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Experience</p>
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+              >
+                Career Timeline
+              </h2>
+
+              <div style={{ marginTop: '48px', display: 'flex', flexDirection: 'column', gap: '0' }}>
+                {timeline.map((item, idx) => (
+                  <div
+                    key={item.role}
+                    style={{
+                      display: 'grid',
+                      gridTemplateColumns: '160px 1fr',
+                      gap: '32px',
+                      position: 'relative',
+                      paddingBottom: idx < timeline.length - 1 ? '48px' : '0',
+                    }}
+                    className="sm:grid"
+                  >
+                    {/* Timeline sidebar */}
+                    <div style={{ textAlign: 'right', paddingTop: '4px' }}>
+                      <div
+                        style={{
+                          fontSize: '0.8rem',
+                          color: 'var(--text-3)',
+                          fontWeight: 500,
+                          lineHeight: 1.5,
+                        }}
+                      >
+                        {item.period}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'var(--accent)',
+                          marginTop: '4px',
+                        }}
+                      >
+                        {item.duration}
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div
+                      style={{
+                        backgroundColor: 'var(--bg-card)',
+                        border: '1px solid var(--border)',
+                        borderLeft: '3px solid var(--accent)',
+                        borderRadius: '6px',
+                        padding: '28px',
+                        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                      }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
+                        <Briefcase size={18} style={{ color: 'var(--accent)', marginTop: '2px', flexShrink: 0 }} />
+                        <div>
+                          <h3
+                            className="font-display"
+                            style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-1)' }}
+                          >
+                            {item.role}
+                          </h3>
+                          <p style={{ fontSize: '0.85rem', color: 'var(--text-2)', marginTop: '2px' }}>
+                            {item.org} &middot; {item.location}
+                          </p>
+                        </div>
+                      </div>
+                      <p
+                        style={{
+                          fontSize: '0.875rem',
+                          color: 'var(--text-2)',
+                          lineHeight: 1.7,
+                          marginBottom: '16px',
+                        }}
+                      >
+                        {item.description}
+                      </p>
+                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                        {item.highlights.map((h) => (
+                          <li
+                            key={h}
+                            style={{
+                              fontSize: '0.82rem',
+                              color: 'var(--text-2)',
+                              paddingLeft: '14px',
+                              position: 'relative',
+                              marginBottom: '5px',
+                              lineHeight: 1.6,
+                            }}
+                          >
+                            <span
+                              style={{
+                                position: 'absolute',
+                                left: 0,
+                                top: '8px',
+                                width: '4px',
+                                height: '1px',
+                                backgroundColor: 'var(--accent)',
+                              }}
+                            />
+                            {h}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== TESTIMONIALS ===================== */}
+        <RevealSection>
+          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)', borderTop: '1px solid var(--border)' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">References</p>
+              <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
+                What Colleagues Say
+              </h2>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '24px',
+                  marginTop: '48px',
+                }}
+              >
+                {testimonials.map((t) => (
+                  <div
+                    key={t.name}
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '32px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '3.5rem',
+                        lineHeight: 1,
+                        marginBottom: '16px',
+                        color: 'var(--accent)',
+                        opacity: 0.35,
+                        fontFamily: 'Georgia, serif',
+                      }}
+                    >
+                      &ldquo;
+                    </div>
+                    <p
+                      style={{
+                        fontSize: '0.9rem',
+                        color: 'var(--text-2)',
+                        lineHeight: 1.75,
+                        marginBottom: '24px',
+                        fontStyle: 'italic',
+                      }}
+                    >
+                      {t.quote}
+                    </p>
+                    <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
+                      <div className="font-display" style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-1)' }}>
+                        {t.name}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--accent)', marginTop: '3px' }}>
+                        {t.role}
+                      </div>
+                      <div style={{ fontSize: '0.78rem', color: 'var(--text-3)', marginTop: '2px' }}>
+                        {t.institution}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== SKILLS & GITHUB ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '64px',
+                  alignItems: 'flex-start',
+                }}
+              >
+                {/* Skills bars */}
+                <div>
+                  <p className="section-label">Technical Depth</p>
+                  <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)', marginBottom: '40px' }}>
+                    Core Skills
+                  </h2>
+                  {skillBars.map((skill) => (
+                    <div key={skill.label} style={{ marginBottom: '20px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '7px' }}>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--text-2)' }}>{skill.label}</span>
+                        <span
+                          style={{
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            color: skill.cat === 'primary' ? 'var(--accent)' : skill.cat === 'code' ? '#60a5fa' : 'var(--warm)',
+                          }}
+                        >
+                          {skill.level}%
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          height: '3px',
+                          backgroundColor: 'var(--border)',
+                          borderRadius: '2px',
+                          overflow: 'hidden',
+                        }}
+                      >
+                        <div
+                          style={{
+                            height: '100%',
+                            width: `${skill.level}%`,
+                            backgroundColor:
+                              skill.cat === 'primary'
+                                ? 'var(--accent)'
+                                : skill.cat === 'code'
+                                ? '#60a5fa'
+                                : 'var(--warm)',
+                            borderRadius: '2px',
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* GitHub + Languages */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                  <div>
+                    <p className="section-label">Open Source</p>
+                    <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)', marginBottom: '28px' }}>
+                      GitHub Activity
+                    </h2>
+                  </div>
+                  <div
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '28px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-around',
+                        marginBottom: '24px',
+                        textAlign: 'center',
+                      }}
+                    >
+                      {[
+                        { num: '9', label: 'Public Repos' },
+                        { num: '2', label: 'QGIS Plugins' },
+                        { num: '3', label: 'Languages' },
+                      ].map(({ num, label }) => (
+                        <div key={label}>
+                          <div className="font-display font-bold" style={{ fontSize: '1.5rem', color: 'var(--accent)' }}>
+                            {num}
+                          </div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '2px' }}>{label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <a
+                      href="https://github.com/Osman-Geomatics93"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        width: '100%',
+                        justifyContent: 'center',
+                        fontSize: '0.85rem',
+                        color: 'var(--text-2)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '6px',
+                        padding: '10px 16px',
+                        transition: 'border-color 0.2s ease, color 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'var(--accent)'
+                        el.style.color = 'var(--accent)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'var(--border)'
+                        el.style.color = 'var(--text-2)'
+                      }}
+                    >
+                      View GitHub Profile →
+                    </a>
+                  </div>
+
+                  {/* Languages */}
+                  <div
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '24px',
+                    }}
+                  >
+                    <div
+                      style={{
+                        fontSize: '0.7rem',
+                        color: 'var(--text-3)',
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.08em',
+                        marginBottom: '16px',
+                      }}
+                    >
+                      Spoken Languages
+                    </div>
+                    {[
+                      { lang: 'Arabic', level: 'Native', pct: 100 },
+                      { lang: 'English', level: 'Professional', pct: 90 },
+                      { lang: 'Turkish', level: 'Intermediate', pct: 60 },
+                    ].map(({ lang, level, pct }) => (
+                      <div key={lang} style={{ marginBottom: '14px' }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
+                          <span style={{ fontSize: '0.85rem', color: 'var(--text-2)' }}>{lang}</span>
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>{level}</span>
+                        </div>
+                        <div
+                          style={{
+                            height: '3px',
+                            backgroundColor: 'var(--border)',
+                            borderRadius: '2px',
+                            overflow: 'hidden',
+                          }}
+                        >
+                          <div
+                            style={{
+                              height: '100%',
+                              width: `${pct}%`,
+                              backgroundColor: 'var(--accent)',
+                              borderRadius: '2px',
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                {/* Floating elements */}
-                <div className="absolute -top-6 -right-6 w-24 h-24 bg-gradient-to-r from-blue-400 to-purple-400 rounded-full opacity-30 animate-spin"></div>
-                <div className="absolute -bottom-6 -left-6 w-16 h-16 bg-gradient-to-r from-green-400 to-blue-400 rounded-full opacity-40 animate-bounce"></div>
-                <Sparkles className="absolute top-2 right-2 w-6 h-6 text-yellow-400 animate-pulse" />
-                <Star className="absolute bottom-4 left-4 w-5 h-5 text-pink-400 animate-ping" />
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </RevealSection>
 
-      {/* My Journey Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/5 backdrop-blur-sm relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-4">
-              My Professional Journey
-            </h2>
-            <p className="text-lg text-gray-300">
-              From student to international project leader
-            </p>
-          </div>
+        {/* ===================== INTERNATIONAL PARTNERS ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+              borderBottom: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Partners</p>
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+              >
+                International Partners
+              </h2>
+              <p
+                style={{
+                  color: 'var(--text-2)',
+                  maxWidth: '520px',
+                  marginTop: '12px',
+                  lineHeight: 1.7,
+                }}
+              >
+                Projects and research conducted in collaboration with leading UN agencies,
+                academic institutions, and international NGOs.
+              </p>
 
-          <div className="space-y-12">
-            {/* Education Journey */}
-            <div className="bg-gradient-to-r from-blue-600/20 to-cyan-600/20 backdrop-blur-sm p-8 rounded-xl border border-blue-500/30 hover:border-blue-400/50 transition-all duration-500 transform hover:scale-105">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center animate-pulse">
-                  <GraduationCap className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-white">Educational Foundation</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div className="group">
-                  <h4 className="font-semibold text-white mb-2 group-hover:text-cyan-300 transition-colors">Master's Degree (2022-2024)</h4>
-                  <p className="text-cyan-300 mb-2">
-                    <strong>Karadeniz Technical University, Turkey</strong>
-                  </p>
-                  <p className="text-blue-300 mb-4">
-                    Geomatics Engineering • GPA: 3.50/4.00
-                  </p>
-                  <p className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                    Specialized in remote sensing applications for agricultural monitoring, 
-                    with thesis on "The use of remote sensing for monitoring agricultural products 
-                    in the Gezira Irrigation Scheme, Sudan"
-                  </p>
-                </div>
-                <div className="group">
-                  <h4 className="font-semibold text-white mb-2 group-hover:text-cyan-300 transition-colors">Bachelor's Degree (2012-2017)</h4>
-                  <p className="text-cyan-300 mb-2">
-                    <strong>Omdurman Islamic University, Sudan</strong>
-                  </p>
-                  <p className="text-blue-300 mb-4">
-                    Surveying Engineering • First Class Honours
-                  </p>
-                  <p className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                    Graduated with distinction, focusing on Geographic Information Systems Technology. 
-                    Thesis: "Evaluating Roads within Omdurman Islamic University Utilising 
-                    Geographic Information Systems Technology"
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Career Progression */}
-            <div className="bg-gradient-to-r from-green-600/20 to-emerald-600/20 backdrop-blur-sm p-8 rounded-xl border border-green-500/30 hover:border-green-400/50 transition-all duration-500 transform hover:scale-105">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center animate-pulse">
-                  <Award className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-white">Career Progression</h3>
-              </div>
-              <div className="space-y-6">
-                <div className="border-l-4 border-green-400 pl-6 group hover:border-green-300 transition-colors">
-                  <h4 className="font-semibold text-white mb-1 group-hover:text-green-300 transition-colors">Senior Research Engineer & Project Manager</h4>
-                  <p className="text-green-300 mb-2">Hydraulics Research Center, Sudan • 2018 - Present</p>
-                  <ul className="text-sm text-gray-300 space-y-1 group-hover:text-white transition-colors">
-                    <li>• Leading $5M+ geospatial analysis projects with international organizations</li>
-                    <li>• Managing multidisciplinary teams of 15+ engineers and technicians</li>
-                    <li>• Developing machine learning algorithms for crop classification and yield prediction</li>
-                    <li>• Training 200+ professionals in geospatial technologies</li>
-                  </ul>
-                </div>
-                <div className="border-l-4 border-blue-400 pl-6 group hover:border-blue-300 transition-colors">
-                  <h4 className="font-semibold text-white mb-1 group-hover:text-blue-300 transition-colors">Land Surveyor & Infrastructure Specialist</h4>
-                  <p className="text-blue-300 mb-2">Ministry of Infrastructure and Transport, Sudan • 2017 - 2018</p>
-                  <ul className="text-sm text-gray-300 space-y-1 group-hover:text-white transition-colors">
-                    <li>• Designed road infrastructure projects worth $10M+ for government initiatives</li>
-                    <li>• Executed precision surveys for roads, bridges, and dam construction</li>
-                    <li>• Coordinated with international stakeholders and government agencies</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-
-            {/* International Recognition */}
-            <div className="bg-gradient-to-r from-purple-600/20 to-pink-600/20 backdrop-blur-sm p-8 rounded-xl border border-purple-500/30 hover:border-purple-400/50 transition-all duration-500 transform hover:scale-105">
-              <div className="flex items-center space-x-4 mb-6">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center animate-pulse">
-                  <Globe className="w-6 h-6 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-white">International Recognition</h3>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                  { name: "FAO", color: "green", desc: "Remote sensing-based monitoring and yield forecasting for irrigation schemes" },
-                  { name: "IFAD", color: "blue", desc: "Water management and productivity assessment for sustainable agriculture" },
-                  { name: "UNESCO", color: "purple", desc: "Water resource management and environmental monitoring projects" }
-                ].map((org, index) => (
-                  <div key={index} className="text-center group">
-                    <div className={`w-16 h-16 bg-gradient-to-r from-${org.color}-500 to-${org.color}-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-bounce transition-all duration-300 transform group-hover:scale-110`}>
-                      <span className="text-white font-bold text-sm">{org.name}</span>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+                  gap: '16px',
+                  marginTop: '40px',
+                }}
+              >
+                {partners.map((p) => (
+                  <div
+                    key={p.name}
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '20px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    <div
+                      className="font-display font-bold"
+                      style={{ fontSize: '1.1rem', color: 'var(--text-1)', marginBottom: '4px' }}
+                    >
+                      {p.name}
                     </div>
-                    <h4 className="font-semibold text-white mb-2 group-hover:text-purple-300 transition-colors">
-                      {org.name === "FAO" ? "Food and Agriculture Organization" : 
-                       org.name === "IFAD" ? "International Fund for Agricultural Development" :
-                       "United Nations Educational, Scientific and Cultural Organization"}
-                    </h4>
-                    <p className="text-sm text-gray-300 group-hover:text-white transition-colors">
-                      {org.desc}
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-2)', marginBottom: '8px', lineHeight: 1.4 }}>
+                      {p.full}
+                    </div>
+                    <span
+                      style={{
+                        fontSize: '0.7rem',
+                        color: 'var(--text-3)',
+                        backgroundColor: 'var(--bg-surface)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '4px',
+                        padding: '2px 7px',
+                        display: 'inline-block',
+                      }}
+                    >
+                      {p.type}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== VALUES ===================== */}
+        <RevealSection>
+          <section style={{ padding: '96px 24px', backgroundColor: 'var(--bg)' }}>
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Approach</p>
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+              >
+                Values &amp; Approach
+              </h2>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
+                  gap: '24px',
+                  marginTop: '48px',
+                }}
+              >
+                {values.map((v) => (
+                  <div
+                    key={v.title}
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '32px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                      transition: 'border-color 0.25s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-bright)'
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)'
+                    }}
+                  >
+                    <h3
+                      className="font-display"
+                      style={{
+                        fontSize: '1rem',
+                        fontWeight: 700,
+                        color: 'var(--accent)',
+                        marginBottom: '12px',
+                      }}
+                    >
+                      {v.title}
+                    </h3>
+                    <p
+                      style={{
+                        fontSize: '0.875rem',
+                        color: 'var(--text-2)',
+                        lineHeight: 1.7,
+                      }}
+                    >
+                      {v.description}
                     </p>
                   </div>
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </RevealSection>
 
-      {/* Values & Approach Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-4">
-              My Values & Approach
-            </h2>
-            <p className="text-lg text-gray-300">
-              What drives me to excel in geospatial engineering
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { 
-                icon: Lightbulb, 
-                title: "Innovation", 
-                desc: "I believe in pushing the boundaries of traditional surveying by integrating cutting-edge remote sensing technologies and machine learning algorithms to solve complex geospatial challenges.",
-                color: "blue"
-              },
-              { 
-                icon: Target, 
-                title: "Impact", 
-                desc: "Every project I undertake is driven by the desire to create meaningful impact. Whether it's improving agricultural productivity or managing water resources, I focus on solutions that benefit communities.",
-                color: "green"
-              },
-              { 
-                icon: Heart, 
-                title: "Collaboration", 
-                desc: "I thrive in multicultural, multidisciplinary environments. My experience working with international organizations has taught me the value of diverse perspectives in solving global challenges.",
-                color: "purple"
-              }
-            ].map((value, index) => (
-              <div 
-                key={index}
-                className="text-center p-6 bg-white/10 backdrop-blur-sm rounded-xl shadow-lg hover:bg-white/20 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl group border border-white/20"
-                style={{ animationDelay: `${index * 200}ms` }}
+        {/* ===================== CTA ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '80px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+              textAlign: 'center',
+            }}
+          >
+            <div style={{ maxWidth: '640px', margin: '0 auto' }}>
+              <h2
+                className="font-display"
+                style={{ color: 'var(--text-1)', marginBottom: '16px' }}
               >
-                <div className={`w-16 h-16 bg-gradient-to-r from-${value.color}-500 to-${value.color}-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:animate-bounce`}>
-                  <value.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-purple-300 transition-colors">{value.title}</h3>
-                <p className="text-gray-300 group-hover:text-white transition-colors">
-                  {value.desc}
-                </p>
+                Let&apos;s Work Together
+              </h2>
+              <p style={{ color: 'var(--text-2)', lineHeight: 1.7, marginBottom: '32px' }}>
+                Open to research collaborations, consulting projects, and positions in remote
+                sensing, GIS, and geospatial data science worldwide.
+              </p>
+              <div style={{ display: 'flex', justifyContent: 'center', gap: '16px', flexWrap: 'wrap' }}>
+                <a
+                  href="/contact"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    backgroundColor: 'var(--accent)',
+                    color: '#070c14',
+                    fontWeight: 600,
+                    fontSize: '0.9rem',
+                    padding: '12px 28px',
+                    borderRadius: '6px',
+                    transition: 'background-color 0.2s ease, transform 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.backgroundColor = 'var(--accent-hover)'
+                    el.style.transform = 'translateY(-1px)'
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.backgroundColor = 'var(--accent)'
+                    el.style.transform = 'translateY(0)'
+                  }}
+                >
+                  Get In Touch →
+                </a>
+                <a
+                  href="/projects"
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    border: '1px solid var(--border-bright)',
+                    color: 'var(--text-2)',
+                    fontWeight: 500,
+                    fontSize: '0.9rem',
+                    padding: '12px 28px',
+                    borderRadius: '6px',
+                    transition: 'border-color 0.2s ease, color 0.2s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.borderColor = 'var(--accent)'
+                    el.style.color = 'var(--accent)'
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.borderColor = 'var(--border-bright)'
+                    el.style.color = 'var(--text-2)'
+                  }}
+                >
+                  View Projects
+                </a>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
+        </RevealSection>
+      </main>
 
-      {/* Personal Touch Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-slate-900/80 to-purple-900/80 backdrop-blur-sm relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-8">
-            Beyond the Professional
-          </h2>
-          <div className="text-lg text-gray-300 space-y-4">
-            <p className="hover:text-white transition-colors duration-300">
-              When I'm not analyzing satellite imagery or conducting field surveys, I'm passionate 
-              about bridging cultures and sharing knowledge. My journey from Sudan to Turkey has 
-              given me a unique perspective on how technology can transcend borders.
-            </p>
-            <p className="hover:text-white transition-colors duration-300">
-              I'm fluent in <strong className="text-blue-400">Arabic</strong>, <strong className="text-green-400">English</strong>, 
-              and <strong className="text-purple-400">Turkish</strong>, which has been invaluable in my international work. 
-              I believe that effective communication is just as important as technical expertise.
-            </p>
-            <p className="hover:text-white transition-colors duration-300">
-              I'm also committed to knowledge sharing and capacity building. Through my work at the 
-              Hydraulics Research Center, I've had the privilege of training over 200 professionals 
-              in geospatial technologies, contributing to the next generation of engineers.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/5 backdrop-blur-sm relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-4">
-            Let's Work Together
-          </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            I'm always excited to collaborate on projects that combine technical innovation 
-            with meaningful impact. Whether you're planning a water resource management 
-            initiative or need expertise in remote sensing applications, I'd love to hear from you.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="/contact"
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-2"
-            >
-              <span>Get In Touch</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-            </a>
-            <a
-              href="/projects"
-              className="border border-purple-400 text-purple-300 px-8 py-3 rounded-lg font-medium hover:bg-purple-400/20 transition-all duration-300 transform hover:scale-105"
-            >
-              View My Projects
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-black/50 backdrop-blur-sm py-8 px-4 sm:px-6 lg:px-8 border-t border-white/20 relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent">
-            © 2025 Osman Osama Ahmed Ibrahim. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
+      <Footer />
+    </>
   )
 }

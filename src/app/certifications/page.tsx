@@ -1,473 +1,535 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Award, ExternalLink, Calendar, MapPin, Star, Sparkles, Download, Eye, ChevronRight, Users, BookOpen, Trophy } from 'lucide-react'
+import { useState } from 'react'
+import Nav from '../components/Nav'
+import Footer from '../components/Footer'
+import RevealSection from '../components/RevealSection'
+import { ExternalLink } from 'lucide-react'
 
-const AnimatedCounter = ({ end, duration = 2000 }) => {
-  const [count, setCount] = useState(0)
-  
-  useEffect(() => {
-    let startTime = null
-    
-    const animate = (currentTime) => {
-      if (!startTime) startTime = currentTime
-      const progress = (currentTime - startTime) / duration
-      
-      if (progress < 1) {
-        setCount(Math.floor(end * progress))
-        requestAnimationFrame(animate)
-      } else {
-        setCount(end)
-      }
-    }
-    
-    requestAnimationFrame(animate)
-  }, [end, duration])
-  
-  return <span>{count}</span>
+interface Cert {
+  title: string
+  org: string
+  year: string
+  category: string
+  link?: string
+}
+
+const certifications: Cert[] = [
+  // Remote Sensing
+  {
+    title: 'Remote Sensing Image Acquisition, Analysis and Applications',
+    org: 'UNSW Sydney & IEEE Geoscience and Remote Sensing Society',
+    year: '2023',
+    category: 'Remote Sensing',
+    link: 'https://coursera.org/verify/certificate_id',
+  },
+  {
+    title: 'Spatial Analysis and Satellite Imagery in a GIS',
+    org: 'University of Toronto',
+    year: '2023',
+    category: 'Remote Sensing',
+    link: 'https://www.coursera.org/account/accomplishments/verify/729AQRHDM2UW',
+  },
+  {
+    title: 'Python for WaPOR Geospatial Analyses',
+    org: 'FAO / IHE Delft Institute for Water Education',
+    year: '2024',
+    category: 'Remote Sensing',
+  },
+  {
+    title: 'GIS & Remote Sensing in WaPOR System',
+    org: 'Hydraulics Research Center, Sudan',
+    year: '2020',
+    category: 'Remote Sensing',
+    link: 'https://drive.google.com/file/d/1y3Id-15QSpiNNJHyAUES1KEGcedxOfAN/view?usp=sharing',
+  },
+  {
+    title: 'Basics of Remote Sensing & Water Harvesting Applications',
+    org: 'UNESCO RCWH – Ministry of Water Resources, Sudan',
+    year: '2019',
+    category: 'Remote Sensing',
+    link: 'https://drive.google.com/file/d/1y2x33J6_gLaR8pcNutdJTuvg75XBGxar/view?usp=sharing',
+  },
+
+  // GIS
+  {
+    title: 'Geospatial Analysis with ArcGIS',
+    org: 'University of California, Davis',
+    year: '2023',
+    category: 'GIS',
+    link: 'https://coursera.org/verify/certificate_id',
+  },
+  {
+    title: 'Geographic Information System (GIS) using QGIS',
+    org: 'IOM–UN Migration, UNAMID & WES Sudan',
+    year: '2020',
+    category: 'GIS',
+    link: 'https://drive.google.com/file/d/1QWs0l12Cpd_8mn5zbROP09OiDhRYWQe9/view?usp=sharing',
+  },
+  {
+    title: 'Python for GIS Development',
+    org: 'PARIS Training Center',
+    year: '2019',
+    category: 'GIS',
+    link: 'https://drive.google.com/file/d/1oA1E_3bgPw4H7UBS90VXp2Os_2eJ5Chs/view?usp=sharing',
+  },
+
+  // Programming
+  {
+    title: 'Data Analysis with R Programming',
+    org: 'Google',
+    year: '2023',
+    category: 'Programming',
+    link: 'https://www.coursera.org/account/accomplishments/verify/KJ4JQPDC2J52',
+  },
+  {
+    title: 'Data Analysis with Python',
+    org: 'IBM',
+    year: '2024',
+    category: 'Programming',
+    link: 'https://www.coursera.org/account/accomplishments/verify/VCKACJAQ92VV',
+  },
+  {
+    title: 'Advanced Data Visualization with R',
+    org: 'Coursera',
+    year: '2024',
+    category: 'Programming',
+  },
+  {
+    title: 'Introduction to Front-End Development',
+    org: 'Meta / Coursera',
+    year: '2024',
+    category: 'Programming',
+  },
+
+  // AI / Deep Learning
+  {
+    title: 'Advanced Computer Vision with TensorFlow',
+    org: 'DeepLearning.AI',
+    year: '2024',
+    category: 'AI / Deep Learning',
+  },
+  {
+    title: 'Sequence Models (Deep Learning Specialization)',
+    org: 'DeepLearning.AI',
+    year: '2024',
+    category: 'AI / Deep Learning',
+  },
+  {
+    title: 'AI Agents and Agentic AI with Python',
+    org: 'DeepLearning.AI',
+    year: '2024',
+    category: 'AI / Deep Learning',
+  },
+
+  // Hydraulics
+  {
+    title: 'Hydraulic Engineering in River Basins',
+    org: 'Regional Training Center, Hydraulics Research Institute, Egypt',
+    year: '2021',
+    category: 'Hydraulics',
+    link: 'https://drive.google.com/file/d/1Crq_bwviW13QAtYByUpjKDV9ORhUPIfI/view?usp=sharing',
+  },
+
+  // Professional
+  {
+    title: 'Certified Trainer — GIS, Remote Sensing & Surveying Engineering',
+    org: 'Hydraulics Research Center, Sudan',
+    year: '2020',
+    category: 'Professional',
+  },
+]
+
+const categories = ['All', 'Remote Sensing', 'GIS', 'Programming', 'AI / Deep Learning', 'Hydraulics', 'Professional']
+
+// Category left-border accent colors — subtle, no rainbow
+const catBorderColor: Record<string, string> = {
+  'Remote Sensing': '#10b981',
+  'GIS': '#7e9ab5',
+  'Programming': '#f59e0b',
+  'AI / Deep Learning': '#60a5fa',
+  'Hydraulics': '#3d5470',
+  'Professional': '#a78bfa',
+}
+
+const catTagColor: Record<string, { bg: string; text: string; border: string }> = {
+  'Remote Sensing': { bg: 'rgba(16,185,129,0.1)', text: '#10b981', border: 'rgba(16,185,129,0.25)' },
+  'GIS': { bg: 'rgba(126,154,181,0.12)', text: '#7e9ab5', border: 'rgba(126,154,181,0.25)' },
+  'Programming': { bg: 'rgba(245,158,11,0.1)', text: '#f59e0b', border: 'rgba(245,158,11,0.25)' },
+  'AI / Deep Learning': { bg: 'rgba(96,165,250,0.1)', text: '#60a5fa', border: 'rgba(96,165,250,0.25)' },
+  'Hydraulics': { bg: 'rgba(61,84,112,0.15)', text: '#7e9ab5', border: 'rgba(61,84,112,0.3)' },
+  'Professional': { bg: 'rgba(167,139,250,0.1)', text: '#a78bfa', border: 'rgba(167,139,250,0.25)' },
 }
 
 export default function CertificationsPage() {
-  const [isVisible, setIsVisible] = useState(false)
-  const [activeFilter, setActiveFilter] = useState('all')
-  const [particles, setParticles] = useState([])
+  const [activeCategory, setActiveCategory] = useState('All')
 
-  useEffect(() => {
-    setIsVisible(true)
-    // Generate particles on client side only to avoid hydration mismatch
-    const newParticles = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 5,
-      animationDuration: 3 + Math.random() * 2
-    }))
-    setParticles(newParticles)
-  }, [])
-
-  const certifications = [
-    {
-      id: 1,
-      emoji: "🏛️",
-      title: "Remote Sensing Image Acquisition, Analysis and Applications",
-      organization: "UNSW Sydney & IEEE Geoscience and Remote Sensing Society",
-      year: "2023",
-      duration: "Oct 2023 - Dec 2023",
-      color: "blue",
-      category: "remote-sensing",
-      description: "Completed an advanced course on the principles and applications of remote sensing, including sensor types, satellite image acquisition techniques, spectral signatures, image interpretation, and data preprocessing. Gained hands-on experience in analyzing satellite data for environmental, agricultural, and urban applications using modern remote sensing workflows aligned with IEEE and academic standards.",
-      link: "https://coursera.org/verify/certificate_id"
-    },
-    {
-      id: 2,
-      emoji: "🎓",
-      title: "Geospatial Analysis with ArcGIS",
-      organization: "University of California, Davis",
-      year: "2023",
-      duration: "Sep 2023 - Nov 2023",
-      color: "green",
-      category: "gis",
-      description: "Completed a comprehensive course on spatial data analysis using ArcGIS. Developed practical skills in spatial data management, coordinate systems, spatial joins, geoprocessing tools, raster analysis, and creating map layouts. Gained hands-on experience in solving real-world geospatial problems using industry-standard workflows in ArcGIS Desktop and ArcGIS Online environments.",
-      link: "https://coursera.org/verify/certificate_id"
-    },
-    {
-      id: 3,
-      emoji: "🍁",
-      title: "Spatial Analysis and Satellite Imagery in a GIS",
-      organization: "University of Toronto",
-      year: "2023",
-      duration: "Aug 2023 - Nov 2023",
-      color: "purple",
-      category: "gis",
-      description: "Completed a specialized course on integrating satellite imagery with GIS for spatial analysis. Gained practical skills in interpreting remote sensing data, performing raster-based analyses, and applying spatial statistics to real-world geographic problems. Emphasized the use of GIS tools for land cover classification, change detection, and environmental monitoring.",
-      link: "https://www.coursera.org/account/accomplishments/verify/729AQRHDM2UW"
-    },
-    {
-      id: 4,
-      emoji: "🔍",
-      title: "Data Analysis with R Programming",
-      organization: "Google",
-      year: "2023",
-      duration: "May 2023 - Dec 2023",
-      color: "red",
-      category: "programming",
-      description: "Completed a hands-on course focused on data analysis using R, covering data cleaning, visualization, statistical analysis, and data manipulation with tidyverse packages. Developed skills in generating insights from large datasets, writing reproducible scripts, and applying data-driven decision-making processes.",
-      link: "https://www.coursera.org/account/accomplishments/verify/KJ4JQPDC2J52"
-    },
-    {
-      id: 5,
-      emoji: "💻",
-      title: "Data Analysis with Python",
-      organization: "IBM",
-      year: "2024",
-      duration: "Jan 2024 - Mar 2024",
-      color: "orange",
-      category: "programming",
-      description: "Completed a hands-on course on data analysis using Python. Topics covered include data wrangling, exploratory data analysis, statistical testing, and visualization using Pandas, Numpy, Matplotlib, and Seaborn. Developed practical skills in working with real datasets and applying analytical techniques for decision-making and reporting.",
-      link: "https://www.coursera.org/account/accomplishments/verify/VCKACJAQ92VV"
-    },
-    {
-      id: 6,
-      emoji: "🌊",
-      title: "Hydraulic Engineering in River Basins",
-      organization: "Regional Training Center of the Hydraulics Research Institute",
-      year: "2021",
-      duration: "Dec 2020 - Mar 2021",
-      color: "indigo",
-      category: "hydraulics",
-      description: "Completed an intensive training program focused on the design, modeling, and management of hydraulic systems in river basins. Covered topics such as flow dynamics, irrigation structures, watershed management, sediment transport, and flood control strategies. Gained practical skills in river engineering using fieldwork, simulation tools, and hydraulic design principles relevant to large-scale water infrastructure projects across Africa and the MENA region.",
-      link: "https://drive.google.com/file/d/1Crq_bwviW13QAtYByUpjKDV9ORhUPIfI/view?usp=sharing"
-    },
-    {
-      id: 7,
-      emoji: "🛰️",
-      title: "GIS & RS in WaPOR system",
-      organization: "Hydraulics Research Center",
-      year: "2020",
-      duration: "Sep 2020 - Oct 2020",
-      color: "teal",
-      category: "remote-sensing",
-      description: "Completed hands-on training on agricultural water productivity assessment using FAO's WaPOR database and open-source geospatial tools. Gained practical experience in accessing and analyzing evapotranspiration, biomass, and water productivity data for irrigation performance monitoring. Developed spatial analysis workflows for decision support in water resource planning and agricultural sustainability.",
-      link: "https://drive.google.com/file/d/1y3Id-15QSpiNNJHyAUES1KEGcedxOfAN/view?usp=sharing"
-    },
-    {
-      id: 8,
-      emoji: "🐍",
-      title: "Python for GIS Development",
-      organization: "PARIS Training Center",
-      year: "2019",
-      duration: "Sep 2019 - Oct 2019",
-      color: "yellow",
-      category: "programming",
-      description: "Completed specialized training on developing GIS tools and automating spatial workflows using Python. Covered key libraries such as arcpy, geopandas, and PyQGIS for spatial data handling, mapping, and geoprocessing. Applied scripting techniques to optimize geospatial analysis and improve productivity in GIS projects.",
-      link: "https://drive.google.com/file/d/1oA1E_3bgPw4H7UBS90VXp2Os_2eJ5Chs/view?usp=sharing"
-    },
-    {
-      id: 9,
-      emoji: "🌍",
-      title: "Geographic Information System (GIS) using QGIS",
-      organization: "IOM–UN Migration, UNAMID, and WES Sudan",
-      year: "2020",
-      duration: "Dec 2019 - Jan 2020",
-      color: "pink",
-      category: "gis",
-      description: "Successfully completed hands-on training on Geographic Information Systems using QGIS. Developed skills in spatial data creation, map design, coordinate systems, geoprocessing, and field data integration. The course emphasized open-source GIS workflows for humanitarian, environmental, and water-related applications, supported by international organizations including IOM and UNAMID.",
-      link: "https://drive.google.com/file/d/1QWs0l12Cpd_8mn5zbROP09OiDhRYWQe9/view?usp=sharing"
-    },
-    {
-      id: 10,
-      emoji: "🏛️",
-      title: "Basics of Remote Sensing and Essentials for Water Harvesting Applications",
-      organization: "UNESCO RCWH – Ministry of Water Resources, Sudan",
-      year: "2019",
-      duration: "Mar 2019 - Mar 2019",
-      color: "emerald",
-      category: "remote-sensing",
-      description: "Participated in a specialized training workshop focused on the foundational principles of remote sensing and its application to water harvesting and resource planning. Covered satellite data interpretation, terrain analysis, and hydrological mapping techniques relevant to sustainable water management in arid and semi-arid regions.",
-      link: "https://drive.google.com/file/d/1y2x33J6_gLaR8pcNutdJTuvg75XBGxar/view?usp=sharing"
-    }
-  ]
-
-  const categories = [
-    { id: 'all', name: 'All Certifications', count: certifications.length },
-    { id: 'gis', name: 'GIS & Mapping', count: certifications.filter(c => c.category === 'gis').length },
-    { id: 'remote-sensing', name: 'Remote Sensing', count: certifications.filter(c => c.category === 'remote-sensing').length },
-    { id: 'programming', name: 'Programming', count: certifications.filter(c => c.category === 'programming').length },
-    { id: 'hydraulics', name: 'Hydraulics', count: certifications.filter(c => c.category === 'hydraulics').length }
-  ]
-
-  const filteredCertifications = activeFilter === 'all' 
-    ? certifications 
-    : certifications.filter(cert => cert.category === activeFilter)
+  const filtered =
+    activeCategory === 'All'
+      ? certifications
+      : certifications.filter((c) => c.category === activeCategory)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '4s'}}></div>
-      </div>
+    <>
+      <Nav activePage="certifications" />
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-2 h-2 bg-white rounded-full opacity-20 animate-ping"
-            style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              animationDelay: `${particle.animationDelay}s`,
-              animationDuration: `${particle.animationDuration}s`
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Navigation */}
-      <nav className="bg-white/10 backdrop-blur-md shadow-lg border-b border-white/20 relative z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent hover:from-pink-400 hover:to-purple-400 transition-all duration-300">
-                Osman O. A. Ibrahim
-              </a>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              {[
-                { name: 'Home', href: '/', active: false },
-                { name: 'About', href: '/about', active: false },
-                { name: 'Projects', href: '/projects', active: false },
-                { name: 'Certifications', href: '/certifications', active: true },
-                { name: 'Contact', href: '/contact', active: false }
-              ].map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={`transition-all duration-300 hover:scale-110 relative group ${
-                    item.active 
-                      ? 'text-purple-300 font-medium' 
-                      : 'text-white/80 hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 ${
-                    item.active ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              Professional <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">Certifications</span>
+      <main style={{ paddingTop: '64px' }}>
+        {/* ===================== HERO ===================== */}
+        <section
+          className="dot-grid"
+          style={{ backgroundColor: 'var(--bg)', padding: '96px 24px 64px' }}
+        >
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <p className="section-label">Credentials</p>
+            <h1
+              className="font-display font-extrabold"
+              style={{
+                fontSize: 'clamp(2.25rem, 5vw, 4rem)',
+                color: 'var(--text-1)',
+                lineHeight: 1.1,
+                marginTop: '16px',
+              }}
+            >
+              Certifications &amp; Training
             </h1>
-            <p className="text-xl bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent mb-8">
-              Continuous learning and professional development from world-class institutions
+            <p
+              style={{
+                color: 'var(--text-2)',
+                maxWidth: '560px',
+                marginTop: '16px',
+                lineHeight: 1.7,
+                fontSize: '1rem',
+              }}
+            >
+              Continuous learning across remote sensing, GIS, machine learning, and water resources —
+              from UNSW Sydney, UC Davis, IBM, Google, DeepLearning.AI, FAO/IHE Delft, UNESCO,
+              and specialised institutions in hydraulics and geospatial science.
             </p>
-            
+
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+            <div
+              style={{ display: 'flex', flexWrap: 'wrap', gap: '32px', marginTop: '40px' }}
+            >
               {[
-                { number: 10, suffix: "+", label: "Professional Certifications", color: "from-blue-400 to-purple-400" },
-                { number: 5, suffix: "", label: "International Institutions", color: "from-purple-400 to-pink-400" },
-                { number: 200, suffix: "+", label: "Professionals Trained", color: "from-pink-400 to-red-400" },
-                { number: 6, suffix: "+", label: "Years of Teaching", color: "from-green-400 to-blue-400" }
-              ].map((stat, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 group">
-                  <div className={`text-3xl font-bold mb-2 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent group-hover:scale-110 transition-transform`}>
-                    <AnimatedCounter end={stat.number} />{stat.suffix}
+                { num: '17', label: 'Certifications' },
+                { num: '10', label: 'Institutions' },
+                { num: '200+', label: 'Professionals Trained' },
+                { num: '6+', label: 'Years Teaching' },
+              ].map(({ num, label }) => (
+                <div key={label}>
+                  <div
+                    className="font-display font-bold"
+                    style={{ fontSize: '1.5rem', color: 'var(--accent)' }}
+                  >
+                    {num}
                   </div>
-                  <div className="text-gray-300 group-hover:text-white transition-colors text-sm">{stat.label}</div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-3)', marginTop: '2px' }}>
+                    {label}
+                  </div>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Filter Section */}
-      <section className="px-4 sm:px-6 lg:px-8 mb-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap justify-center gap-4 mb-8">
-            {categories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => setActiveFilter(category.id)}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 ${
-                  activeFilter === category.id
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-2xl'
-                    : 'bg-white/10 backdrop-blur-sm text-gray-300 hover:bg-white/20 hover:text-white border border-white/20'
-                }`}
-              >
-                <span>{category.name}</span>
-                <span className={`px-2 py-1 rounded-full text-xs ${
-                  activeFilter === category.id ? 'bg-white/20' : 'bg-purple-500/20 text-purple-300'
-                }`}>
-                  {category.count}
-                </span>
-              </button>
-            ))}
+        {/* ===================== FILTER ===================== */}
+        <div
+          style={{
+            padding: '24px',
+            backgroundColor: 'var(--bg)',
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: '1280px',
+              margin: '0 auto',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '8px',
+            }}
+          >
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    border: isActive ? 'none' : '1px solid var(--border-bright)',
+                    backgroundColor: isActive ? 'var(--accent)' : 'transparent',
+                    color: isActive ? '#070c14' : 'var(--text-2)',
+                  }}
+                >
+                  {cat}
+                </button>
+              )
+            })}
           </div>
         </div>
-      </section>
 
-      {/* Certifications Grid */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-16 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredCertifications.map((cert, index) => (
-              <div
-                key={cert.id}
-                className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-6 hover:bg-white/20 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl group border border-white/20"
-                style={{ animationDelay: `${index * 100}ms` }}
-              >
-                {/* Header */}
-                <div className="flex items-start justify-between mb-4">
-                  <div className="text-4xl group-hover:animate-bounce">{cert.emoji}</div>
-                  <div className="flex space-x-2">
-                    <span className={`bg-${cert.color}-500/20 text-${cert.color}-300 px-3 py-1 rounded-full text-xs border border-${cert.color}-500/30`}>
-                      {cert.year}
-                    </span>
-                  </div>
-                </div>
+        {/* ===================== CERTIFICATIONS GRID ===================== */}
+        <section
+          style={{
+            padding: '48px 24px 96px',
+            backgroundColor: 'var(--bg)',
+          }}
+        >
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '20px',
+              }}
+            >
+              {filtered.map((cert) => {
+                const borderLeft = catBorderColor[cert.category] || 'var(--border-bright)'
+                const tag = catTagColor[cert.category] || {
+                  bg: 'rgba(126,154,181,0.1)',
+                  text: 'var(--text-2)',
+                  border: 'rgba(126,154,181,0.25)',
+                }
 
-                {/* Content */}
-                <div className="mb-4">
-                  <h3 className="text-lg font-bold text-white mb-2 group-hover:text-purple-300 transition-colors line-clamp-2">
-                    {cert.title}
-                  </h3>
-                  <p className="text-purple-300 text-sm mb-2 font-medium">
-                    {cert.organization}
-                  </p>
-                  <div className="flex items-center text-gray-400 text-xs mb-3">
-                    <Calendar className="w-3 h-3 mr-1" />
-                    {cert.duration}
-                  </div>
-                  <p className="text-gray-300 text-sm line-clamp-4 group-hover:text-gray-200 transition-colors">
-                    {cert.description}
-                  </p>
-                </div>
+                // Initials badge
+                const initials = cert.org
+                  .split(/[\s,&/-]+/)
+                  .filter(Boolean)
+                  .map((w) => w[0].toUpperCase())
+                  .slice(0, 3)
+                  .join('')
 
-                {/* Actions */}
-                <div className="flex items-center justify-between pt-4 border-t border-white/20">
-                  <div className="flex items-center space-x-2">
-                    <Trophy className={`w-4 h-4 text-${cert.color}-400`} />
-                    <span className="text-xs text-gray-400">Verified</span>
-                  </div>
-                  <a
-                    href={cert.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="group/link inline-flex items-center text-purple-300 hover:text-white text-sm font-medium transition-all duration-300 hover:scale-105"
+                return (
+                  <div
+                    key={cert.title}
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderLeft: `3px solid ${borderLeft}`,
+                      borderRadius: '6px',
+                      padding: '24px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '10px',
+                      transition: 'border-color 0.25s ease',
+                    }}
+                    onMouseEnter={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderTopColor = 'var(--border-bright)'
+                      ;(e.currentTarget as HTMLElement).style.borderRightColor = 'var(--border-bright)'
+                      ;(e.currentTarget as HTMLElement).style.borderBottomColor = 'var(--border-bright)'
+                    }}
+                    onMouseLeave={(e) => {
+                      (e.currentTarget as HTMLElement).style.borderTopColor = 'var(--border)'
+                      ;(e.currentTarget as HTMLElement).style.borderRightColor = 'var(--border)'
+                      ;(e.currentTarget as HTMLElement).style.borderBottomColor = 'var(--border)'
+                    }}
                   >
-                    <Eye className="w-4 h-4 mr-1 group-hover/link:animate-bounce" />
-                    View Recognition
-                    <ExternalLink className="w-3 h-3 ml-1 group-hover/link:translate-x-1 transition-transform" />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+                    {/* Org badge + category */}
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
+                      <div
+                        style={{
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '6px',
+                          backgroundColor: 'var(--bg-surface)',
+                          border: '1px solid var(--border)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.65rem',
+                          fontWeight: 700,
+                          color: 'var(--text-2)',
+                          letterSpacing: '0.03em',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {initials}
+                      </div>
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          fontWeight: 600,
+                          color: tag.text,
+                          backgroundColor: tag.bg,
+                          border: `1px solid ${tag.border}`,
+                          borderRadius: '4px',
+                          padding: '2px 7px',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        {cert.category}
+                      </span>
+                    </div>
 
-      {/* Teaching & Training Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-purple-900/50 to-pink-900/50 backdrop-blur-sm relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-4">
-              Knowledge Sharing & Capacity Building
-            </h2>
-            <p className="text-lg text-gray-300">
-              Recognized expertise in training and developing technical professionals
-            </p>
-          </div>
+                    {/* Title */}
+                    <h3
+                      className="font-display"
+                      style={{
+                        fontSize: '0.9rem',
+                        fontWeight: 700,
+                        color: 'var(--text-1)',
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      {cert.title}
+                    </h3>
 
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border border-white/20">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-              <div>
-                <div className="flex items-center space-x-4 mb-6">
-                  <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-blue-500 rounded-full flex items-center justify-center animate-pulse">
-                    <Users className="w-6 h-6 text-white" />
+                    {/* Org + year */}
+                    <div>
+                      <p style={{ fontSize: '0.82rem', color: 'var(--text-2)' }}>{cert.org}</p>
+                      <p style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '2px' }}>{cert.year}</p>
+                    </div>
+
+                    {/* Link */}
+                    {cert.link && (
+                      <a
+                        href={cert.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '5px',
+                          fontSize: '0.78rem',
+                          color: 'var(--accent)',
+                          marginTop: 'auto',
+                          transition: 'opacity 0.2s ease',
+                        }}
+                        onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.opacity = '0.7' }}
+                        onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.opacity = '1' }}
+                      >
+                        <ExternalLink size={12} />
+                        View Certificate
+                      </a>
+                    )}
                   </div>
-                  <h3 className="text-2xl font-bold text-white">Professional Training Program</h3>
-                </div>
-                <p className="text-gray-300 mb-4">
-                  Since 2018, I've been responsible for preparing and delivering technical training sessions 
-                  for engineers and researchers at the Hydraulics Research Center on geospatial and surveying technologies.
+                )
+              })}
+            </div>
+
+            {filtered.length === 0 && (
+              <p style={{ color: 'var(--text-3)', textAlign: 'center', padding: '48px 0' }}>
+                No certifications found in this category.
+              </p>
+            )}
+          </div>
+        </section>
+
+        {/* ===================== KNOWLEDGE SHARING ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Teaching</p>
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+              >
+                Knowledge Sharing
+              </h2>
+              <p
+                style={{
+                  color: 'var(--text-2)',
+                  maxWidth: '560px',
+                  marginTop: '12px',
+                  lineHeight: 1.7,
+                }}
+              >
+                Beyond research, Osman has trained over 200 professionals in GIS, remote
+                sensing, and surveying technologies across Sudan and the region — recognized
+                formally by the HRC Director General.
+              </p>
+
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                  gap: '20px',
+                  marginTop: '48px',
+                }}
+              >
+                {[
+                  { number: '200+', label: 'Professionals Trained', sub: 'GIS, RS & Surveying' },
+                  { number: '6+', label: 'Years Teaching', sub: 'Formal & informal' },
+                  { number: '15+', label: 'Training Modules', sub: 'Custom curriculum' },
+                  { number: '10+', label: 'Software Tools', sub: 'Covered in training' },
+                ].map(({ number, label, sub }) => (
+                  <div
+                    key={label}
+                    style={{
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '24px',
+                      textAlign: 'center',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                    }}
+                  >
+                    <div
+                      className="font-display font-bold"
+                      style={{ fontSize: '1.75rem', color: 'var(--warm)', marginBottom: '4px' }}
+                    >
+                      {number}
+                    </div>
+                    <div style={{ fontSize: '0.85rem', color: 'var(--text-1)', fontWeight: 600, marginBottom: '4px' }}>
+                      {label}
+                    </div>
+                    <div style={{ fontSize: '0.75rem', color: 'var(--text-3)' }}>{sub}</div>
+                  </div>
+                ))}
+              </div>
+
+              <div
+                style={{
+                  marginTop: '40px',
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderLeft: '3px solid var(--accent)',
+                  borderRadius: '6px',
+                  padding: '24px 28px',
+                  maxWidth: '640px',
+                }}
+              >
+                <p
+                  style={{
+                    fontSize: '0.9rem',
+                    color: 'var(--text-2)',
+                    lineHeight: 1.7,
+                    fontStyle: 'italic',
+                  }}
+                >
+                  &ldquo;Recognized by the HRC Director General for exceptional contributions
+                  to knowledge transfer and capacity building in geospatial technologies
+                  across the Hydraulics Research Center and partner organizations.&rdquo;
                 </p>
-                <div className="space-y-2 text-sm text-gray-300">
-                  <p>• <strong className="text-green-400">Geographic Information Systems (GIS)</strong></p>
-                  <p>• <strong className="text-blue-400">Remote Sensing Techniques (RS)</strong></p>
-                  <p>• <strong className="text-purple-400">Land and Bathymetric Surveying</strong></p>
-                  <p>• <strong className="text-yellow-400">Professional Software Training</strong> (ArcGIS, ERDAS, AutoCAD, QGIS)</p>
-                </div>
-                <div className="mt-6 p-4 bg-green-500/20 rounded-lg border border-green-500/30">
-                  <p className="text-green-300 text-sm">
-                    <strong>Recognition:</strong> Acknowledged by the Director General of HRC for commitment 
-                    and excellence in technical instruction and capacity building.
-                  </p>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-6">
-                <div className="text-center group">
-                  <div className="text-4xl font-bold bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">
-                    <AnimatedCounter end={200} />+
-                  </div>
-                  <div className="text-gray-300 group-hover:text-white transition-colors">Professionals Trained</div>
-                  <div className="text-xs text-gray-400 mt-1">Engineers & Technicians</div>
-                </div>
-                <div className="text-center group">
-                  <div className="text-4xl font-bold bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">
-                    <AnimatedCounter end={6} />+
-                  </div>
-                  <div className="text-gray-300 group-hover:text-white transition-colors">Years Teaching</div>
-                  <div className="text-xs text-gray-400 mt-1">Continuous Training</div>
-                </div>
-                <div className="text-center group">
-                  <div className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">
-                    <AnimatedCounter end={15} />+
-                  </div>
-                  <div className="text-gray-300 group-hover:text-white transition-colors">Training Modules</div>
-                  <div className="text-xs text-gray-400 mt-1">Specialized Topics</div>
-                </div>
-                <div className="text-center group">
-                  <div className="text-4xl font-bold bg-gradient-to-r from-orange-400 to-red-400 bg-clip-text text-transparent mb-2 group-hover:scale-110 transition-transform">
-                    <AnimatedCounter end={10} />+
-                  </div>
-                  <div className="text-gray-300 group-hover:text-white transition-colors">Software Tools</div>
-                  <div className="text-xs text-gray-400 mt-1">Technical Training</div>
-                </div>
+                <p
+                  style={{
+                    fontSize: '0.8rem',
+                    color: 'var(--text-3)',
+                    marginTop: '12px',
+                  }}
+                >
+                  — Hydraulics Research Center, Sudan
+                </p>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        </RevealSection>
+      </main>
 
-      {/* Call to Action */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/5 backdrop-blur-sm relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-4">
-            Ready to Apply This Expertise?
-          </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Let's discuss how my continuous learning and certified expertise can help your next project succeed.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="/contact"
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-2"
-            >
-              <span>Get In Touch</span>
-              <ChevronRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-            </a>
-            <a
-              href="/projects"
-              className="border border-purple-400 text-purple-300 px-8 py-3 rounded-lg font-medium hover:bg-purple-400/20 transition-all duration-300 transform hover:scale-105"
-            >
-              View My Projects
-            </a>
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-black/50 backdrop-blur-sm py-8 px-4 sm:px-6 lg:px-8 border-t border-white/20 relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent">
-            © 2025 Osman Osama Ahmed Ibrahim. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
+      <Footer />
+    </>
   )
 }

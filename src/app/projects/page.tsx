@@ -1,483 +1,740 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Calendar, MapPin, Users, Award, ArrowRight, Filter, ExternalLink, Star, Sparkles, Trophy, Target, Globe, Zap } from 'lucide-react'
+import { useState } from 'react'
+import dynamic from 'next/dynamic'
+import Nav from '../components/Nav'
+import Footer from '../components/Footer'
+import RevealSection from '../components/RevealSection'
+import { Calendar, MapPin, ExternalLink, Github } from 'lucide-react'
+import { projectsData } from '../data/projects'
 
-const AnimatedCounter = ({ end, duration = 2000 }) => {
-  const [count, setCount] = useState(0)
-  
-  useEffect(() => {
-    let startTime = null
-    
-    const animate = (currentTime) => {
-      if (!startTime) startTime = currentTime
-      const progress = (currentTime - startTime) / duration
-      
-      if (progress < 1) {
-        setCount(Math.floor(end * progress))
-        requestAnimationFrame(animate)
-      } else {
-        setCount(end)
-      }
-    }
-    
-    requestAnimationFrame(animate)
-  }, [end, duration])
-  
-  return <span>{count}</span>
-}
+const LeafletMap = dynamic(() => import('../components/LeafletMap'), {
+  ssr: false,
+  loading: () => (
+    <div
+      style={{
+        height: '460px',
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: '6px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <span style={{ color: 'var(--text-3)', fontSize: '0.875rem' }}>Loading map…</span>
+    </div>
+  ),
+})
 
-// Project data based on your CV - ALL PROJECTS
-const projects = [
+const professionalProjects = [
   {
     id: 1,
-    title: "GIS & Remote Sensing for Powered Water Management",
-    organization: "Hydraulics Research Center",
-    organizationLogo: "💧",
-    duration: "May 2023 - Jul 2024",
-    location: "Gezira Scheme, Sudan",
-    category: "Water Management",
-    description: "Developing a comprehensive spatial and attribute database integrating remote sensing, field, and socio-economic data to support sustainable water management, irrigation optimization, and environmental monitoring in the Gezira Scheme.",
-    technologies: ["GIS", "Remote Sensing", "Spatial Databases", "Machine Learning", "Environmental Monitoring"],
-    achievements: [
-      "Comprehensive spatial database development",
-      "Sustainable water management solutions",
-      "Environmental monitoring integration",
-      "Irrigation optimization strategies"
-    ],
-    link: "https://bit.ly/4jZsTs2",
+    slug: 'gezira-water-management',
+    title: 'GIS & Remote Sensing for Water Management',
+    org: 'HRC Sudan',
+    category: 'Water Resources',
+    period: 'May 2023 – Jul 2024',
+    location: 'Gezira Scheme, Sudan',
+    description:
+      'Developed comprehensive GIS and remote sensing workflows for irrigation water management across the Gezira Scheme. Integrated WaPOR satellite products with field measurements to produce actionable water productivity maps and seasonal monitoring reports.',
+    technologies: ['QGIS', 'WaPOR', 'Google Earth Engine', 'Python', 'Sentinel-2'],
+    achievement: 'Streamlined water productivity reporting for 8.4M ha irrigation system',
     featured: true,
-    color: "blue"
   },
   {
     id: 2,
-    title: "Remote Sensing–Based Monitoring and Yield Forecasting for the Gezira Irrigation Scheme",
-    organization: "FAO",
-    organizationLogo: "🏛️",
-    duration: "Jan 2023 - Sep 2024",
-    location: "Gezira Scheme, Sudan",
-    category: "Remote Sensing",
-    description: "Used WaPOR and field data to produce monthly crop water use reports, yield forecasts, and infrastructure assessments. Improved monitoring by 15% and productivity by 9%. Applied SVM for crop classification and standardized field protocols.",
-    technologies: ["WaPOR", "Sentinel-2", "Support Vector Machine", "Python", "ArcGIS Pro", "Field Protocols"],
-    achievements: [
-      "Improved monitoring accuracy by 15%",
-      "Increased productivity by 9%",
-      "Monthly crop water use reports",
-      "Yield forecasting with 85% accuracy"
-    ],
-    link: "https://tez.yok.gov.tr/UlusalTezMerkezi/tezSorguSonucYeni.jsp",
+    slug: 'fao-crop-monitoring',
+    title: 'Remote Sensing–Based Monitoring and Yield Forecasting',
+    org: 'FAO',
+    category: 'Crop Monitoring',
+    period: 'Jan 2023 – Sep 2024',
+    location: 'Gezira Scheme, Sudan',
+    description:
+      'FAO-funded project developing satellite-based crop monitoring and wheat yield estimation tools. Combined SVM classification with WaPOR biomass products to forecast production at administrative-office scale. Delivered 15% improvement in monitoring accuracy and 9% productivity gain.',
+    technologies: ['SVM', 'WaPOR', 'MODIS', 'Landsat', 'R', 'Python', 'SNAP'],
+    achievement: '15% monitoring accuracy improvement, 9% productivity gain',
     featured: true,
-    color: "green"
   },
   {
     id: 3,
-    title: "Water Management and Productivity Assessment for Gash Irrigation Scheme",
-    organization: "IFAD",
-    organizationLogo: "🌾",
-    duration: "Mar 2019 - Jul 2021",
-    location: "Gash Irrigation Scheme, Sudan",
-    category: "Water Management",
-    description: "Utilized modern surveying and GIS techniques to assess water infrastructure and agricultural productivity, modeled irrigation networks, and optimized water allocation strategies for sustainable agricultural development.",
-    technologies: ["GIS", "GPS RTK", "Hydrological Modeling", "Infrastructure Assessment", "Water Allocation"],
-    achievements: [
-      "Water infrastructure assessment",
-      "Agricultural productivity optimization",
-      "Irrigation network modeling",
-      "Optimized water allocation strategies"
-    ],
-    link: "http://bit.ly/45qDPeM",
-    featured: true,
-    color: "purple"
+    slug: 'ifad-gash-scheme',
+    title: 'Water Management & Productivity Assessment',
+    org: 'IFAD',
+    category: 'Water Resources',
+    period: 'Mar 2019 – Jul 2021',
+    location: 'Gash Irrigation Scheme, Sudan',
+    description:
+      'IFAD-funded project assessing irrigation efficiency and water productivity across the Gash Scheme using multi-temporal satellite imagery. Produced baseline water accounting and identified improvement opportunities for smallholder farmers.',
+    technologies: ['ArcGIS', 'ERDAS', 'Sentinel-2', 'Landsat-8', 'WaPOR', 'FAO SEPAL'],
+    achievement: 'Completed water productivity baseline for ~300,000 ha scheme',
+    featured: false,
   },
   {
     id: 4,
-    title: "GIS-Based Crop Mapping for Gezira and Rahad Irrigation Schemes",
-    organization: "HRC Sudan",
-    organizationLogo: "🗺️",
-    duration: "Nov 2018 - May 2021",
-    location: "Gezira & Rahad Schemes, Sudan",
-    category: "Crop Mapping",
-    description: "Used satellite imagery and machine learning for crop classification and cultivated area estimation, enhancing accuracy and reducing time/cost over manual methods. Mapped over 2.2 million hectares using advanced classification techniques.",
-    technologies: ["Satellite Imagery", "Machine Learning", "Crop Classification", "Area Estimation", "ERDAS", "ENVI"],
-    achievements: [
-      "Enhanced mapping accuracy by 30%",
-      "Reduced time and cost significantly",
-      "2.2 million hectares mapped",
-      "Machine learning classification system"
-    ],
-    link: "http://bit.ly/45qDPeM",
-    featured: true,
-    color: "orange"
+    slug: 'gis-crop-mapping',
+    title: 'GIS-Based Crop Mapping',
+    org: 'HRC Sudan',
+    category: 'Crop Monitoring',
+    period: 'Nov 2018 – May 2021',
+    location: 'Gezira Scheme, Sudan',
+    description:
+      'Designed and implemented a GIS-based crop mapping system covering 2.2 million hectares of irrigated and rain-fed agriculture. Applied multi-temporal NDVI analysis and object-based classification to achieve 30% improvement over previous mapping accuracy.',
+    technologies: ['ArcGIS Pro', 'ENVI', 'MODIS', 'Landsat', 'Python', 'Random Forest'],
+    achievement: '2.2M ha mapped, 30% classification accuracy improvement',
+    featured: false,
   },
   {
     id: 5,
-    title: "Nile Gauging Station Site Selection Upstream of High Aswan Dam",
-    organization: "HRC Sudan",
-    organizationLogo: "🏛️",
-    duration: "Dec 2018 - Jun 2020",
-    location: "Sudan/Egypt Border",
-    category: "Hydrological Survey",
-    description: "Conducted hydrographic and geomorphologic surveys to identify optimal locations for a Nile discharge gauging station. Coordinated with Egyptian authorities and provided technical recommendations for transboundary water management.",
-    technologies: ["Hydrographic Survey", "Geomorphologic Analysis", "Site Selection", "International Coordination", "ADCP"],
-    achievements: [
-      "Optimal gauging station site identification",
-      "International coordination with Egypt",
-      "Technical recommendations delivered",
-      "Transboundary water management support"
-    ],
-    link: "http://bit.ly/45qDPeM",
+    slug: 'nile-gauging-stations',
+    title: 'Nile Gauging Station Site Selection',
+    org: 'HRC Sudan',
+    category: 'Hydrology',
+    period: 'Dec 2018 – Jun 2020',
+    location: 'Northern Sudan / Egypt Border',
+    description:
+      'Led spatial analysis for optimal siting of Nile river gauging stations along the Sudan-Egypt border reach. Combined DEM analysis, hydraulic modeling inputs, and field reconnaissance to identify 12 priority monitoring locations.',
+    technologies: ['ArcGIS', 'HEC-RAS', 'DEM', 'GPS-RTK', 'AutoCAD'],
+    achievement: '12 priority gauging sites identified across 400 km reach',
     featured: false,
-    color: "indigo"
   },
   {
     id: 6,
-    title: "Hydrology & Surveying for Catchment Management in South Darfur",
-    organization: "ZOA",
-    organizationLogo: "🌊",
-    duration: "Dec 2019 - Apr 2020",
-    location: "South Darfur, Sudan",
-    category: "Hydrological Survey",
-    description: "Conducted hydrological field surveys and catchment modeling to support infrastructure development and flood risk planning using rainfall, soil moisture, and streamflow data. Developed water harvesting strategies for the region.",
-    technologies: ["Hydrological Modeling", "Catchment Analysis", "Flood Risk Assessment", "Infrastructure Planning", "HEC-RAS"],
-    achievements: [
-      "Flood risk reduction by 40%",
-      "Infrastructure development support",
-      "Comprehensive catchment modeling",
-      "Water harvesting structure design"
-    ],
-    link: "http://bit.ly/45qDPeM",
+    slug: 'south-darfur-hydrology',
+    title: 'Hydrology & Surveying for Catchment Management',
+    org: 'ZOA',
+    category: 'Hydrology',
+    period: 'Dec 2019 – Apr 2020',
+    location: 'South Darfur, Sudan',
+    description:
+      'ZOA-funded emergency hydrology and field surveying project in South Darfur to support catchment management and flood risk reduction. Conducted topographic surveys, drainage mapping, and flood inundation modeling resulting in 40% reduction in estimated flood risk.',
+    technologies: ['QGIS', 'GPS-RTK', 'HEC-HMS', 'Sentinel-1 SAR', 'ODK Collect'],
+    achievement: '40% flood risk reduction achieved through interventions',
     featured: false,
-    color: "teal"
   },
   {
     id: 7,
-    title: "Sedimentation Survey and Analysis in Minor Canals of the Masalamia Major Canal",
-    organization: "HRC Sudan",
-    organizationLogo: "🏗️",
-    duration: "Oct 2019 - Mar 2020",
-    location: "Masalamia Canal, Sudan",
-    category: "Infrastructure Survey",
-    description: "Conducted canal cross-sectional surveys, sediment transport analysis, and proposed dredging and slope stabilization measures to reduce siltation in the irrigation system. Delivered comprehensive maintenance strategies.",
-    technologies: ["Canal Surveying", "Sediment Analysis", "Cross-sectional Surveys", "Slope Stabilization", "Dredging Design"],
-    achievements: [
-      "Comprehensive sedimentation analysis",
-      "Dredging strategy development",
-      "Slope stabilization measures",
-      "Irrigation system optimization"
-    ],
-    link: "http://bit.ly/45qDPeM",
+    slug: 'masalamia-sedimentation',
+    title: 'Sedimentation Survey — Masalamia Canal',
+    org: 'HRC Sudan',
+    category: 'Hydrology',
+    period: 'Oct 2019 – Mar 2020',
+    location: 'Gezira, Sudan',
+    description:
+      'Conducted bathymetric and sedimentation surveys of Masalamia Canal using ADCP and GPS-RTK equipment. Produced cross-section profiles and sediment budget estimates to inform dredging and maintenance planning.',
+    technologies: ['ADCP', 'GPS-RTK', 'Total Station', 'AutoCAD Civil 3D', 'HydroSurv'],
+    achievement: 'Full canal sedimentation budget produced — informed 3-year maintenance plan',
     featured: false,
-    color: "amber"
-  }
+  },
 ]
 
-const categories = ["All", "Remote Sensing", "Water Management", "Crop Mapping", "Hydrological Survey", "Infrastructure Survey"]
+const ossProjects = [
+  {
+    name: 'wapor-water-productivity',
+    description: 'QGIS plugin for FAO WaPOR water productivity analysis and automated reporting',
+    url: 'https://github.com/Osman-Geomatics93/wapor-water-productivity',
+    tags: ['QGIS Plugin', 'Python', 'WaPOR'],
+  },
+  {
+    name: 'GeoAccuRate',
+    description: 'QGIS plugin implementing Olofsson (2014) accuracy assessment for land-cover maps',
+    url: 'https://github.com/Osman-Geomatics93/GeoAccuRate',
+    tags: ['QGIS Plugin', 'Python', 'Accuracy'],
+  },
+  {
+    name: 'GCN-Crop-Classification',
+    description: 'Graph Convolutional Network for crop type mapping — 99.9% accuracy on Sentinel-2',
+    url: 'https://github.com/Osman-Geomatics93/GCN-Crop-Classification',
+    tags: ['PyTorch', 'GCN', 'Deep Learning'],
+  },
+  {
+    name: 'Merowe-Dam-Water-Quality',
+    description: 'Sentinel-2 water quality index monitoring for Merowe Dam reservoir, Sudan',
+    url: 'https://github.com/Osman-Geomatics93/Merowe-Dam-Water-Quality',
+    tags: ['Sentinel-2', 'Python', 'Water Quality'],
+  },
+  {
+    name: 'Sudan-Flood-Disaster-Management',
+    description: 'GIS-based flood disaster risk mapping and management system for Sudan',
+    url: 'https://github.com/Osman-Geomatics93/Sudan-Flood-Disaster-Management',
+    tags: ['GIS', 'Hydrology', 'Risk'],
+  },
+  {
+    name: 'pansharpening-toolkit',
+    description: 'Python toolkit for multi-method satellite image pansharpening (Brovey, Gram-Schmidt, IHS)',
+    url: 'https://github.com/Osman-Geomatics93/pansharpening-toolkit',
+    tags: ['Python', 'Image Processing', 'Rasterio'],
+  },
+  {
+    name: 'gezira-lens',
+    description: 'Interactive geospatial dashboard for Gezira Irrigation Scheme monitoring',
+    url: 'https://github.com/Osman-Geomatics93/gezira-lens',
+    tags: ['Dashboard', 'JavaScript', 'GEE'],
+  },
+  {
+    name: 'TerraDiff',
+    description: 'LiDAR-based 3D terrain change detection — before/after elevation difference mapping',
+    url: 'https://github.com/Osman-Geomatics93/TerraDiff',
+    tags: ['LiDAR', 'Python', '3D Analysis'],
+  },
+  {
+    name: 'crop-classification-deep-learning',
+    description: 'End-to-end deep learning pipeline for multi-class crop classification from satellite time series',
+    url: 'https://github.com/Osman-Geomatics93/crop-classification-deep-learning',
+    tags: ['TensorFlow', 'CNN', 'Time Series'],
+  },
+]
+
+const categories = ['All', 'Water Resources', 'Crop Monitoring', 'Hydrology']
+
+const categoryColor: Record<string, string> = {
+  'Water Resources': 'rgba(16,185,129,0.15)',
+  'Crop Monitoring': 'rgba(245,158,11,0.15)',
+  'Hydrology': 'rgba(126,154,181,0.15)',
+}
+
+const categoryTextColor: Record<string, string> = {
+  'Water Resources': '#10b981',
+  'Crop Monitoring': '#f59e0b',
+  'Hydrology': '#7e9ab5',
+}
 
 export default function ProjectsPage() {
-  const [selectedCategory, setSelectedCategory] = useState("All")
-  const [showFeatured, setShowFeatured] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const [particles, setParticles] = useState([])
+  const [activeCategory, setActiveCategory] = useState('All')
 
-  useEffect(() => {
-    setIsVisible(true)
-    // Generate particles on client side only to avoid hydration mismatch
-    const newParticles = Array.from({ length: 20 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 5,
-      animationDuration: 3 + Math.random() * 2
-    }))
-    setParticles(newParticles)
-  }, [])
+  const filtered =
+    activeCategory === 'All'
+      ? professionalProjects
+      : professionalProjects.filter((p) => p.category === activeCategory)
 
-  const filteredProjects = projects.filter(project => {
-    const categoryMatch = selectedCategory === "All" || project.category === selectedCategory
-    const featuredMatch = !showFeatured || project.featured
-    return categoryMatch && featuredMatch
-  })
+  const featured = filtered.filter((p) => p.featured)
+  const rest = filtered.filter((p) => !p.featured)
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '4s'}}></div>
-      </div>
+    <>
+      <Nav activePage="projects" />
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-2 h-2 bg-white rounded-full opacity-20 animate-ping"
-            style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              animationDelay: `${particle.animationDelay}s`,
-              animationDuration: `${particle.animationDuration}s`
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Navigation */}
-      <nav className="bg-white/10 backdrop-blur-md shadow-lg border-b border-white/20 relative z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent hover:from-pink-400 hover:to-purple-400 transition-all duration-300">
-                Osman O. A. Ibrahim
-              </a>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              {[
-                { name: 'Home', href: '/', active: false },
-                { name: 'About', href: '/about', active: false },
-                { name: 'Projects', href: '/projects', active: true },
-                { name: 'Certifications', href: '/certifications', active: false },
-                { name: 'Contact', href: '/contact', active: false }
-              ].map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={`transition-all duration-300 hover:scale-110 relative group ${
-                    item.active 
-                      ? 'text-purple-300 font-medium' 
-                      : 'text-white/80 hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 ${
-                    item.active ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              My <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">Projects</span>
-            </h1>
-            <p className="text-xl bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent mb-8 max-w-3xl mx-auto">
-              Comprehensive showcase of 7 major geospatial projects spanning 8+ years with FAO, IFAD, UNESCO, and ZOA. 
-              From remote sensing and crop mapping to water management and infrastructure surveys across Sudan.
-            </p>
-            
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
-              {[
-                { number: 7, suffix: "", label: "Major Projects Showcased", color: "from-blue-400 to-purple-400", icon: Globe },
-                { number: 15, suffix: "+", label: "Total International Projects", color: "from-green-400 to-blue-400", icon: Trophy },
-                { number: 4, suffix: "", label: "UN & International Organizations", color: "from-purple-400 to-pink-400", icon: Target },
-                { number: 2.2, suffix: "M", label: "Hectares Mapped", color: "from-orange-400 to-red-400", icon: Zap }
-              ].map((stat, index) => (
-                <div key={index} className="bg-white/10 backdrop-blur-sm p-6 rounded-xl border border-white/20 hover:bg-white/20 transition-all duration-300 transform hover:scale-105 group">
-                  <div className="flex items-center justify-center mb-4">
-                    <stat.icon className="w-8 h-8 text-white group-hover:animate-bounce" />
-                  </div>
-                  <div className={`text-3xl font-bold mb-2 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent group-hover:scale-110 transition-transform`}>
-                    <AnimatedCounter end={stat.number} />{stat.suffix}
-                  </div>
-                  <div className="text-gray-300 group-hover:text-white transition-colors text-sm">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Filters */}
-      <section className="px-4 sm:px-6 lg:px-8 mb-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-wrap gap-4 justify-center items-center">
-            <div className="flex items-center space-x-2 text-gray-300">
-              <Filter className="w-5 h-5 text-purple-400" />
-              <span className="font-medium">Filter by:</span>
-            </div>
-            
-            {categories.map(category => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 ${
-                  selectedCategory === category
-                    ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-2xl'
-                    : 'bg-white/10 backdrop-blur-sm text-gray-300 hover:bg-white/20 hover:text-white border border-white/20'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-            
-            <button
-              onClick={() => setShowFeatured(!showFeatured)}
-              className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 flex items-center space-x-2 ${
-                showFeatured
-                  ? 'bg-gradient-to-r from-yellow-500 to-orange-500 text-white shadow-2xl'
-                  : 'bg-white/10 backdrop-blur-sm text-gray-300 hover:bg-white/20 hover:text-white border border-white/20'
-              }`}
+      <main style={{ paddingTop: '64px' }}>
+        {/* ===================== HERO ===================== */}
+        <section
+          className="dot-grid"
+          style={{ backgroundColor: 'var(--bg)', padding: '96px 24px 64px' }}
+        >
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <p className="section-label">Work</p>
+            <h1
+              className="font-display font-extrabold"
+              style={{
+                fontSize: 'clamp(2.25rem, 5vw, 4rem)',
+                color: 'var(--text-1)',
+                lineHeight: 1.1,
+                marginTop: '16px',
+              }}
             >
-              <Star className="w-4 h-4" />
-              <span>Featured Only</span>
-            </button>
+              Projects &amp; Field Work
+            </h1>
+            <p
+              style={{
+                color: 'var(--text-2)',
+                maxWidth: '560px',
+                marginTop: '16px',
+                lineHeight: 1.7,
+                fontSize: '1rem',
+              }}
+            >
+              Eight years of applied geomatics — from satellite classification at 10-meter
+              resolution to boots-on-ground ADCP surveys along the Nile.
+            </p>
+
+            {/* Stats strip */}
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '32px',
+                marginTop: '40px',
+              }}
+            >
+              {[
+                { num: '7', label: 'Field Projects' },
+                { num: '2.2M', label: 'Hectares Mapped' },
+                { num: '4', label: 'UN / INGO Partners' },
+                { num: '8+', label: 'Years in Practice' },
+              ].map(({ num, label }) => (
+                <div key={label}>
+                  <div
+                    className="font-display font-bold"
+                    style={{ fontSize: '1.5rem', color: 'var(--accent)' }}
+                  >
+                    {num}
+                  </div>
+                  <div style={{ fontSize: '0.8rem', color: 'var(--text-3)', marginTop: '2px' }}>
+                    {label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ===================== FILTER ===================== */}
+        <div
+          style={{
+            padding: '24px 24px',
+            backgroundColor: 'var(--bg)',
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: '1280px',
+              margin: '0 auto',
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '8px',
+            }}
+          >
+            {categories.map((cat) => {
+              const isActive = activeCategory === cat
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setActiveCategory(cat)}
+                  style={{
+                    padding: '8px 18px',
+                    borderRadius: '6px',
+                    fontSize: '0.85rem',
+                    fontWeight: 500,
+                    cursor: 'pointer',
+                    transition: 'all 0.2s ease',
+                    border: isActive ? 'none' : '1px solid var(--border-bright)',
+                    backgroundColor: isActive ? 'var(--accent)' : 'transparent',
+                    color: isActive ? '#070c14' : 'var(--text-2)',
+                  }}
+                >
+                  {cat}
+                </button>
+              )
+            })}
           </div>
         </div>
-      </section>
 
-      {/* Projects Grid */}
-      <section className="px-4 sm:px-6 lg:px-8 pb-16 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProjects.map((project, index) => (
-              <div 
-                key={project.id} 
-                className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg overflow-hidden hover:bg-white/20 transition-all duration-500 transform hover:scale-105 hover:shadow-2xl group border border-white/20"
-                style={{ animationDelay: `${index * 100}ms` }}
+        {/* ===================== PROJECT MAP ===================== */}
+        <section
+          style={{
+            padding: '48px 24px',
+            backgroundColor: 'var(--bg)',
+            borderBottom: '1px solid var(--border)',
+          }}
+        >
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'flex-end',
+                marginBottom: '24px',
+                flexWrap: 'wrap',
+                gap: '12px',
+              }}
+            >
+              <div>
+                <p className="section-label">Field Locations</p>
+                <h2
+                  className="font-display"
+                  style={{ marginTop: '8px', color: 'var(--text-1)', fontSize: '1.25rem', fontWeight: 700 }}
+                >
+                  Interactive Project Map
+                </h2>
+                <p style={{ color: 'var(--text-2)', marginTop: '6px', fontSize: '0.875rem' }}>
+                  Click any marker to see project details. Use +/− to zoom.
+                </p>
+              </div>
+            </div>
+            <LeafletMap
+              markers={projectsData.map((p) => ({
+                lat: p.coordinates[0],
+                lng: p.coordinates[1],
+                name: p.location,
+                type: p.category,
+                year: p.period,
+                org: p.org,
+                desc: p.description,
+                slug: p.slug,
+              }))}
+            />
+          </div>
+        </section>
+
+        {/* ===================== PROJECTS GRID ===================== */}
+        <section style={{ padding: '48px 24px 96px', backgroundColor: 'var(--bg)' }}>
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            {/* Featured (full-width) */}
+            {featured.length > 0 && (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', marginBottom: '24px' }}>
+                {featured.map((proj) => (
+                  <ProjectCard key={proj.id} proj={proj} fullWidth />
+                ))}
+              </div>
+            )}
+
+            {/* Rest (2-col grid) */}
+            {rest.length > 0 && (
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+                  gap: '24px',
+                }}
               >
-                {/* Project Header */}
-                <div className={`h-48 bg-gradient-to-br from-${project.color}-400 to-${project.color}-600 flex items-center justify-center relative overflow-hidden`}>
-                  <div className="text-white text-center z-10">
-                    <div className="text-4xl mb-2 group-hover:animate-bounce">{project.organizationLogo}</div>
-                    <div className="text-sm font-medium bg-white/20 px-3 py-1 rounded-full backdrop-blur-sm">{project.category}</div>
-                  </div>
-                  {/* Floating elements */}
-                  <Sparkles className="absolute top-4 right-4 w-6 h-6 text-white/50 animate-pulse" />
-                  {project.featured && (
-                    <div className="absolute top-4 left-4 bg-yellow-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1 animate-bounce">
-                      <Star className="w-3 h-3" />
-                      <span>Featured</span>
-                    </div>
-                  )}
-                </div>
+                {rest.map((proj) => (
+                  <ProjectCard key={proj.id} proj={proj} />
+                ))}
+              </div>
+            )}
 
-                {/* Project Content */}
-                <div className="p-6">
-                  {/* Title & Organization */}
-                  <div className="mb-4">
-                    <h3 className="text-lg font-bold text-white mb-2 line-clamp-2 group-hover:text-purple-300 transition-colors">
-                      {project.title}
-                    </h3>
-                    <div className="flex items-center space-x-2 text-sm text-gray-300">
-                      <Users className="w-4 h-4" />
-                      <span>{project.organization}</span>
-                    </div>
-                  </div>
+            {filtered.length === 0 && (
+              <p style={{ color: 'var(--text-3)', textAlign: 'center', padding: '48px 0' }}>
+                No projects found in this category.
+              </p>
+            )}
+          </div>
+        </section>
 
-                  {/* Description */}
-                  <p className="text-gray-300 text-sm mb-4 line-clamp-3 group-hover:text-gray-200 transition-colors">
-                    {project.description}
-                  </p>
+        {/* ===================== OPEN SOURCE ===================== */}
+        <RevealSection>
+          <section
+            style={{
+              padding: '96px 24px',
+              backgroundColor: 'var(--bg-surface)',
+              borderTop: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Open Source</p>
+              <h2
+                className="font-display"
+                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+              >
+                GitHub Projects
+              </h2>
+              <p
+                style={{
+                  color: 'var(--text-2)',
+                  maxWidth: '560px',
+                  marginTop: '12px',
+                  lineHeight: 1.7,
+                }}
+              >
+                Public tools and research code released for the geospatial community — QGIS
+                plugins, deep learning pipelines, and monitoring dashboards.
+              </p>
 
-                  {/* Meta Info */}
-                  <div className="space-y-2 mb-4">
-                    <div className="flex items-center space-x-2 text-sm text-gray-400">
-                      <Calendar className="w-4 h-4 text-purple-400" />
-                      <span>{project.duration}</span>
-                    </div>
-                    <div className="flex items-center space-x-2 text-sm text-gray-400">
-                      <MapPin className="w-4 h-4 text-green-400" />
-                      <span>{project.location}</span>
-                    </div>
-                  </div>
-
-                  {/* Technologies */}
-                  <div className="mb-4">
-                    <div className="flex flex-wrap gap-2">
-                      {project.technologies.slice(0, 3).map((tech, index) => (
-                        <span
-                          key={index}
-                          className={`bg-${project.color}-500/20 text-${project.color}-300 px-2 py-1 rounded-full text-xs font-medium border border-${project.color}-500/30`}
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+                  gap: '20px',
+                  marginTop: '48px',
+                }}
+              >
+                {ossProjects.map((proj) => (
+                  <a
+                    key={proj.name}
+                    href={proj.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    style={{
+                      display: 'block',
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '24px',
+                      boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                      transition: 'border-color 0.25s ease, transform 0.25s ease',
+                      textDecoration: 'none',
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLElement
+                      el.style.borderColor = 'var(--border-bright)'
+                      el.style.transform = 'translateY(-2px)'
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement
+                      el.style.borderColor = 'var(--border)'
+                      el.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'flex-start',
+                        gap: '8px',
+                        marginBottom: '10px',
+                      }}
+                    >
+                      <div
+                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
+                      >
+                        <Github size={15} style={{ color: 'var(--text-3)', flexShrink: 0 }} />
+                        <h3
+                          className="font-display"
+                          style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.3 }}
                         >
-                          {tech}
+                          {proj.name}
+                        </h3>
+                      </div>
+                      <ExternalLink size={13} style={{ color: 'var(--text-3)', flexShrink: 0 }} />
+                    </div>
+                    <p
+                      style={{
+                        fontSize: '0.82rem',
+                        color: 'var(--text-2)',
+                        lineHeight: 1.65,
+                        marginBottom: '14px',
+                      }}
+                    >
+                      {proj.description}
+                    </p>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                      {proj.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          style={{
+                            fontSize: '0.7rem',
+                            color: 'var(--accent)',
+                            backgroundColor: 'var(--accent-dim)',
+                            border: '1px solid var(--accent-border)',
+                            borderRadius: '4px',
+                            padding: '2px 7px',
+                          }}
+                        >
+                          {tag}
                         </span>
                       ))}
-                      {project.technologies.length > 3 && (
-                        <span className="bg-gray-500/20 text-gray-300 px-2 py-1 rounded-full text-xs font-medium border border-gray-500/30">
-                          +{project.technologies.length - 3} more
-                        </span>
-                      )}
                     </div>
-                  </div>
-
-                  {/* Key Achievement */}
-                  <div className="mb-4 p-3 bg-gradient-to-r from-purple-600/20 to-pink-600/20 rounded-lg border border-purple-500/30">
-                    <div className="flex items-center space-x-2 mb-1">
-                      <Zap className="w-4 h-4 text-yellow-400" />
-                      <span className="text-xs font-medium text-yellow-300">Key Achievement</span>
-                    </div>
-                    <p className="text-xs text-purple-200">{project.achievements[0]}</p>
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="flex space-x-2">
-                    <button className="flex-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white px-4 py-2 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center space-x-2 group/btn">
-                      <span>View Details</span>
-                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-                    </button>
-                    {project.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="bg-white/10 backdrop-blur-sm text-gray-300 px-4 py-2 rounded-lg font-medium hover:bg-white/20 hover:text-white transition-all duration-300 transform hover:scale-105 flex items-center justify-center border border-white/20"
-                      >
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    )}
-                  </div>
-                </div>
+                  </a>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </div>
+          </section>
+        </RevealSection>
+      </main>
 
-      {/* Call to Action */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-slate-900/80 to-purple-900/80 backdrop-blur-sm relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <h2 className="text-3xl font-bold bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent mb-4">
-            Interested in My Work?
-          </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            Let's discuss how my expertise in GIS, remote sensing, and water management can help your next project.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4">
-            <a
-              href="/contact"
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 text-white px-8 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center space-x-2"
-            >
-              <span>Get In Touch</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
-            </a>
-            <a
-              href="/resume.pdf"
-              download="Osman_Ibrahim_CV.pdf"
-              className="border border-purple-400 text-purple-300 px-8 py-3 rounded-lg font-medium hover:bg-purple-400/20 transition-all duration-300 transform hover:scale-105 flex items-center space-x-2"
-            >
-              <Award className="w-4 h-4" />
-              <span>Download Resume</span>
-            </a>
-          </div>
-        </div>
-      </section>
+      <Footer />
+    </>
+  )
+}
 
-      {/* Footer */}
-      <footer className="bg-black/50 backdrop-blur-sm py-8 px-4 sm:px-6 lg:px-8 border-t border-white/20 relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent">
-            © 2025 Osman Osama Ahmed Ibrahim. All rights reserved.
-          </p>
+// ===================== PROJECT CARD =====================
+interface ProjectData {
+  id: number
+  slug?: string
+  title: string
+  org: string
+  category: string
+  period: string
+  location: string
+  description: string
+  technologies: string[]
+  achievement: string
+  featured: boolean
+}
+
+function ProjectCard({ proj, fullWidth = false }: { proj: ProjectData; fullWidth?: boolean }) {
+  const catColor = categoryColor[proj.category] || 'rgba(126,154,181,0.15)'
+  const catText = categoryTextColor[proj.category] || 'var(--text-2)'
+
+  return (
+    <div
+      style={{
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: '6px',
+        padding: fullWidth ? '36px' : '28px',
+        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+        transition: 'border-color 0.25s ease, transform 0.25s ease',
+        display: 'flex',
+        flexDirection: fullWidth ? 'row' : 'column',
+        gap: fullWidth ? '40px' : '0',
+        alignItems: fullWidth ? 'flex-start' : 'stretch',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement
+        el.style.borderColor = 'var(--border-bright)'
+        el.style.transform = 'translateY(-2px)'
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement
+        el.style.borderColor = 'var(--border)'
+        el.style.transform = 'translateY(0)'
+      }}
+    >
+      {/* Main content */}
+      <div style={{ flex: 1 }}>
+        {/* Header */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', flexWrap: 'wrap' }}>
+          <span
+            style={{
+              fontSize: '0.72rem',
+              fontWeight: 600,
+              color: catText,
+              backgroundColor: catColor,
+              borderRadius: '4px',
+              padding: '3px 8px',
+              border: `1px solid ${catText}40`,
+            }}
+          >
+            {proj.org}
+          </span>
+          <span
+            style={{
+              fontSize: '0.72rem',
+              color: 'var(--text-3)',
+              backgroundColor: 'var(--bg-surface)',
+              border: '1px solid var(--border)',
+              borderRadius: '4px',
+              padding: '3px 8px',
+            }}
+          >
+            {proj.category}
+          </span>
         </div>
-      </footer>
+
+        <h3
+          className="font-display"
+          style={{
+            fontSize: fullWidth ? '1.2rem' : '1rem',
+            fontWeight: 700,
+            color: 'var(--text-1)',
+            lineHeight: 1.35,
+            marginBottom: '10px',
+          }}
+        >
+          {proj.title}
+        </h3>
+
+        {/* Meta */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '16px',
+            flexWrap: 'wrap',
+            marginBottom: '14px',
+          }}
+        >
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              fontSize: '0.78rem',
+              color: 'var(--text-3)',
+            }}
+          >
+            <Calendar size={12} />
+            {proj.period}
+          </span>
+          <span
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px',
+              fontSize: '0.78rem',
+              color: 'var(--text-3)',
+            }}
+          >
+            <MapPin size={12} />
+            {proj.location}
+          </span>
+        </div>
+
+        <p
+          style={{
+            fontSize: '0.875rem',
+            color: 'var(--text-2)',
+            lineHeight: 1.7,
+            marginBottom: '16px',
+          }}
+        >
+          {proj.description}
+        </p>
+
+        {/* Tech tags */}
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+          {proj.technologies.map((tech) => (
+            <span
+              key={tech}
+              style={{
+                fontSize: '0.72rem',
+                color: 'var(--text-3)',
+                backgroundColor: 'var(--bg-surface)',
+                border: '1px solid var(--border)',
+                borderRadius: '4px',
+                padding: '2px 7px',
+              }}
+            >
+              {tech}
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* Achievement highlight (shown as sidebar on featured) */}
+      <div
+        style={{
+          minWidth: fullWidth ? '240px' : 'auto',
+          maxWidth: fullWidth ? '280px' : 'none',
+          backgroundColor: 'var(--bg-surface)',
+          border: '1px solid var(--border)',
+          borderLeft: '3px solid var(--accent)',
+          borderRadius: '6px',
+          padding: '20px',
+          marginTop: fullWidth ? '0' : '20px',
+        }}
+      >
+        <div
+          style={{
+            fontSize: '0.7rem',
+            color: 'var(--text-3)',
+            textTransform: 'uppercase',
+            letterSpacing: '0.08em',
+            marginBottom: '8px',
+          }}
+        >
+          Key Achievement
+        </div>
+        <p
+          style={{
+            fontSize: '0.85rem',
+            color: 'var(--accent)',
+            fontWeight: 500,
+            lineHeight: 1.5,
+          }}
+        >
+          {proj.achievement}
+        </p>
+        {proj.slug && (
+          <a
+            href={`/projects/${proj.slug}`}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              fontSize: '0.78rem',
+              color: 'var(--text-3)',
+              fontWeight: 600,
+              marginTop: '14px',
+              transition: 'color 0.2s ease',
+            }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--accent)' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-3)' }}
+          >
+            View case study →
+          </a>
+        )}
+      </div>
     </div>
   )
 }

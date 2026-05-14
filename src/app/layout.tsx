@@ -1,20 +1,62 @@
-// src/app/layout.tsx
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Manrope, DM_Sans } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const manrope = Manrope({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-manrope',
+  display: 'swap',
+})
+
+const dmSans = DM_Sans({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-dm-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
-  title: 'Osman Ibrahim - Senior Surveying & Geomatics Engineer',
-  description: 'Professional portfolio of Osman Osama Ahmed Ibrahim, Senior Surveying & Geomatics Engineer with 8+ years of experience in GIS, Remote Sensing, and Water Resource Management.',
-  keywords: 'GIS, Remote Sensing, Surveying, Geomatics, Water Management, FAO, IFAD, UNESCO',
+  title: 'Osman Ibrahim — Remote Sensing & GIS Expert',
+  description:
+    'Geomatics Engineer with 8+ years transforming satellite data into actionable insights for water management, crop monitoring, and environmental assessment. M.Sc. KTU Turkey.',
+  keywords:
+    'Remote Sensing, GIS, Geomatics, QGIS, Google Earth Engine, WaPOR, FAO, IFAD, Sudan, Water Management, Crop Classification, Machine Learning, Sentinel, Landsat, MODIS',
   authors: [{ name: 'Osman Osama Ahmed Ibrahim' }],
   openGraph: {
-    title: 'Osman Ibrahim - Senior Surveying & Geomatics Engineer',
-    description: 'Professional portfolio showcasing international projects with FAO, IFAD, and UNESCO',
-    type: 'website',
+    title: 'Osman Ibrahim — Remote Sensing & GIS Expert',
+    description:
+      'Geomatics Engineer with 8+ years in satellite data analysis, water management, and crop monitoring. Leading projects with FAO, IFAD, and UNESCO.',
+    url: 'https://osman-geomatics.com',
+    siteName: 'Osman Ibrahim Portfolio',
+    images: [
+      {
+        url: 'https://i.imgur.com/1QHqofS.jpg',
+        width: 800,
+        height: 1000,
+        alt: 'Osman Ibrahim — Geomatics Engineer',
+      },
+    ],
     locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Osman Ibrahim — Remote Sensing & GIS Expert',
+    description:
+      'Geomatics Engineer with 8+ years in satellite data analysis, water management, and crop monitoring.',
+    images: ['https://i.imgur.com/1QHqofS.jpg'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 }
 
@@ -24,13 +66,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body 
-        className={inter.className}
-        suppressHydrationWarning={true}
-      >
-        {children}
-      </body>
+    <html lang="en" className={`${manrope.variable} ${dmSans.variable}`}>
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico" />
+      </head>
+      <body className={dmSans.className}>{children}</body>
     </html>
   )
 }

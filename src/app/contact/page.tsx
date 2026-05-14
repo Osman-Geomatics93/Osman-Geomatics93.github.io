@@ -1,7 +1,22 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Mail, Phone, MapPin, Linkedin, Github, Send, Clock, Globe, CheckCircle, Star, Sparkles, MessageCircle, Calendar, ArrowRight } from 'lucide-react'
+import { useState } from 'react'
+import Nav from '../components/Nav'
+import Footer from '../components/Footer'
+import { Mail, Phone, MapPin, Linkedin, Github, Send, CheckCircle, AlertCircle } from 'lucide-react'
+
+const inputStyle: React.CSSProperties = {
+  backgroundColor: '#111f35',
+  border: '1px solid #1a2d45',
+  borderRadius: '6px',
+  padding: '12px 16px',
+  color: '#e8f0fe',
+  fontSize: '0.9rem',
+  width: '100%',
+  outline: 'none',
+  transition: 'border-color 0.2s ease',
+  fontFamily: 'inherit',
+}
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -9,440 +24,489 @@ export default function ContactPage() {
     email: '',
     company: '',
     subject: '',
-    message: ''
+    message: '',
   })
-  
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
-  const [isVisible, setIsVisible] = useState(false)
-  const [particles, setParticles] = useState([])
+  const [error, setError] = useState<string | null>(null)
+  const [focusedField, setFocusedField] = useState<string | null>(null)
 
-  useEffect(() => {
-    setIsVisible(true)
-    // Generate particles on client side only to avoid hydration mismatch
-    const newParticles = Array.from({ length: 15 }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 5,
-      animationDuration: 3 + Math.random() * 2
-    }))
-    setParticles(newParticles)
-  }, [])
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
-    // Simulate form submission (replace with actual email service)
-    setTimeout(() => {
-      setIsSubmitting(false)
+    setError(null)
+
+    try {
+      const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID
+      const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID
+      const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+
+      if (!serviceId || !templateId || !publicKey) {
+        // Fallback: open mailto link if EmailJS is not configured
+        const subject = encodeURIComponent(`Portfolio contact: ${formData.subject}`)
+        const body = encodeURIComponent(
+          `From: ${formData.name} (${formData.email})\nOrg: ${formData.company}\n\n${formData.message}`
+        )
+        window.location.href = `mailto:osmangeomatics93@gmail.com?subject=${subject}&body=${body}`
+        setIsSubmitted(true)
+        return
+      }
+
+      const emailjs = await import('@emailjs/browser')
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          company: formData.company || 'Not provided',
+          subject: formData.subject,
+          message: formData.message,
+        },
+        publicKey
+      )
       setIsSubmitted(true)
-      // Reset form
-      setFormData({
-        name: '',
-        email: '',
-        company: '',
-        subject: '',
-        message: ''
-      })
-    }, 2000)
+    } catch (err) {
+      console.error('Email send error:', err)
+      setError('Failed to send. Please email me directly at osmangeomatics93@gmail.com')
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
-  if (isSubmitted) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center relative overflow-hidden">
-        {/* Animated Background */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '2s'}}></div>
-        </div>
-        
-        <div className="bg-white/10 backdrop-blur-lg p-8 rounded-xl shadow-2xl text-center max-w-md mx-4 border border-white/20 relative z-10 transform animate-bounce">
-          <div className="w-16 h-16 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
-            <CheckCircle className="w-8 h-8 text-white" />
-          </div>
-          <h2 className="text-2xl font-bold text-white mb-4">Message Sent Successfully!</h2>
-          <p className="text-gray-300 mb-6">
-            Thank you for reaching out. I'll get back to you within 24 hours.
-          </p>
-          <button 
-            onClick={() => setIsSubmitted(false)}
-            className="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105"
-          >
-            Send Another Message
-          </button>
-        </div>
-      </div>
-    )
-  }
+  const fieldStyle = (name: string): React.CSSProperties => ({
+    ...inputStyle,
+    borderColor: focusedField === name ? '#10b981' : '#1a2d45',
+  })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '2s'}}></div>
-        <div className="absolute top-40 left-1/2 w-80 h-80 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-pulse" style={{animationDelay: '4s'}}></div>
-      </div>
+    <>
+      <Nav activePage="contact" />
 
-      {/* Floating Particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {particles.map((particle) => (
-          <div
-            key={particle.id}
-            className="absolute w-2 h-2 bg-white rounded-full opacity-20 animate-ping"
-            style={{
-              left: `${particle.left}%`,
-              top: `${particle.top}%`,
-              animationDelay: `${particle.animationDelay}s`,
-              animationDuration: `${particle.animationDuration}s`
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Navigation */}
-      <nav className="bg-white/10 backdrop-blur-md shadow-lg border-b border-white/20 relative z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center">
-              <a href="/" className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent hover:from-pink-400 hover:to-purple-400 transition-all duration-300">
-                Osman O. A. Ibrahim
-              </a>
-            </div>
-            <div className="hidden md:flex space-x-8">
-              {[
-                { name: 'Home', href: '/', active: false },
-                { name: 'About', href: '/about', active: false },
-                { name: 'Projects', href: '/projects', active: false },
-                { name: 'Certifications', href: '/certifications', active: false },
-                { name: 'Contact', href: '/contact', active: true }
-              ].map((item) => (
-                <a
-                  key={item.name}
-                  href={item.href}
-                  className={`transition-all duration-300 hover:scale-110 relative group ${
-                    item.active 
-                      ? 'text-purple-300 font-medium' 
-                      : 'text-white/80 hover:text-white'
-                  }`}
-                >
-                  {item.name}
-                  <span className={`absolute -bottom-1 left-0 h-0.5 bg-gradient-to-r from-purple-400 to-pink-400 transition-all duration-300 ${
-                    item.active ? 'w-full' : 'w-0 group-hover:w-full'
-                  }`}></span>
-                </a>
-              ))}
-            </div>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <div className={`transform transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
-            <h1 className="text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight">
-              Let's <span className="bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent animate-pulse">Connect</span>
+      <main style={{ paddingTop: '64px' }}>
+        {/* ===================== HERO ===================== */}
+        <section
+          className="dot-grid"
+          style={{ backgroundColor: 'var(--bg)', padding: '96px 24px 64px' }}
+        >
+          <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+            <p className="section-label">Contact</p>
+            <h1
+              className="font-display font-extrabold"
+              style={{
+                fontSize: 'clamp(2.25rem, 5vw, 4rem)',
+                color: 'var(--text-1)',
+                lineHeight: 1.1,
+                marginTop: '16px',
+              }}
+            >
+              Get In Touch
             </h1>
-            <p className="text-xl bg-gradient-to-r from-blue-300 to-purple-300 bg-clip-text text-transparent mb-8 max-w-3xl mx-auto">
-              I'm always excited to discuss new opportunities, collaborate on innovative projects, 
-              or share expertise in GIS, remote sensing, and water resource management.
+            <p
+              style={{
+                color: 'var(--text-2)',
+                maxWidth: '520px',
+                marginTop: '16px',
+                lineHeight: 1.7,
+                fontSize: '1rem',
+              }}
+            >
+              Open to research collaborations, consulting engagements, and full-time positions
+              in remote sensing, GIS, and geospatial data science. Let&apos;s connect.
             </p>
-            <div className="flex justify-center items-center space-x-6 mb-8">
-              <div className="flex items-center space-x-2 text-gray-300">
-                <MessageCircle className="w-5 h-5 text-green-400" />
-                <span>Quick Response</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Globe className="w-5 h-5 text-blue-400" />
-                <span>Global Projects</span>
-              </div>
-              <div className="flex items-center space-x-2 text-gray-300">
-                <Star className="w-5 h-5 text-yellow-400" />
-                <span>Expert Consultation</span>
-              </div>
-            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Contact Form & Info */}
-      <section className="pb-16 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-            {/* Contact Form */}
-            <div className={`bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/20 transform transition-all duration-1000 delay-300 ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-full opacity-0'}`}>
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
-                  <Send className="w-4 h-4 text-white" />
-                </div>
-                <h2 className="text-2xl font-bold text-white">Send me a message</h2>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="group">
-                    <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2 group-hover:text-white transition-colors">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
-                      placeholder="Your full name"
-                    />
-                  </div>
-                  <div className="group">
-                    <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2 group-hover:text-white transition-colors">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleChange}
-                      required
-                      className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
-                      placeholder="your.email@example.com"
-                    />
-                  </div>
-                </div>
+        {/* ===================== FORM + DETAILS ===================== */}
+        <section
+          style={{
+            padding: '64px 24px 96px',
+            backgroundColor: 'var(--bg)',
+          }}
+        >
+          <div
+            style={{
+              maxWidth: '1280px',
+              margin: '0 auto',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '64px',
+              alignItems: 'flex-start',
+            }}
+            className="lg:grid-cols-2"
+          >
+            {/* ---- CONTACT FORM ---- */}
+            <div>
+              <h2
+                className="font-display"
+                style={{
+                  fontSize: '1.25rem',
+                  fontWeight: 700,
+                  color: 'var(--text-1)',
+                  marginBottom: '28px',
+                }}
+              >
+                Send a Message
+              </h2>
 
-                <div className="group">
-                  <label htmlFor="company" className="block text-sm font-medium text-gray-300 mb-2 group-hover:text-white transition-colors">
-                    Company/Organization
-                  </label>
-                  <input
-                    type="text"
-                    id="company"
-                    name="company"
-                    value={formData.company}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
-                    placeholder="Your company or organization"
-                  />
-                </div>
-
-                <div className="group">
-                  <label htmlFor="subject" className="block text-sm font-medium text-gray-300 mb-2 group-hover:text-white transition-colors">
-                    Subject *
-                  </label>
-                  <select
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleChange}
-                    required
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
-                  >
-                    <option value="" className="bg-slate-800">Select a subject...</option>
-                    <option value="job-opportunity" className="bg-slate-800">Job Opportunity</option>
-                    <option value="project-collaboration" className="bg-slate-800">Project Collaboration</option>
-                    <option value="consulting-services" className="bg-slate-800">Consulting Services</option>
-                    <option value="technical-question" className="bg-slate-800">Technical Question</option>
-                    <option value="speaking-engagement" className="bg-slate-800">Speaking Engagement</option>
-                    <option value="other" className="bg-slate-800">Other</option>
-                  </select>
-                </div>
-
-                <div className="group">
-                  <label htmlFor="message" className="block text-sm font-medium text-gray-300 mb-2 group-hover:text-white transition-colors">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleChange}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-white placeholder-gray-400 backdrop-blur-sm transition-all duration-300 hover:bg-white/20 resize-none"
-                    placeholder="Tell me about your project, opportunity, or question..."
-                  />
-                </div>
-
-                <button
-                  type="button"
-                  onClick={handleSubmit}
-                  disabled={isSubmitting}
-                  className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-lg font-medium hover:from-purple-700 hover:to-pink-700 transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center space-x-2 disabled:opacity-50 group"
+              {isSubmitted ? (
+                <div
+                  style={{
+                    backgroundColor: 'var(--accent-dim)',
+                    border: '1px solid var(--accent-border)',
+                    borderRadius: '6px',
+                    padding: '32px',
+                    textAlign: 'center',
+                  }}
                 >
-                  {isSubmitting ? (
-                    <>
-                      <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                      <span>Sending...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Send className="w-4 h-4 group-hover:animate-bounce" />
-                      <span>Send Message</span>
-                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                    </>
+                  <CheckCircle size={40} style={{ color: 'var(--accent)', margin: '0 auto 16px' }} />
+                  <h3
+                    className="font-display"
+                    style={{ color: 'var(--text-1)', fontSize: '1.1rem', marginBottom: '8px' }}
+                  >
+                    Message Sent
+                  </h3>
+                  <p style={{ color: 'var(--text-2)', fontSize: '0.9rem', lineHeight: 1.6 }}>
+                    Thank you for reaching out. I&apos;ll respond within 1–2 business days.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setIsSubmitted(false)
+                      setFormData({ name: '', email: '', company: '', subject: '', message: '' })
+                    }}
+                    style={{
+                      marginTop: '20px',
+                      fontSize: '0.85rem',
+                      color: 'var(--accent)',
+                      backgroundColor: 'transparent',
+                      border: 'none',
+                      cursor: 'pointer',
+                      textDecoration: 'underline',
+                    }}
+                  >
+                    Send another message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                  {/* Name + Email row */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                    <div>
+                      <label htmlFor="name" style={{ fontSize: '0.8rem', color: 'var(--text-3)', display: 'block', marginBottom: '6px' }}>
+                        Full Name *
+                      </label>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        required
+                        placeholder="Jane Smith"
+                        value={formData.name}
+                        onChange={handleChange}
+                        onFocus={() => setFocusedField('name')}
+                        onBlur={() => setFocusedField(null)}
+                        style={fieldStyle('name')}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="email" style={{ fontSize: '0.8rem', color: 'var(--text-3)', display: 'block', marginBottom: '6px' }}>
+                        Email *
+                      </label>
+                      <input
+                        id="email"
+                        name="email"
+                        type="email"
+                        required
+                        placeholder="jane@org.com"
+                        value={formData.email}
+                        onChange={handleChange}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField(null)}
+                        style={fieldStyle('email')}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Company */}
+                  <div>
+                    <label htmlFor="company" style={{ fontSize: '0.8rem', color: 'var(--text-3)', display: 'block', marginBottom: '6px' }}>
+                      Organization / Institution
+                    </label>
+                    <input
+                      id="company"
+                      name="company"
+                      type="text"
+                      placeholder="FAO, university, company..."
+                      value={formData.company}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField('company')}
+                      onBlur={() => setFocusedField(null)}
+                      style={fieldStyle('company')}
+                    />
+                  </div>
+
+                  {/* Subject */}
+                  <div>
+                    <label htmlFor="subject" style={{ fontSize: '0.8rem', color: 'var(--text-3)', display: 'block', marginBottom: '6px' }}>
+                      Subject *
+                    </label>
+                    <select
+                      id="subject"
+                      name="subject"
+                      required
+                      value={formData.subject}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField('subject')}
+                      onBlur={() => setFocusedField(null)}
+                      style={{
+                        ...fieldStyle('subject'),
+                        appearance: 'none',
+                        WebkitAppearance: 'none',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      <option value="" style={{ backgroundColor: '#111f35' }}>Select a topic...</option>
+                      <option value="Research Collaboration" style={{ backgroundColor: '#111f35' }}>Research Collaboration</option>
+                      <option value="Consulting / Freelance" style={{ backgroundColor: '#111f35' }}>Consulting / Freelance</option>
+                      <option value="Full-time Position" style={{ backgroundColor: '#111f35' }}>Full-time Position</option>
+                      <option value="Training / Workshop" style={{ backgroundColor: '#111f35' }}>Training / Workshop</option>
+                      <option value="Other" style={{ backgroundColor: '#111f35' }}>Other</option>
+                    </select>
+                  </div>
+
+                  {/* Message */}
+                  <div>
+                    <label htmlFor="message" style={{ fontSize: '0.8rem', color: 'var(--text-3)', display: 'block', marginBottom: '6px' }}>
+                      Message *
+                    </label>
+                    <textarea
+                      id="message"
+                      name="message"
+                      required
+                      rows={6}
+                      placeholder="Describe your project, role, or inquiry..."
+                      value={formData.message}
+                      onChange={handleChange}
+                      onFocus={() => setFocusedField('message')}
+                      onBlur={() => setFocusedField(null)}
+                      style={{
+                        ...fieldStyle('message'),
+                        resize: 'vertical',
+                        minHeight: '140px',
+                      }}
+                    />
+                  </div>
+
+                  {/* Error */}
+                  {error && (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'flex-start',
+                        gap: '10px',
+                        backgroundColor: 'rgba(239,68,68,0.08)',
+                        border: '1px solid rgba(239,68,68,0.3)',
+                        borderRadius: '6px',
+                        padding: '12px 16px',
+                        fontSize: '0.85rem',
+                        color: '#fca5a5',
+                      }}
+                    >
+                      <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '1px' }} />
+                      {error}
+                    </div>
                   )}
-                </button>
-              </div>
+
+                  {/* Submit */}
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: '8px',
+                      backgroundColor: isSubmitting ? 'var(--accent-hover)' : 'var(--accent)',
+                      color: '#070c14',
+                      fontWeight: 600,
+                      fontSize: '0.9rem',
+                      padding: '13px 28px',
+                      borderRadius: '6px',
+                      border: 'none',
+                      cursor: isSubmitting ? 'not-allowed' : 'pointer',
+                      transition: 'background-color 0.2s ease, transform 0.2s ease',
+                      opacity: isSubmitting ? 0.8 : 1,
+                    }}
+                    onMouseEnter={(e) => {
+                      if (!isSubmitting) {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.backgroundColor = 'var(--accent-hover)'
+                        el.style.transform = 'translateY(-1px)'
+                      }
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLElement
+                      el.style.backgroundColor = isSubmitting ? 'var(--accent-hover)' : 'var(--accent)'
+                      el.style.transform = 'translateY(0)'
+                    }}
+                  >
+                    <Send size={16} />
+                    {isSubmitting ? 'Sending...' : 'Send Message'}
+                  </button>
+                </form>
+              )}
             </div>
 
-            {/* Contact Information */}
-            <div className={`space-y-8 transform transition-all duration-1000 delay-500 ${isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'}`}>
-              {/* Contact Details */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
-                <div className="flex items-center space-x-3 mb-6">
-                  <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                    <Mail className="w-4 h-4 text-white" />
-                  </div>
-                  <h2 className="text-2xl font-bold text-white">Contact Information</h2>
-                </div>
-                
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4 group hover:scale-105 transition-transform duration-300">
-                    <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full flex items-center justify-center group-hover:animate-bounce">
-                      <Mail className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-white group-hover:text-cyan-300 transition-colors">Email</p>
-                      <a href="mailto:osmangeomatics93@gmail.com" className="text-gray-300 hover:text-cyan-400 transition-colors">
-                        osmangeomatics93@gmail.com
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 group hover:scale-105 transition-transform duration-300">
-                    <div className="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full flex items-center justify-center group-hover:animate-bounce">
-                      <Phone className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-white group-hover:text-green-300 transition-colors">Phone</p>
-                      <a href="tel:+905319464405" className="text-gray-300 hover:text-green-400 transition-colors">
-                        (+90) 05319464405
-                      </a>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-4 group hover:scale-105 transition-transform duration-300">
-                    <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center group-hover:animate-bounce">
-                      <MapPin className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-white group-hover:text-purple-300 transition-colors">Location</p>
-                      <p className="text-gray-300">Trabzon, Turkey</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {/* ---- CONTACT DETAILS ---- */}
+            <div>
+              <h2
+                className="font-display"
+                style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-1)', marginBottom: '28px' }}
+              >
+                Contact Details
+              </h2>
 
-              {/* Social Media */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
-                <h2 className="text-2xl font-bold text-white mb-6">Connect on Social Media</h2>
-                
-                <div className="flex space-x-4">
-                  <a
-                    href="https://www.linkedin.com/in/osman-o-a-ibrahim-a02a9a197"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 bg-gradient-to-r from-blue-600 to-blue-700 rounded-full flex items-center justify-center hover:from-blue-700 hover:to-blue-800 transition-all duration-300 transform hover:scale-125 hover:rotate-12"
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                {[
+                  { Icon: Mail, label: 'Email', value: 'osmangeomatics93@gmail.com', href: 'mailto:osmangeomatics93@gmail.com' },
+                  { Icon: Phone, label: 'Phone', value: '+90 531 946 44 05', href: 'tel:+905319464405' },
+                  { Icon: MapPin, label: 'Location', value: 'Trabzon, Turkey', href: undefined },
+                ].map(({ Icon, label, value, href }) => (
+                  <div
+                    key={label}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '16px',
+                      backgroundColor: 'var(--bg-card)',
+                      border: '1px solid var(--border)',
+                      borderRadius: '6px',
+                      padding: '18px 20px',
+                    }}
                   >
-                    <Linkedin className="w-6 h-6 text-white" />
-                  </a>
-                  <a
-                    href="https://github.com/Osman-Geomatics93"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-12 h-12 bg-gradient-to-r from-gray-800 to-gray-900 rounded-full flex items-center justify-center hover:from-gray-700 hover:to-gray-800 transition-all duration-300 transform hover:scale-125 hover:rotate-12"
-                  >
-                    <Github className="w-6 h-6 text-white" />
-                  </a>
-                </div>
+                    <div
+                      style={{
+                        width: '40px',
+                        height: '40px',
+                        borderRadius: '6px',
+                        backgroundColor: 'var(--accent-dim)',
+                        border: '1px solid var(--accent-border)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                      }}
+                    >
+                      <Icon size={18} style={{ color: 'var(--accent)' }} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: '0.72rem', color: 'var(--text-3)', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                        {label}
+                      </div>
+                      {href ? (
+                        <a
+                          href={href}
+                          style={{ fontSize: '0.9rem', color: 'var(--text-1)', fontWeight: 500, transition: 'color 0.2s ease' }}
+                          onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--accent)' }}
+                          onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-1)' }}
+                        >
+                          {value}
+                        </a>
+                      ) : (
+                        <span style={{ fontSize: '0.9rem', color: 'var(--text-1)', fontWeight: 500 }}>{value}</span>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
 
-              {/* Availability */}
-              <div className="bg-gradient-to-r from-blue-600/20 to-purple-600/20 backdrop-blur-sm rounded-xl p-8 border border-blue-500/30 hover:border-blue-400/50 transition-all duration-300">
-                <h2 className="text-2xl font-bold text-white mb-6">Availability & Response Time</h2>
-                
-                <div className="space-y-4">
-                  <div className="flex items-center space-x-3 group">
-                    <Clock className="w-5 h-5 text-blue-400 group-hover:animate-spin" />
-                    <div>
-                      <p className="font-medium text-white">Response Time</p>
-                      <p className="text-blue-300">Usually within 24 hours</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-3 group">
-                    <Globe className="w-5 h-5 text-purple-400 group-hover:animate-pulse" />
-                    <div>
-                      <p className="font-medium text-white">Time Zone</p>
-                      <p className="text-purple-300">Turkey Time (UTC+3)</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center space-x-3 group">
-                    <Calendar className="w-5 h-5 text-green-400 group-hover:animate-bounce" />
-                    <div>
-                      <p className="font-medium text-white">Availability</p>
-                      <p className="text-green-300">Monday - Friday, 9 AM - 6 PM</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Services */}
-              <div className="bg-white/10 backdrop-blur-sm rounded-xl shadow-lg p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
-                <h2 className="text-2xl font-bold text-white mb-6">How I Can Help</h2>
-                
-                <div className="space-y-3">
+              {/* Social links */}
+              <div style={{ marginTop: '28px' }}>
+                <p style={{ fontSize: '0.8rem', color: 'var(--text-3)', marginBottom: '12px', textTransform: 'uppercase', letterSpacing: '0.07em' }}>
+                  Connect Online
+                </p>
+                <div style={{ display: 'flex', gap: '12px' }}>
                   {[
-                    { service: "GIS & Remote Sensing Consulting", color: "blue" },
-                    { service: "Water Resource Management", color: "green" },
-                    { service: "Agricultural Monitoring Solutions", color: "purple" },
-                    { service: "Project Management & Training", color: "orange" },
-                    { service: "Technical Documentation & Analysis", color: "red" }
-                  ].map((item, index) => (
-                    <div key={index} className="flex items-center space-x-3 group hover:translate-x-2 transition-transform duration-300">
-                      <div className={`w-3 h-3 bg-${item.color}-500 rounded-full group-hover:animate-ping`}></div>
-                      <span className="text-gray-300 group-hover:text-white transition-colors">{item.service}</span>
-                    </div>
+                    { Icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/osman-ibrahim-a02a9a197/' },
+                    { Icon: Github, label: 'GitHub', href: 'https://github.com/Osman-Geomatics93' },
+                  ].map(({ Icon, label, href }) => (
+                    <a
+                      key={label}
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        backgroundColor: 'var(--bg-card)',
+                        border: '1px solid var(--border)',
+                        borderRadius: '6px',
+                        padding: '10px 16px',
+                        fontSize: '0.85rem',
+                        color: 'var(--text-2)',
+                        transition: 'border-color 0.2s ease, color 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'var(--accent)'
+                        el.style.color = 'var(--accent)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'var(--border)'
+                        el.style.color = 'var(--text-2)'
+                      }}
+                    >
+                      <Icon size={16} />
+                      {label}
+                    </a>
                   ))}
                 </div>
-                
-                <div className="mt-6 p-4 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg border border-purple-500/30">
-                  <div className="flex items-center space-x-2 mb-2">
-                    <Sparkles className="w-4 h-4 text-yellow-400 animate-pulse" />
-                    <span className="text-yellow-300 font-medium text-sm">Special Expertise</span>
-                  </div>
-                  <p className="text-purple-200 text-sm">
-                    8+ years experience with international organizations (FAO, IFAD, UNESCO) 
-                    and 200+ professionals trained in geospatial technologies.
-                  </p>
+              </div>
+
+              {/* Availability note */}
+              <div
+                style={{
+                  marginTop: '28px',
+                  backgroundColor: 'var(--bg-card)',
+                  border: '1px solid var(--border)',
+                  borderLeft: '3px solid var(--accent)',
+                  borderRadius: '6px',
+                  padding: '20px 24px',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                  <div
+                    style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      backgroundColor: 'var(--accent)',
+                      flexShrink: 0,
+                    }}
+                  />
+                  <span style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--accent)' }}>
+                    Available for New Opportunities
+                  </span>
                 </div>
+                <p style={{ fontSize: '0.82rem', color: 'var(--text-2)', lineHeight: 1.6 }}>
+                  Currently open to research positions, consulting projects, and full-time roles
+                  in remote sensing, GIS, and geospatial data science. Response time: 1–2 business days.
+                </p>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </main>
 
-      {/* Footer */}
-      <footer className="bg-black/50 backdrop-blur-sm py-8 px-4 sm:px-6 lg:px-8 border-t border-white/20 relative z-10">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="bg-gradient-to-r from-gray-300 to-white bg-clip-text text-transparent">
-            © 2025 Osman Osama Ahmed Ibrahim. All rights reserved.
-          </p>
-        </div>
-      </footer>
-    </div>
+      <Footer />
+    </>
   )
 }
