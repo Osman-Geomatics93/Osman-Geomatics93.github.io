@@ -8,6 +8,7 @@ import Toast from './components/Toast'
 import FilmGrain from './components/FilmGrain'
 import BackToTop from './components/BackToTop'
 import PageTransition from './components/PageTransition'
+import Preloader from './components/Preloader'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 
@@ -80,6 +81,8 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        {/* Prevent flash of wrong theme — runs before paint */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();` }} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -125,6 +128,7 @@ export default function RootLayout({
         />
       </head>
       <body className={dmSans.className}>
+        <Preloader />
         <CursorGlow />
         <ScrollProgress />
         <FilmGrain />

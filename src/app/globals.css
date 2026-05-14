@@ -20,9 +20,37 @@
   --accent-border: rgba(16, 185, 129, 0.25);
   --warm: #f59e0b;
   --warm-dim: rgba(245, 158, 11, 0.12);
+  --nav-bg: rgba(7, 12, 20, 0.97);
+  --nav-overlay: rgba(7, 12, 20, 0.98);
   --ease-snappy: cubic-bezier(0.16, 1, 0.3, 1);
   --radius: 6px;
 }
+
+[data-theme="light"] {
+  --bg: #f0f4f8;
+  --bg-surface: #f0f4f8;
+  --bg-card: #ffffff;
+  --border: rgba(0,0,0,0.08);
+  --border-bright: rgba(0,0,0,0.16);
+  --text-1: #0f172a;
+  --text-2: #475569;
+  --text-3: #94a3b8;
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-dim: rgba(5, 150, 105, 0.08);
+  --accent-border: rgba(5, 150, 105, 0.22);
+  --warm: #d97706;
+  --warm-dim: rgba(217, 119, 6, 0.1);
+  --nav-bg: rgba(240, 244, 248, 0.97);
+  --nav-overlay: rgba(240, 244, 248, 0.99);
+}
+
+[data-theme="light"] .dot-grid {
+  background-image: radial-gradient(circle, rgba(0,0,0,0.07) 1px, transparent 1px);
+}
+
+[data-theme="light"] ::-webkit-scrollbar-track { background: var(--bg); }
+[data-theme="light"] ::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.15); }
 
 /* ============================================
    BASE RESET & BODY

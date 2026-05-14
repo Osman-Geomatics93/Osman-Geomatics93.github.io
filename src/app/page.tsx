@@ -12,6 +12,8 @@ import MagneticButton from './components/MagneticButton'
 import SkillsRadar from './components/SkillsRadar'
 import { showToast } from './components/Toast'
 import SectionDots from './components/SectionDots'
+import AuroraBackground from './components/AuroraBackground'
+import HorizontalScroll from './components/HorizontalScroll'
 import dynamic from 'next/dynamic'
 
 const ProjectMap = dynamic(() => import('./components/ProjectMap'), { ssr: false })
@@ -124,9 +126,12 @@ export default function Home() {
           className="dot-grid resp-section"
           style={{
             backgroundColor: 'var(--bg)',
+            position: 'relative',
+            overflow: 'hidden',
           }}
         >
-          <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px' }}>
+          <AuroraBackground />
+          <div style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
             <div
               style={{
                 display: 'grid',
@@ -1040,22 +1045,30 @@ export default function Home() {
                 plugins, deep learning pipelines, and interactive dashboards.
               </p>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-                  gap: '20px',
-                  marginTop: '48px',
-                }}
-              >
+              {/* Drag hint */}
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-3)', marginTop: '12px', letterSpacing: '0.04em' }}>
+                ← drag to scroll →
+              </p>
+
+              <div style={{ marginTop: '24px', position: 'relative' }}>
+                {/* Fade edges */}
+                <div style={{
+                  position: 'absolute', inset: 0, zIndex: 1, pointerEvents: 'none',
+                  backgroundImage: 'linear-gradient(to right, var(--bg) 0, transparent 48px, transparent calc(100% - 48px), var(--bg) 100%)',
+                }} />
+                <HorizontalScroll>
                 {ossProjects.map((proj) => (
                   <a
                     key={proj.name}
                     href={proj.url}
                     target="_blank"
                     rel="noopener noreferrer"
+                    draggable={false}
                     style={{
                       display: 'block',
+                      flexShrink: 0,
+                      width: '296px',
+                      scrollSnapAlign: 'start',
                       backgroundColor: 'var(--bg-card)',
                       border: '1px solid var(--border)',
                       borderRadius: '6px',
@@ -1065,8 +1078,8 @@ export default function Home() {
                     }}
                     onMouseEnter={(e) => {
                       const el = e.currentTarget as HTMLElement
-                      el.style.borderColor = 'var(--border-bright)'
-                      el.style.transform = 'translateY(-2px)'
+                      el.style.borderColor = 'var(--accent)'
+                      el.style.transform = 'translateY(-3px)'
                     }}
                     onMouseLeave={(e) => {
                       const el = e.currentTarget as HTMLElement
@@ -1128,6 +1141,7 @@ export default function Home() {
                     </div>
                   </a>
                 ))}
+                </HorizontalScroll>
               </div>
 
               <div style={{ marginTop: '32px', textAlign: 'center' }}>

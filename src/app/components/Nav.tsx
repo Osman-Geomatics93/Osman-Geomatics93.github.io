@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Download, Menu, X } from 'lucide-react'
+import ThemeToggle from './ThemeToggle'
 
 interface NavProps {
   activePage?: string
@@ -51,7 +52,7 @@ export default function Nav({ activePage = 'home' }: NavProps) {
           zIndex: 50,
           height: '64px',
           transition: 'background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease',
-          backgroundColor: scrolled || menuOpen ? 'rgba(7, 12, 20, 0.97)' : 'transparent',
+          backgroundColor: scrolled || menuOpen ? 'var(--nav-bg)' : 'transparent',
           backdropFilter: scrolled || menuOpen ? 'blur(12px)' : 'none',
           borderBottom: scrolled ? '1px solid #1a2d45' : '1px solid transparent',
           boxShadow: scrolled ? '0 1px 3px rgba(0,0,0,0.3)' : 'none',
@@ -74,13 +75,13 @@ export default function Nav({ activePage = 'home' }: NavProps) {
             onClick={() => setMenuOpen(false)}
             className="font-display font-bold"
             style={{
-              color: '#e8f0fe',
+              color: 'var(--text-1)',
               letterSpacing: '-0.02em',
               fontSize: 'clamp(0.95rem, 3vw, 1.1rem)',
               transition: 'color 0.2s ease',
             }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = '#10b981' }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = '#e8f0fe' }}
+            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--accent)' }}
+            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-1)' }}
           >
             Osman Ibrahim
           </Link>
@@ -96,14 +97,14 @@ export default function Nav({ activePage = 'home' }: NavProps) {
                   style={{
                     fontSize: '0.9rem',
                     fontWeight: 500,
-                    color: isActive ? '#10b981' : '#7e9ab5',
+                    color: isActive ? 'var(--accent)' : 'var(--text-2)',
                     transition: 'color 0.2s ease',
                   }}
                   onMouseEnter={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.color = '#e8f0fe'
+                    if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--text-1)'
                   }}
                   onMouseLeave={(e) => {
-                    if (!isActive) (e.currentTarget as HTMLElement).style.color = '#7e9ab5'
+                    if (!isActive) (e.currentTarget as HTMLElement).style.color = 'var(--text-2)'
                   }}
                 >
                   {link.label}
@@ -112,8 +113,9 @@ export default function Nav({ activePage = 'home' }: NavProps) {
             })}
           </nav>
 
-          {/* Right side: ⌘K hint + CV button + hamburger */}
+          {/* Right side: ⌘K hint + theme toggle + CV button + hamburger */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <ThemeToggle />
             <button
               className="hidden md:flex"
               onClick={() => {
@@ -184,9 +186,9 @@ export default function Nav({ activePage = 'home' }: NavProps) {
               aria-label={menuOpen ? 'Close menu' : 'Open menu'}
               style={{
                 background: 'none',
-                border: '1px solid #1a2d45',
+                border: '1px solid var(--border)',
                 borderRadius: '6px',
-                color: menuOpen ? '#10b981' : '#7e9ab5',
+                color: menuOpen ? 'var(--accent)' : 'var(--text-2)',
                 cursor: 'pointer',
                 padding: '7px',
                 display: 'flex',
@@ -196,13 +198,13 @@ export default function Nav({ activePage = 'home' }: NavProps) {
               }}
               onMouseEnter={(e) => {
                 const el = e.currentTarget as HTMLElement
-                el.style.borderColor = '#264a6e'
-                el.style.color = '#e8f0fe'
+                el.style.borderColor = 'var(--border-bright)'
+                el.style.color = 'var(--text-1)'
               }}
               onMouseLeave={(e) => {
                 const el = e.currentTarget as HTMLElement
-                el.style.borderColor = '#1a2d45'
-                el.style.color = menuOpen ? '#10b981' : '#7e9ab5'
+                el.style.borderColor = 'var(--border)'
+                el.style.color = menuOpen ? 'var(--accent)' : 'var(--text-2)'
               }}
             >
               {menuOpen ? <X size={20} /> : <Menu size={20} />}
@@ -220,7 +222,7 @@ export default function Nav({ activePage = 'home' }: NavProps) {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundColor: 'rgba(7, 12, 20, 0.98)',
+            backgroundColor: 'var(--nav-overlay)',
             backdropFilter: 'blur(20px)',
             zIndex: 49,
             overflowY: 'auto',
@@ -240,9 +242,9 @@ export default function Nav({ activePage = 'home' }: NavProps) {
                     justifyContent: 'space-between',
                     fontSize: '1.15rem',
                     fontWeight: 600,
-                    color: isActive ? '#10b981' : '#e8f0fe',
+                    color: isActive ? 'var(--accent)' : 'var(--text-1)',
                     padding: '18px 0',
-                    borderBottom: i < navLinks.length - 1 ? '1px solid #1a2d45' : 'none',
+                    borderBottom: i < navLinks.length - 1 ? '1px solid var(--border)' : 'none',
                     transition: 'color 0.15s ease',
                   }}
                 >
