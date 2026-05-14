@@ -3,7 +3,7 @@
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import RevealSection from '../components/RevealSection'
-import { MapPin, Calendar, Globe, Users, GraduationCap, Briefcase } from 'lucide-react'
+import { MapPin, Calendar, Globe, Users, GraduationCap } from 'lucide-react'
 
 const education = [
   {
@@ -36,36 +36,86 @@ const education = [
   },
 ]
 
-const timeline = [
+const careerTimeline = [
   {
-    role: 'Research Assistant / Remote Sensing Expert',
-    org: 'Hydraulics Research Center (HRC)',
-    location: 'Sudan',
-    period: '2018 — Present',
-    duration: '8+ years',
-    description:
-      'Led GIS and remote sensing initiatives for water resource management, crop monitoring, and flood risk assessment. Managed international projects funded by FAO, IFAD, and ZOA across East Africa.',
-    highlights: [
-      'Led FAO-funded crop monitoring — 15% productivity improvement',
-      'Managed IFAD water productivity assessment, Gash Scheme',
-      'Designed Nile gauging station network — Sudan/Egypt border',
-      'Trained 200+ professionals in GIS and remote sensing',
-    ],
+    typeLabel: 'Education',
+    year: '2013 – 2017',
+    title: 'B.Sc. Surveying Engineering',
+    org: 'Omdurman Islamic University',
+    location: 'Omdurman, Sudan',
+    summary:
+      'First Class Honours. Foundation in geodesy, photogrammetry, GPS-RTK, GIS, and land surveying — the technical bedrock for everything that followed.',
+    color: '#f59e0b',
   },
   {
-    role: 'Land Surveyor',
+    typeLabel: 'Work',
+    year: '2017 – 2018',
+    title: 'Land Surveyor',
     org: 'Ministry of Infrastructure & Transport',
+    location: 'Khartoum, Sudan',
+    summary:
+      'Precision GPS-RTK and total station surveys for national road infrastructure. Topographic mapping, boundary demarcation, and AutoCAD Civil 3D processing.',
+    color: '#7e9ab5',
+  },
+  {
+    typeLabel: 'Work',
+    year: '2018',
+    title: 'Joined Hydraulics Research Center',
+    org: 'HRC Sudan',
     location: 'Sudan',
-    period: '2017 — 2018',
-    duration: '1 year',
-    description:
-      'Conducted precision land surveys for infrastructure projects including road alignments, topographic mapping, and boundary demarcation using GPS-RTK and total station equipment.',
-    highlights: [
-      'GPS-RTK field surveys for road infrastructure',
-      'Topographic mapping and boundary demarcation',
-      'AutoCAD Civil 3D processing and report production',
-      'Coordination with engineering and legal teams',
-    ],
+    summary:
+      "Joined East Africa's leading water research institution. Began expanding into satellite-based water resource monitoring and remote sensing — a pivot that defined the next eight years.",
+    color: '#10b981',
+  },
+  {
+    typeLabel: 'Project',
+    year: '2019 – 2021',
+    title: 'IFAD & ZOA International Projects',
+    org: 'IFAD / ZOA International',
+    location: 'Gash Scheme & South Darfur, Sudan',
+    summary:
+      'Dual international engagements: IFAD water productivity baseline for ~300,000 ha spate scheme and ZOA emergency hydrology achieving 40% flood risk reduction across 6 catchments.',
+    color: '#60a5fa',
+  },
+  {
+    typeLabel: 'Project',
+    year: '2020 – 2021',
+    title: 'FAO Remote Sensing Analyst',
+    org: 'FAO / HRC Sudan',
+    location: 'Gezira Scheme, Sudan',
+    summary:
+      'FAO-funded crop monitoring for 8.4 million hectares. Delivered 15% monitoring accuracy improvement and 9% water productivity gain using SVM classification and WaPOR biomass products.',
+    color: '#f59e0b',
+  },
+  {
+    typeLabel: 'Education',
+    year: '2022 – 2024',
+    title: 'M.Sc. Geomatics Engineering',
+    org: 'Karadeniz Technical University',
+    location: 'Trabzon, Turkey',
+    summary:
+      'Remote Sensing & GIS specialisation. GPA 3.50/4.00. Thesis on satellite monitoring of the Gezira Irrigation Scheme. Released two open-source QGIS plugins adopted internationally.',
+    color: '#10b981',
+  },
+  {
+    typeLabel: 'Work',
+    year: '2023 – Present',
+    title: 'GIS & Remote Sensing, Water Management',
+    org: 'HRC Sudan',
+    location: 'Gezira Scheme, Sudan',
+    summary:
+      'Ongoing WaPOR + Sentinel-2 water productivity monitoring at scale. Released wapor-water-productivity QGIS plugin and GeoAccuRate plugin to the open-source geospatial community.',
+    color: '#10b981',
+  },
+  {
+    typeLabel: 'Volunteer',
+    year: '2024',
+    title: 'Founded Sudan Scholars Hub',
+    org: 'deltaroots.store',
+    location: 'Remote / Global',
+    summary:
+      "Built and launched a free bilingual scholarship platform for Sudanese students worldwide — solo, zero funding — because access to international education shouldn't depend on who you know.",
+    color: '#a78bfa',
   },
 ]
 
@@ -370,112 +420,150 @@ export default function AboutPage() {
               <p className="section-label">Experience</p>
               <h2
                 className="font-display"
-                style={{ marginTop: '12px', color: 'var(--text-1)' }}
+                style={{ marginTop: '12px', color: 'var(--text-1)', marginBottom: '64px' }}
               >
-                Career Timeline
+                Career Journey
               </h2>
 
-              <div style={{ marginTop: '48px', display: 'flex', flexDirection: 'column', gap: '0' }}>
-                {timeline.map((item, idx) => (
-                  <div
-                    key={item.role}
-                    style={{
-                      display: 'grid',
-                      gridTemplateColumns: '160px 1fr',
-                      gap: '32px',
-                      position: 'relative',
-                      paddingBottom: idx < timeline.length - 1 ? '48px' : '0',
-                    }}
-                    className="sm:grid"
-                  >
-                    {/* Timeline sidebar */}
-                    <div style={{ textAlign: 'right', paddingTop: '4px' }}>
-                      <div
+              <div className="tl-outer">
+                {careerTimeline.map((entry, i) => {
+                  const isReversed = i % 2 !== 0
+
+                  const dateLabel = (
+                    <div>
+                      <span
                         style={{
-                          fontSize: '0.8rem',
-                          color: 'var(--text-3)',
-                          fontWeight: 500,
-                          lineHeight: 1.5,
+                          display: 'inline-block',
+                          fontSize: '0.65rem',
+                          fontWeight: 700,
+                          color: entry.color,
+                          backgroundColor: `${entry.color}18`,
+                          border: `1px solid ${entry.color}35`,
+                          borderRadius: '20px',
+                          padding: '3px 10px',
+                          letterSpacing: '0.07em',
+                          textTransform: 'uppercase',
+                          marginBottom: '10px',
                         }}
                       >
-                        {item.period}
+                        {entry.typeLabel}
+                      </span>
+                      <div
+                        style={{
+                          fontSize: '0.9rem',
+                          fontWeight: 600,
+                          color: 'var(--text-2)',
+                          lineHeight: 1.4,
+                        }}
+                      >
+                        {entry.year}
                       </div>
                       <div
                         style={{
                           fontSize: '0.75rem',
-                          color: 'var(--accent)',
+                          color: 'var(--text-3)',
                           marginTop: '4px',
+                          lineHeight: 1.4,
                         }}
                       >
-                        {item.duration}
+                        {entry.location}
                       </div>
                     </div>
+                  )
 
-                    {/* Content */}
+                  const card = (
                     <div
                       style={{
                         backgroundColor: 'var(--bg-card)',
                         border: '1px solid var(--border)',
-                        borderLeft: '3px solid var(--accent)',
+                        borderLeft: `3px solid ${entry.color}`,
                         borderRadius: '6px',
-                        padding: '28px',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
+                        padding: '22px 24px',
+                        boxShadow: `0 1px 8px rgba(0,0,0,0.25), 0 0 0 0 ${entry.color}`,
+                        transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+                        textAlign: 'left',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.transform = 'translateY(-3px)'
+                        el.style.boxShadow = `0 6px 20px rgba(0,0,0,0.3), 0 0 0 1px ${entry.color}30`
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.transform = 'translateY(0)'
+                        el.style.boxShadow = '0 1px 8px rgba(0,0,0,0.25)'
                       }}
                     >
-                      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', marginBottom: '12px' }}>
-                        <Briefcase size={18} style={{ color: 'var(--accent)', marginTop: '2px', flexShrink: 0 }} />
-                        <div>
-                          <h3
-                            className="font-display"
-                            style={{ fontSize: '1rem', fontWeight: 700, color: 'var(--text-1)' }}
-                          >
-                            {item.role}
-                          </h3>
-                          <p style={{ fontSize: '0.85rem', color: 'var(--text-2)', marginTop: '2px' }}>
-                            {item.org} &middot; {item.location}
-                          </p>
-                        </div>
-                      </div>
-                      <p
+                      <h3
+                        className="font-display"
                         style={{
-                          fontSize: '0.875rem',
-                          color: 'var(--text-2)',
-                          lineHeight: 1.7,
-                          marginBottom: '16px',
+                          fontSize: '0.975rem',
+                          fontWeight: 700,
+                          color: 'var(--text-1)',
+                          lineHeight: 1.3,
+                          marginBottom: '4px',
                         }}
                       >
-                        {item.description}
+                        {entry.title}
+                      </h3>
+                      <p
+                        style={{
+                          fontSize: '0.8rem',
+                          color: entry.color,
+                          fontWeight: 600,
+                          marginBottom: '12px',
+                        }}
+                      >
+                        {entry.org}
                       </p>
-                      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-                        {item.highlights.map((h) => (
-                          <li
-                            key={h}
-                            style={{
-                              fontSize: '0.82rem',
-                              color: 'var(--text-2)',
-                              paddingLeft: '14px',
-                              position: 'relative',
-                              marginBottom: '5px',
-                              lineHeight: 1.6,
-                            }}
-                          >
-                            <span
-                              style={{
-                                position: 'absolute',
-                                left: 0,
-                                top: '8px',
-                                width: '4px',
-                                height: '1px',
-                                backgroundColor: 'var(--accent)',
-                              }}
-                            />
-                            {h}
-                          </li>
-                        ))}
-                      </ul>
+                      <p
+                        style={{
+                          fontSize: '0.855rem',
+                          color: 'var(--text-2)',
+                          lineHeight: 1.65,
+                          margin: 0,
+                        }}
+                      >
+                        {entry.summary}
+                      </p>
                     </div>
-                  </div>
-                ))}
+                  )
+
+                  return (
+                    <div
+                      key={entry.title}
+                      className={`tl-row${isReversed ? ' tl-row-rev' : ''}`}
+                    >
+                      {/* Left slot */}
+                      <div
+                        className="tl-col-l"
+                        style={{ paddingRight: '28px', textAlign: 'right' }}
+                      >
+                        {isReversed ? card : dateLabel}
+                      </div>
+
+                      {/* Center dot */}
+                      <div className="tl-col-c">
+                        <div
+                          style={{
+                            width: '16px',
+                            height: '16px',
+                            borderRadius: '50%',
+                            backgroundColor: 'var(--bg)',
+                            border: `3px solid ${entry.color}`,
+                            boxShadow: `0 0 0 3px var(--bg), 0 0 12px ${entry.color}55`,
+                            flexShrink: 0,
+                          }}
+                        />
+                      </div>
+
+                      {/* Right slot */}
+                      <div className="tl-col-r" style={{ paddingLeft: '28px' }}>
+                        {isReversed ? dateLabel : card}
+                      </div>
+                    </div>
+                  )
+                })}
               </div>
             </div>
           </section>

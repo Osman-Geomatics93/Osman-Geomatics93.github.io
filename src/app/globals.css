@@ -188,6 +188,70 @@ a {
 }
 
 /* ============================================
+   CAREER TIMELINE
+   ============================================ */
+.tl-outer {
+  position: relative;
+}
+.tl-outer::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: linear-gradient(
+    to bottom,
+    var(--accent) 0%,
+    var(--border) 70%,
+    transparent 100%
+  );
+  transform: translateX(-1px);
+  z-index: 0;
+}
+.tl-row {
+  display: grid;
+  grid-template-columns: 1fr 56px 1fr;
+  align-items: flex-start;
+  margin-bottom: 48px;
+  position: relative;
+  z-index: 1;
+}
+.tl-col-l { padding-right: 28px; }
+.tl-col-c { display: flex; justify-content: center; padding-top: 16px; }
+.tl-col-r { padding-left: 28px; }
+
+@media (max-width: 768px) {
+  .tl-outer::before {
+    left: 17px;
+  }
+  .tl-row {
+    grid-template-columns: 40px 1fr;
+  }
+  /* Even row: date in left col (hide it), dot col 1, card in right col 2 */
+  .tl-col-l { display: none; }
+  .tl-col-c { grid-column: 1; grid-row: 1; padding-top: 14px; }
+  .tl-col-r { grid-column: 2; grid-row: 1; padding-left: 16px; }
+
+  /* Odd/reversed row: card is in left col — move it to col 2; hide right col (date) */
+  .tl-row-rev .tl-col-l {
+    display: block !important;
+    grid-column: 2;
+    grid-row: 1;
+    padding-left: 16px !important;
+    padding-right: 0 !important;
+    text-align: left !important;
+  }
+  .tl-row-rev .tl-col-c {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .tl-row-rev .tl-col-r {
+    display: none !important;
+  }
+}
+
+/* ============================================
    REDUCED MOTION
    ============================================ */
 @media (prefers-reduced-motion: reduce) {

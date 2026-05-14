@@ -17,6 +17,7 @@ const dmSans = DM_Sans({
 })
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://osman-geomatics.com'),
   title: 'Osman Ibrahim — Remote Sensing & GIS Expert',
   description:
     'Geomatics Engineer with 8+ years transforming satellite data into actionable insights for water management, crop monitoring, and environmental assessment. M.Sc. KTU Turkey.',
@@ -70,6 +71,49 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'Person',
+              name: 'Osman Osama Ahmed Ibrahim',
+              alternateName: 'Osman Ibrahim',
+              jobTitle: 'Remote Sensing & GIS Expert',
+              url: 'https://osman-geomatics.com',
+              email: 'osmangeomatics93@gmail.com',
+              image: 'https://i.imgur.com/1QHqofS.jpg',
+              sameAs: [
+                'https://www.linkedin.com/in/osman-ibrahim-a02a9a197/',
+                'https://github.com/Osman-Geomatics93',
+              ],
+              alumniOf: [
+                {
+                  '@type': 'EducationalOrganization',
+                  name: 'Karadeniz Technical University',
+                  url: 'https://www.ktu.edu.tr',
+                },
+                {
+                  '@type': 'EducationalOrganization',
+                  name: 'Omdurman Islamic University',
+                },
+              ],
+              knowsAbout: [
+                'Remote Sensing',
+                'Geographic Information Systems',
+                'Satellite Image Analysis',
+                'WaPOR Water Productivity',
+                'Google Earth Engine',
+                'Water Resource Management',
+                'Crop Monitoring',
+                'Machine Learning',
+                'Python',
+                'QGIS',
+                'Geomatics Engineering',
+              ],
+            }),
+          }}
+        />
       </head>
       <body className={dmSans.className}>{children}</body>
     </html>

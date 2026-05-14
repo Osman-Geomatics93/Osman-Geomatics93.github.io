@@ -6,6 +6,7 @@ import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import RevealSection from '../components/RevealSection'
 import { Calendar, MapPin, ExternalLink, Github } from 'lucide-react'
+import AnimatedCounter from '../components/AnimatedCounter'
 import { projectsData } from '../data/projects'
 
 const LeafletMap = dynamic(() => import('../components/LeafletMap'), {
@@ -256,18 +257,20 @@ export default function ProjectsPage() {
               }}
             >
               {[
-                { num: '7', label: 'Field Projects' },
-                { num: '2.2M', label: 'Hectares Mapped' },
-                { num: '4', label: 'UN / INGO Partners' },
-                { num: '8+', label: 'Years in Practice' },
-              ].map(({ num, label }) => (
+                { to: 7,   suffix: '',  decimals: 0, label: 'Field Projects' },
+                { to: 2.2, suffix: 'M', decimals: 1, label: 'Hectares Mapped' },
+                { to: 4,   suffix: '',  decimals: 0, label: 'UN / INGO Partners' },
+                { to: 8,   suffix: '+', decimals: 0, label: 'Years in Practice' },
+              ].map(({ to, suffix, decimals, label }) => (
                 <div key={label}>
-                  <div
+                  <AnimatedCounter
+                    to={to}
+                    suffix={suffix}
+                    decimals={decimals}
+                    duration={1600}
                     className="font-display font-bold"
-                    style={{ fontSize: '1.5rem', color: 'var(--accent)' }}
-                  >
-                    {num}
-                  </div>
+                    style={{ fontSize: '1.5rem', color: 'var(--accent)', display: 'block' }}
+                  />
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-3)', marginTop: '2px' }}>
                     {label}
                   </div>

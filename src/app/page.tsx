@@ -4,6 +4,7 @@ import Nav from './components/Nav'
 import Footer from './components/Footer'
 import RevealSection from './components/RevealSection'
 import { MapPin, Mail, Phone, Linkedin, Github, Download, ExternalLink } from 'lucide-react'
+import AnimatedCounter from './components/AnimatedCounter'
 
 const expertiseAreas = [
   {
@@ -340,11 +341,11 @@ export default function Home() {
               }}
             >
               {[
-                { number: '8+', label: 'Years Experience' },
-                { number: '15+', label: 'International Projects' },
-                { number: '200+', label: 'Professionals Trained' },
-                { number: '13+', label: 'Certifications' },
-              ].map(({ number, label }, i) => (
+                { to: 8,   suffix: '+', label: 'Years Experience' },
+                { to: 15,  suffix: '+', label: 'International Projects' },
+                { to: 200, suffix: '+', label: 'Professionals Trained' },
+                { to: 13,  suffix: '+', label: 'Certifications' },
+              ].map(({ to, suffix, label }, i) => (
                 <div
                   key={label}
                   style={{
@@ -352,12 +353,13 @@ export default function Home() {
                     borderRight: i < 3 ? '1px solid var(--border)' : 'none',
                   }}
                 >
-                  <div
+                  <AnimatedCounter
+                    to={to}
+                    suffix={suffix}
+                    duration={1600}
                     className="font-display font-bold"
-                    style={{ fontSize: '1.75rem', color: 'var(--accent)' }}
-                  >
-                    {number}
-                  </div>
+                    style={{ fontSize: '1.75rem', color: 'var(--accent)', display: 'block' }}
+                  />
                   <div style={{ fontSize: '0.8rem', color: 'var(--text-2)', marginTop: '4px' }}>
                     {label}
                   </div>
