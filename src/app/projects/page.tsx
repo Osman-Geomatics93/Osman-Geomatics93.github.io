@@ -130,61 +130,159 @@ const professionalProjects = [
 ]
 
 const ossProjects = [
+  // ── QGIS Plugins ──
   {
-    name: 'wapor-water-productivity',
-    description: 'QGIS plugin for FAO WaPOR water productivity analysis and automated reporting',
-    url: 'https://github.com/Osman-Geomatics93/wapor-water-productivity',
-    tags: ['QGIS Plugin', 'Python', 'WaPOR'],
+    name: 'survey_adjustment',
+    description: 'Production-ready QGIS plugin for geodetic network least-squares adjustment — 2D/3D/GNSS/leveling, robust estimation (Huber, Danish, IGG-III), error ellipses, and HTML/GeoPackage reports.',
+    url: 'https://github.com/Osman-Geomatics93/survey_adjustment',
+    tags: ['QGIS Plugin', 'Python', 'Geodesy', 'Least Squares'],
+    stars: 4,
+    category: 'QGIS Plugin',
   },
   {
     name: 'GeoAccuRate',
-    description: 'QGIS plugin implementing Olofsson (2014) accuracy assessment for land-cover maps',
+    description: 'QGIS plugin for scientifically rigorous accuracy assessment — Olofsson area-weighted estimation, Pontius decomposition, Wilson confidence intervals, 86 unit tests, 92% coverage.',
     url: 'https://github.com/Osman-Geomatics93/GeoAccuRate',
-    tags: ['QGIS Plugin', 'Python', 'Accuracy'],
+    tags: ['QGIS Plugin', 'Python', 'Accuracy Assessment'],
+    stars: 2,
+    category: 'QGIS Plugin',
+  },
+  {
+    name: 'wapor-water-productivity',
+    description: 'QGIS plugin for FAO WaPOR-based water productivity analysis — 6-step workflow, offline caching, automated HTML/PDF reports. No API token required.',
+    url: 'https://github.com/Osman-Geomatics93/wapor-water-productivity',
+    tags: ['QGIS Plugin', 'Python', 'WaPOR', 'FAO'],
+    stars: 0,
+    category: 'QGIS Plugin',
+  },
+  {
+    name: 'sudan_data_loader',
+    description: 'QGIS plugin v3.0 for Sudan administrative boundaries — AI natural language queries, HDX / ACLED / NASA FIRMS / Sentinel Hub integration, dark mode dashboard.',
+    url: 'https://github.com/Osman-Geomatics93/sudan_data_loader',
+    tags: ['QGIS Plugin', 'Python', 'Sudan', 'AI'],
+    stars: 1,
+    category: 'QGIS Plugin',
+  },
+  {
+    name: 'SudanDataDownloader',
+    description: 'QGIS plugin for downloading Sudan geographic data — administrative boundaries, infrastructure, and natural features in one click.',
+    url: 'https://github.com/Osman-Geomatics93/SudanDataDownloader',
+    tags: ['QGIS Plugin', 'Python', 'Sudan'],
+    stars: 0,
+    category: 'QGIS Plugin',
+  },
+  // ── Remote Sensing / ML ──
+  {
+    name: 'S2DR4-Khartoum-SuperRes',
+    description: '10× super-resolution of Sentinel-2 imagery (10 m → 1 m) using Gamma Earth\'s S2DR4 model over Khartoum. Interactive drag-slider comparison + GEE download scripts.',
+    url: 'https://github.com/Osman-Geomatics93/S2DR4-Khartoum-SuperRes',
+    tags: ['Super-Resolution', 'Sentinel-2', 'Deep Learning', 'GEE'],
+    stars: 19,
+    category: 'Remote Sensing',
   },
   {
     name: 'GCN-Crop-Classification',
-    description: 'Graph Convolutional Network for crop type mapping — 99.9% accuracy on Sentinel-2',
+    description: 'Graph Convolutional Network for pixel-level crop classification from Sentinel-2 — 99.9% overall accuracy across 5 classes over 22 km² of Sudan\'s Gezira region.',
     url: 'https://github.com/Osman-Geomatics93/GCN-Crop-Classification',
-    tags: ['PyTorch', 'GCN', 'Deep Learning'],
-  },
-  {
-    name: 'Merowe-Dam-Water-Quality',
-    description: 'Sentinel-2 water quality index monitoring for Merowe Dam reservoir, Sudan',
-    url: 'https://github.com/Osman-Geomatics93/Merowe-Dam-Water-Quality',
-    tags: ['Sentinel-2', 'Python', 'Water Quality'],
-  },
-  {
-    name: 'Sudan-Flood-Disaster-Management',
-    description: 'GIS-based flood disaster risk mapping and management system for Sudan',
-    url: 'https://github.com/Osman-Geomatics93/Sudan-Flood-Disaster-Management',
-    tags: ['GIS', 'Hydrology', 'Risk'],
+    tags: ['GCN', 'PyTorch', 'Sentinel-2', 'Crop Mapping'],
+    stars: 7,
+    category: 'Remote Sensing',
   },
   {
     name: 'pansharpening-toolkit',
-    description: 'Python toolkit for multi-method satellite image pansharpening (Brovey, Gram-Schmidt, IHS)',
-    url: 'https://github.com/Osman-Geomatics93/pansharpening-toolkit',
-    tags: ['Python', 'Image Processing', 'Rasterio'],
+    description: '5 classic methods (Brovey, IHS, SFIM, Gram-Schmidt, HPF) + 7 deep learning models (PanNet, PanFormer, DRPNN) for satellite image pansharpening with quality metrics (PSNR, SSIM, SAM, ERGAS).',
+    url: 'https://github.com/Osman-Geomatics93/pansharpening-toolkit-',
+    tags: ['Python', 'PyTorch', 'Image Fusion', 'Transformers'],
+    stars: 3,
+    category: 'Remote Sensing',
   },
   {
-    name: 'gezira-lens',
-    description: 'Interactive geospatial dashboard for Gezira Irrigation Scheme monitoring',
-    url: 'https://github.com/Osman-Geomatics93/gezira-lens',
-    tags: ['Dashboard', 'JavaScript', 'GEE'],
-  },
-  {
-    name: 'TerraDiff',
-    description: 'LiDAR-based 3D terrain change detection — before/after elevation difference mapping',
-    url: 'https://github.com/Osman-Geomatics93/TerraDiff',
-    tags: ['LiDAR', 'Python', '3D Analysis'],
+    name: 'Merowe-Dam-Water-Quality',
+    description: 'Sentinel-2 multi-parameter water quality monitoring of Merowe Dam (926 km²) — 7 indicators (Chl-a, turbidity, TSS, CDOM, Secchi) across 510 cloud-filtered scenes via Google Earth Engine & XArray.',
+    url: 'https://github.com/Osman-Geomatics93/Merowe-Dam-Water-Quality',
+    tags: ['Sentinel-2', 'GEE', 'Water Quality', 'XArray'],
+    stars: 1,
+    category: 'Remote Sensing',
   },
   {
     name: 'crop-classification-deep-learning',
-    description: 'End-to-end deep learning pipeline for multi-class crop classification from satellite time series',
+    description: 'Complete ML pipeline for multi-class crop classification in Sudan — Random Forest, XGBoost, and PyTorch CNN/MLP/Attention models achieving 100% accuracy on 24,556 labeled Sentinel-2 samples.',
     url: 'https://github.com/Osman-Geomatics93/crop-classification-deep-learning',
-    tags: ['TensorFlow', 'CNN', 'Time Series'],
+    tags: ['PyTorch', 'XGBoost', 'Sentinel-2', 'Sudan'],
+    stars: 0,
+    category: 'Remote Sensing',
+  },
+  // ── Geospatial Web Apps ──
+  {
+    name: 'TerraDiff',
+    description: 'Full-stack 3D LiDAR change detection — automated ICP alignment, grid differencing, volumetric analysis (cut/fill), cross-sections. React + Three.js + FastAPI + Open3D.',
+    url: 'https://github.com/Osman-Geomatics93/TerraDiff',
+    tags: ['Three.js', 'FastAPI', 'LiDAR', 'React'],
+    stars: 3,
+    category: 'Web App',
+  },
+  {
+    name: 'HydroCalc',
+    description: 'Interactive open channel hydraulics calculator — 7 chapters (Manning\'s, hydraulic jumps, GVF profiles, sediment transport), Monte Carlo uncertainty, 3D longitudinal profiles. Live on Vercel.',
+    url: 'https://github.com/Osman-Geomatics93/HydroCalc',
+    tags: ['React', 'TypeScript', 'Plotly', 'Hydraulics'],
+    stars: 0,
+    liveUrl: 'https://hydro-calc.vercel.app',
+    category: 'Web App',
+  },
+  {
+    name: 'gezira-lens',
+    description: 'Interactive dashboard for Gezira Irrigation Scheme (1,564 command areas) — drag-and-drop lens system, D3 radial charts, time-player animation, heatmap, PNG export.',
+    url: 'https://github.com/Osman-Geomatics93/gezira-lens',
+    tags: ['D3.js', 'Leaflet', 'Vanilla JS', 'Turf.js'],
+    stars: 0,
+    category: 'Web App',
+  },
+  {
+    name: 'Sudan-Flood-Disaster-Management-System',
+    description: 'Full-stack flood disaster management platform — Next.js, tRPC, PostGIS spatial queries, Leaflet mapping. Monorepo with Turborepo, Docker, and GitHub Actions CI.',
+    url: 'https://github.com/Osman-Geomatics93/Sudan-Flood-Disaster-Management-System',
+    tags: ['Next.js', 'PostGIS', 'tRPC', 'TypeScript'],
+    stars: 0,
+    category: 'Web App',
+  },
+  // ── Python Libraries ──
+  {
+    name: 'sudapy',
+    description: 'Sudan-focused geomatics Python toolkit — built-in CRS presets for all Sudanese UTM zones (Adindan / WGS84), vector/raster ops, quick map export, Sentinel search/download. v1.2.1.',
+    url: 'https://github.com/Osman-Geomatics93/sudapy',
+    tags: ['Python', 'GIS', 'CLI', 'Sudan'],
+    stars: 0,
+    category: 'Python Library',
+  },
+  {
+    name: 'GeoScrapling',
+    description: 'Geospatial intelligence + web scraping — coordinate parsing (DD/DMS/UTM/MGRS/Geohash), 9,000+ EPSG codes, OGC services (WFS/WMS/WCS), multi-format export, MCP server integration.',
+    url: 'https://github.com/Osman-Geomatics93/GeoScrapling',
+    tags: ['Python', 'Scrapy', 'Geospatial', 'OGC'],
+    stars: 0,
+    category: 'Python Library',
+  },
+  // ── Tools ──
+  {
+    name: 'ScanBridge',
+    description: 'Local scanner-to-browser integration — Python/Flask service on localhost, Windows WIA API bridge, real-time WebSocket streaming, Base64 preview, no cloud uploads required. v2.0.',
+    url: 'https://github.com/Osman-Geomatics93/ScanBridge',
+    tags: ['Python', 'Flask', 'WebSocket', 'Windows WIA'],
+    stars: 0,
+    category: 'Tool',
   },
 ]
+
+const OSS_CATEGORIES = ['All', 'QGIS Plugin', 'Remote Sensing', 'Web App', 'Python Library', 'Tool']
+
+const ossCategoryColor: Record<string, string> = {
+  'QGIS Plugin': '#10b981',
+  'Remote Sensing': '#3b82f6',
+  'Web App': '#f59e0b',
+  'Python Library': '#8b5cf6',
+  'Tool': '#6b7280',
+}
 
 const categories = ['All', 'Water Resources', 'Crop Monitoring', 'Hydrology']
 
@@ -203,6 +301,7 @@ const categoryTextColor: Record<string, string> = {
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
+  const [activeOssCategory, setActiveOssCategory] = useState('All')
 
   const filtered = professionalProjects
     .filter((p) => activeCategory === 'All' || p.category === activeCategory)
@@ -220,6 +319,11 @@ export default function ProjectsPage() {
 
   const featured = filtered.filter((p) => p.featured)
   const rest = filtered.filter((p) => !p.featured)
+
+  const filteredOss = activeOssCategory === 'All'
+    ? ossProjects
+    : ossProjects.filter((p) => p.category === activeOssCategory)
+  const sortedOss = [...filteredOss].sort((a, b) => (b.stars ?? 0) - (a.stars ?? 0))
 
   return (
     <>
@@ -1513,110 +1617,218 @@ export default function ProjectsPage() {
             }}
           >
             <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
-              <p className="section-label">Open Source</p>
-              <h2
-                className="font-display"
-                style={{ marginTop: '12px', color: 'var(--text-1)' }}
-              >
-                GitHub Projects
-              </h2>
-              <p
-                style={{
-                  color: 'var(--text-2)',
-                  maxWidth: '560px',
-                  marginTop: '12px',
-                  lineHeight: 1.7,
-                }}
-              >
-                Public tools and research code released for the geospatial community — QGIS
-                plugins, deep learning pipelines, and monitoring dashboards.
-              </p>
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: '16px' }}>
+                <div>
+                  <p className="section-label">Open Source</p>
+                  <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
+                    GitHub Projects
+                  </h2>
+                  <p style={{ color: 'var(--text-2)', maxWidth: '560px', marginTop: '12px', lineHeight: 1.7 }}>
+                    17 public repositories — QGIS plugins, deep learning pipelines, geospatial web apps,
+                    and Python libraries released for the geospatial community.
+                  </p>
+                </div>
+                <a
+                  href="https://github.com/Osman-Geomatics93"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: '8px',
+                    border: '1px solid var(--border-bright)', color: 'var(--text-2)',
+                    fontSize: '0.82rem', fontWeight: 600, padding: '9px 18px',
+                    borderRadius: '8px', textDecoration: 'none',
+                    transition: 'border-color 0.2s, color 0.2s',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.borderColor = 'var(--accent)'
+                    el.style.color = 'var(--accent)'
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.borderColor = 'var(--border-bright)'
+                    el.style.color = 'var(--text-2)'
+                  }}
+                >
+                  <Github size={14} />
+                  View GitHub Profile
+                </a>
+              </div>
 
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-                  gap: '20px',
-                  marginTop: '48px',
-                }}
-              >
-                {ossProjects.map((proj) => (
-                  <a
-                    key={proj.name}
-                    href={proj.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: 'block',
-                      backgroundColor: 'var(--bg-card)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '6px',
-                      padding: '24px',
-                      transition: 'border-color 0.25s ease, transform 0.25s ease',
-                      textDecoration: 'none',
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.borderColor = 'var(--border-bright)'
-                      el.style.transform = 'translateY(-2px)'
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLElement
-                      el.style.borderColor = 'var(--border)'
-                      el.style.transform = 'translateY(0)'
-                    }}
-                  >
-                    <div
+              {/* Stats strip */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '24px', marginTop: '32px', marginBottom: '40px' }}>
+                {[
+                  { value: '17', label: 'Public Repos' },
+                  { value: '36+', label: 'GitHub Stars' },
+                  { value: '5', label: 'QGIS Plugins' },
+                  { value: '5', label: 'ML / RS Projects' },
+                ].map(({ value, label }) => (
+                  <div key={label} style={{
+                    backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)',
+                    borderRadius: '8px', padding: '16px 20px', textAlign: 'center', minWidth: '100px',
+                  }}>
+                    <div className="font-display font-bold" style={{ fontSize: '1.35rem', color: 'var(--accent)' }}>{value}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'var(--text-3)', marginTop: '2px' }}>{label}</div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Category filter */}
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginBottom: '32px' }}>
+                {OSS_CATEGORIES.map((cat) => {
+                  const isActive = activeOssCategory === cat
+                  const tc = cat === 'All' ? 'var(--accent)' : ossCategoryColor[cat]
+                  return (
+                    <button
+                      key={cat}
+                      onClick={() => setActiveOssCategory(cat)}
                       style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'flex-start',
-                        gap: '8px',
-                        marginBottom: '10px',
+                        padding: '7px 16px', borderRadius: '6px', fontSize: '0.8rem', fontWeight: 500,
+                        cursor: 'pointer', fontFamily: 'inherit',
+                        border: isActive ? 'none' : '1px solid var(--border-bright)',
+                        backgroundColor: isActive ? tc : 'transparent',
+                        color: isActive ? '#070c14' : 'var(--text-2)',
+                        transition: 'all 0.2s',
                       }}
                     >
-                      <div
-                        style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
-                      >
-                        <Github size={15} style={{ color: 'var(--text-3)', flexShrink: 0 }} />
-                        <h3
-                          className="font-display"
-                          style={{ fontSize: '0.9rem', fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.3 }}
-                        >
+                      {cat}
+                      {cat !== 'All' && (
+                        <span style={{ marginLeft: '6px', opacity: 0.7, fontSize: '0.72rem' }}>
+                          ({ossProjects.filter(p => p.category === cat).length})
+                        </span>
+                      )}
+                    </button>
+                  )
+                })}
+              </div>
+
+              {/* Cards grid */}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+                gap: '20px',
+              }}>
+                {sortedOss.map((proj) => {
+                  const catColor = ossCategoryColor[proj.category] ?? 'var(--accent)'
+                  return (
+                    <div
+                      key={proj.name}
+                      style={{
+                        display: 'flex', flexDirection: 'column',
+                        backgroundColor: 'var(--bg-card)',
+                        border: '1px solid var(--border)',
+                        borderTop: `3px solid ${catColor}`,
+                        borderRadius: '10px',
+                        padding: '24px',
+                        transition: 'border-color 0.25s, transform 0.25s',
+                        position: 'relative',
+                      }}
+                      onMouseEnter={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = catColor
+                        el.style.transform = 'translateY(-3px)'
+                      }}
+                      onMouseLeave={(e) => {
+                        const el = e.currentTarget as HTMLElement
+                        el.style.borderColor = 'var(--border)'
+                        el.style.transform = 'translateY(0)'
+                      }}
+                    >
+                      {/* Category badge + stars */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                        <span style={{
+                          fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.06em',
+                          textTransform: 'uppercase', color: catColor,
+                          backgroundColor: `${catColor}15`, border: `1px solid ${catColor}30`,
+                          borderRadius: '4px', padding: '2px 8px',
+                        }}>
+                          {proj.category}
+                        </span>
+                        {(proj.stars ?? 0) > 0 && (
+                          <span style={{ fontSize: '0.75rem', color: '#f59e0b', display: 'flex', alignItems: 'center', gap: '3px', fontWeight: 600 }}>
+                            ★ {proj.stars}
+                          </span>
+                        )}
+                      </div>
+
+                      {/* Repo name */}
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+                        <Github size={14} style={{ color: 'var(--text-3)', flexShrink: 0 }} />
+                        <h3 className="font-display" style={{ fontSize: '0.92rem', fontWeight: 700, color: 'var(--text-1)', lineHeight: 1.3 }}>
                           {proj.name}
                         </h3>
                       </div>
-                      <ExternalLink size={13} style={{ color: 'var(--text-3)', flexShrink: 0 }} />
-                    </div>
-                    <p
-                      style={{
-                        fontSize: '0.82rem',
-                        color: 'var(--text-2)',
-                        lineHeight: 1.65,
-                        marginBottom: '14px',
-                      }}
-                    >
-                      {proj.description}
-                    </p>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
-                      {proj.tags.map((tag) => (
-                        <span
-                          key={tag}
+
+                      {/* Description */}
+                      <p style={{ fontSize: '0.82rem', color: 'var(--text-2)', lineHeight: 1.7, marginBottom: '16px', flex: 1 }}>
+                        {proj.description}
+                      </p>
+
+                      {/* Tags */}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '18px' }}>
+                        {proj.tags.map((tag) => (
+                          <span key={tag} style={{
+                            fontSize: '0.67rem', color: catColor,
+                            backgroundColor: `${catColor}10`,
+                            border: `1px solid ${catColor}25`,
+                            borderRadius: '4px', padding: '2px 7px',
+                          }}>
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      {/* Action links */}
+                      <div style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+                        <a
+                          href={proj.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           style={{
-                            fontSize: '0.7rem',
-                            color: 'var(--accent)',
-                            backgroundColor: 'var(--accent-dim)',
-                            border: '1px solid var(--accent-border)',
-                            borderRadius: '4px',
-                            padding: '2px 7px',
+                            display: 'inline-flex', alignItems: 'center', gap: '5px',
+                            fontSize: '0.78rem', fontWeight: 600, color: 'var(--text-2)',
+                            backgroundColor: 'var(--bg-surface)', border: '1px solid var(--border)',
+                            borderRadius: '6px', padding: '7px 14px', textDecoration: 'none',
+                            transition: 'border-color 0.2s, color 0.2s',
+                          }}
+                          onMouseEnter={(e) => {
+                            const el = e.currentTarget as HTMLElement
+                            el.style.borderColor = catColor
+                            el.style.color = catColor
+                          }}
+                          onMouseLeave={(e) => {
+                            const el = e.currentTarget as HTMLElement
+                            el.style.borderColor = 'var(--border)'
+                            el.style.color = 'var(--text-2)'
                           }}
                         >
-                          {tag}
-                        </span>
-                      ))}
+                          <Github size={12} />
+                          Code
+                        </a>
+                        {'liveUrl' in proj && proj.liveUrl && (
+                          <a
+                            href={proj.liveUrl as string}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              display: 'inline-flex', alignItems: 'center', gap: '5px',
+                              fontSize: '0.78rem', fontWeight: 600, color: catColor,
+                              backgroundColor: `${catColor}10`, border: `1px solid ${catColor}30`,
+                              borderRadius: '6px', padding: '7px 14px', textDecoration: 'none',
+                              transition: 'background-color 0.2s',
+                            }}
+                            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = `${catColor}20` }}
+                            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.backgroundColor = `${catColor}10` }}
+                          >
+                            <ExternalLink size={12} />
+                            Live Demo
+                          </a>
+                        )}
+                      </div>
                     </div>
-                  </a>
-                ))}
+                  )
+                })}
               </div>
             </div>
           </section>
