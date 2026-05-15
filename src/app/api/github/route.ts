@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 
-export const dynamic = 'force-dynamic'
+export const dynamic = process.env.NEXT_STATIC_EXPORT === 'true' ? 'auto' : 'force-dynamic'
 
 const USERNAME = 'Osman-Geomatics93'
 
