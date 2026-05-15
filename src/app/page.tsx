@@ -18,6 +18,7 @@ import dynamic from 'next/dynamic'
 
 const ProjectMap = dynamic(() => import('./components/ProjectMap'), { ssr: false })
 const EarthGlobe = dynamic(() => import('./components/EarthGlobe'), { ssr: false })
+const GitHubWidget = dynamic(() => import('./components/GitHubWidget'), { ssr: false })
 const ParticleField = dynamic(() => import('./components/ParticleField'), { ssr: false })
 
 const expertiseAreas = [
@@ -1179,6 +1180,58 @@ export default function Home() {
                   View all repositories on GitHub →
                 </a>
               </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== GITHUB ACTIVITY ===================== */}
+        <RevealSection>
+          <section
+            className="resp-section"
+            style={{
+              padding: '0 24px',
+              backgroundColor: 'var(--bg)',
+              borderTop: '1px solid var(--border)',
+            }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12, marginBottom: 40 }}>
+                <div>
+                  <p className="section-label">Open Source Activity</p>
+                  <h2
+                    className="font-display"
+                    style={{ marginTop: 12, color: 'var(--text-1)', fontSize: 'clamp(1.5rem, 3vw, 2rem)', fontWeight: 700 }}
+                  >
+                    GitHub Activity
+                  </h2>
+                  <p style={{ color: 'var(--text-2)', maxWidth: 520, marginTop: 10, lineHeight: 1.7, fontSize: '0.95rem' }}>
+                    Contribution heatmap, language breakdown, and top repositories — pulled live from the GitHub API.
+                  </p>
+                </div>
+                <a
+                  href="https://github.com/Osman-Geomatics93"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: 'inline-flex', alignItems: 'center', gap: 8,
+                    border: '1px solid var(--border-bright)', color: 'var(--text-2)',
+                    fontSize: '0.82rem', fontWeight: 600, padding: '9px 18px',
+                    borderRadius: 8, textDecoration: 'none', transition: 'border-color 0.2s, color 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.borderColor = 'var(--accent)'; el.style.color = 'var(--accent)'
+                  }}
+                  onMouseLeave={e => {
+                    const el = e.currentTarget as HTMLElement
+                    el.style.borderColor = 'var(--border-bright)'; el.style.color = 'var(--text-2)'
+                  }}
+                >
+                  <Github size={14} />
+                  View GitHub Profile
+                </a>
+              </div>
+              <GitHubWidget />
             </div>
           </section>
         </RevealSection>
