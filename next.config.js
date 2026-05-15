@@ -6,7 +6,7 @@ const isGithubPages = process.env.NEXT_STATIC_EXPORT === 'true'
 const nextConfig = {
   ...(isGithubPages ? { output: 'export' } : {}),
   images: {
-    domains: ['i.imgur.com', 'avatars.githubusercontent.com'],
+    domains: ['avatars.githubusercontent.com'],
     unoptimized: isGithubPages,
   },
   eslint: {

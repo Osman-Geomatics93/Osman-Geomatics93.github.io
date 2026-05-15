@@ -378,7 +378,7 @@ export default function Home() {
                   }}
                 >
                   <Image
-                    src="https://i.imgur.com/1QHqofS.jpg"
+                    src="/osman-profile.jpg"
                     alt="Osman Osama Ahmed Ibrahim — Geomatics Engineer"
                     width={320}
                     height={400}

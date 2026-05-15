@@ -304,7 +304,7 @@ export default function AboutPage() {
                   }}
                 >
                   <Image
-                    src="https://i.imgur.com/1QHqofS.jpg"
+                    src="/osman-profile.jpg"
                     alt="Osman Ibrahim — Geomatics Engineer"
                     width={340}
                     height={425}
