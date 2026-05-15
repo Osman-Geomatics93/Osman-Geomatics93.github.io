@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import Image from 'next/image'
 import { Github, Star, GitFork, Users, ExternalLink } from 'lucide-react'
 
 interface ContribDay { date: string; count: number; level: number }
@@ -98,9 +99,10 @@ export default function GitHubWidget() {
         backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)',
         borderRadius: 12, padding: '20px 24px', flexWrap: 'wrap',
       }}>
-        <img
+        <Image
           src={data.avatarUrl} alt={data.name}
-          style={{ width: 56, height: 56, borderRadius: '50%', border: '2px solid var(--accent)', flexShrink: 0 }}
+          width={56} height={56}
+          style={{ borderRadius: '50%', border: '2px solid var(--accent)', flexShrink: 0 }}
         />
         <div style={{ flex: 1, minWidth: 200 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>

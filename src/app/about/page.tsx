@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
 import RevealSection from '../components/RevealSection'
@@ -302,9 +303,12 @@ export default function AboutPage() {
                     maxWidth: '340px',
                   }}
                 >
-                  <img
+                  <Image
                     src="https://i.imgur.com/1QHqofS.jpg"
                     alt="Osman Ibrahim — Geomatics Engineer"
+                    width={340}
+                    height={425}
+                    priority
                     style={{
                       width: '100%',
                       height: '100%',

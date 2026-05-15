@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import Nav from './components/Nav'
 import Footer from './components/Footer'
 import RevealSection from './components/RevealSection'
@@ -17,9 +18,10 @@ import HorizontalScroll from './components/HorizontalScroll'
 import dynamic from 'next/dynamic'
 
 const ProjectMap = dynamic(() => import('./components/ProjectMap'), { ssr: false })
-const EarthGlobe = dynamic(() => import('./components/EarthGlobe'), { ssr: false })
+const LazyGlobe = dynamic(() => import('./components/LazyGlobe'), { ssr: false })
 const GitHubWidget = dynamic(() => import('./components/GitHubWidget'), { ssr: false })
 const ParticleField = dynamic(() => import('./components/ParticleField'), { ssr: false })
+const CodeShowcase = dynamic(() => import('./components/CodeShowcase'), { ssr: false })
 
 const expertiseAreas = [
   {
@@ -375,9 +377,12 @@ export default function Home() {
                     boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                   }}
                 >
-                  <img
+                  <Image
                     src="https://i.imgur.com/1QHqofS.jpg"
                     alt="Osman Osama Ahmed Ibrahim — Geomatics Engineer"
+                    width={320}
+                    height={400}
+                    priority
                     style={{
                       width: '100%',
                       height: '100%',
@@ -607,6 +612,22 @@ export default function Home() {
                   <SkillsRadar />
                 </div>
               </div>
+            </div>
+          </section>
+        </RevealSection>
+
+        {/* ===================== CODE SHOWCASE ===================== */}
+        <RevealSection>
+          <section
+            className="resp-section"
+            style={{ padding: '0 24px', backgroundColor: 'var(--bg-card)', borderTop: '1px solid var(--border)' }}
+          >
+            <div style={{ maxWidth: '1280px', margin: '0 auto' }}>
+              <p className="section-label">Code in Action</p>
+              <h2 className="font-display" style={{ marginTop: '12px', color: 'var(--text-1)' }}>
+                Real Scripts from Research
+              </h2>
+              <CodeShowcase />
             </div>
           </section>
         </RevealSection>
@@ -1264,7 +1285,7 @@ export default function Home() {
                   background: '#050d1a',
                 }}
               >
-                <EarthGlobe />
+                <LazyGlobe />
               </div>
             </div>
           </section>

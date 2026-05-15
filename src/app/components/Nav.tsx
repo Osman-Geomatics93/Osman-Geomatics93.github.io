@@ -199,6 +199,7 @@ export default function Nav({ activePage = 'home' }: NavProps) {
               href="/cv"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="Download CV"
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
