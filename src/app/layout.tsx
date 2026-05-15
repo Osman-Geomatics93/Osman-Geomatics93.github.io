@@ -81,6 +81,10 @@ export default function RootLayout({
     <html lang="en" className={`${manrope.variable} ${dmSans.variable}`}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="preconnect" href="https://unpkg.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://unpkg.com" />
+        <link rel="dns-prefetch" href="https://avatars.githubusercontent.com" />
+        <link rel="dns-prefetch" href="https://github-contributions-api.jogruber.de" />
         <link rel="icon" href="/icon-192.png" type="image/png" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
         <link rel="manifest" href="/manifest.json" />

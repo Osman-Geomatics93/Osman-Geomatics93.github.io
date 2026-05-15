@@ -214,9 +214,15 @@ export default function CodeShowcase() {
   const [charIndex, setCharIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const rafRef = useRef<number | null>(null)
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lastTimeRef = useRef<number>(0)
   const streamRef = useRef<Char[]>(buildStream(SNIPPETS[0].lines))
   const containerRef = useRef<HTMLDivElement>(null)
+  const isMobile = useRef(false)
+
+  useEffect(() => {
+    isMobile.current = window.matchMedia('(max-width: 767px)').matches
+  }, [])
 
   /* rebuild stream when tab changes */
   useEffect(() => {
@@ -225,32 +231,40 @@ export default function CodeShowcase() {
     lastTimeRef.current = 0
   }, [activeTab])
 
-  /* typewriter loop */
+  /* typewriter loop — rAF on desktop, setTimeout on mobile to yield main thread */
   const tick = useCallback((ts: number) => {
     if (paused) return
+    const speed = isMobile.current ? 35 : 18
     const elapsed = ts - lastTimeRef.current
-    const speed = 18 // ms per char
     if (elapsed >= speed) {
       const steps = Math.floor(elapsed / speed)
       lastTimeRef.current = ts - (elapsed % speed)
       setCharIndex(prev => {
         const next = Math.min(prev + steps, streamRef.current.length)
         if (next >= streamRef.current.length) {
-          /* auto-advance to next tab after 3 s pause */
-          setTimeout(() => {
-            setActiveTab(t => (t + 1) % SNIPPETS.length)
-          }, 3000)
+          setTimeout(() => setActiveTab(t => (t + 1) % SNIPPETS.length), 3000)
           return next
         }
         return next
       })
     }
-    rafRef.current = requestAnimationFrame(tick)
+    if (isMobile.current) {
+      timerRef.current = setTimeout(() => tick(performance.now()), speed)
+    } else {
+      rafRef.current = requestAnimationFrame(tick)
+    }
   }, [paused])
 
   useEffect(() => {
-    rafRef.current = requestAnimationFrame(tick)
-    return () => { if (rafRef.current) cancelAnimationFrame(rafRef.current) }
+    if (isMobile.current) {
+      timerRef.current = setTimeout(() => tick(performance.now()), 35)
+    } else {
+      rafRef.current = requestAnimationFrame(tick)
+    }
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current)
+      if (timerRef.current) clearTimeout(timerRef.current)
+    }
   }, [tick])
 
   /* auto-scroll code container */

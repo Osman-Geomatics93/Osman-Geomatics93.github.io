@@ -12,6 +12,7 @@ export default function ParticleField() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
+    if (window.matchMedia('(max-width: 767px)').matches) return
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     const canvas = canvasRef.current

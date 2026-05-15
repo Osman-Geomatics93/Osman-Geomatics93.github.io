@@ -19,6 +19,12 @@ export default function AuroraBackground() {
           30%     { transform: translate(4%,8%) scale(0.9); }
           60%     { transform: translate(-6%,-5%) scale(1.1); }
         }
+        @media (max-width: 767px) {
+          .aurora-blob { animation: none !important; filter: none !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .aurora-blob { animation: none !important; }
+        }
       `}</style>
       <div
         aria-hidden="true"
@@ -31,7 +37,7 @@ export default function AuroraBackground() {
         }}
       >
         {/* Emerald — centre-left */}
-        <div style={{
+        <div className="aurora-blob" style={{
           position: 'absolute',
           top: '5%', left: '5%',
           width: '55%', height: '80%',
@@ -41,7 +47,7 @@ export default function AuroraBackground() {
           animation: 'aurora-1 14s ease-in-out infinite',
         }} />
         {/* Blue — top-right */}
-        <div style={{
+        <div className="aurora-blob" style={{
           position: 'absolute',
           top: '-15%', right: '0%',
           width: '52%', height: '70%',
@@ -51,7 +57,7 @@ export default function AuroraBackground() {
           animation: 'aurora-2 18s ease-in-out infinite',
         }} />
         {/* Purple — bottom */}
-        <div style={{
+        <div className="aurora-blob" style={{
           position: 'absolute',
           bottom: '-5%', left: '25%',
           width: '50%', height: '55%',

@@ -6,6 +6,7 @@ export default function FilmGrain() {
   const divRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    if (window.matchMedia('(max-width: 767px)').matches) return
     const el = divRef.current
     if (!el) return
 
