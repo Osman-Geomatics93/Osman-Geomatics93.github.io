@@ -1,8 +1,6 @@
 import { NextRequest } from 'next/server'
 import Groq from 'groq-sdk'
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
-
 const SYSTEM_PROMPT = `You are an AI assistant for Osman Ibrahim's personal portfolio website. Your job is to answer questions about Osman's background, skills, projects, and experience in a friendly, concise, and professional way.
 
 ## About Osman Ibrahim
@@ -142,6 +140,7 @@ Government: WES Sudan, HRC Sudan
 - Don't make up facts — only use information from this prompt`
 
 export async function POST(req: NextRequest) {
+  const groq = new Groq({ apiKey: process.env.GROQ_API_KEY })
   try {
     const { messages } = await req.json()
 
