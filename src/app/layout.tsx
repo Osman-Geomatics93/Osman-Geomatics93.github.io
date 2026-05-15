@@ -7,6 +7,7 @@ import CommandPalette from './components/CommandPalette'
 import Toast from './components/Toast'
 import FilmGrain from './components/FilmGrain'
 import BackToTop from './components/BackToTop'
+import ChatBot from './components/ChatBot'
 import PageTransition from './components/PageTransition'
 import Preloader from './components/Preloader'
 import { Analytics } from '@vercel/analytics/react'
@@ -135,6 +136,7 @@ export default function RootLayout({
         <CommandPalette />
         <Toast />
         <BackToTop />
+        <ChatBot />
         <PageTransition>{children}</PageTransition>
         <Analytics />
         <SpeedInsights />
