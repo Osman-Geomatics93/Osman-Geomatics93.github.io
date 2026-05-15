@@ -314,6 +314,50 @@ a {
   color: var(--accent);
 }
 
+.blog-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--accent);
+  color: #070c14;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 12px 28px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background-color 0.2s, transform 0.2s;
+}
+.blog-cta-btn:hover {
+  background-color: var(--accent-hover);
+  transform: translateY(-2px);
+}
+
+.blog-related-card {
+  transition: border-color 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+.blog-related-card:hover {
+  border-color: var(--accent) !important;
+  transform: translateY(-2px);
+}
+
+.blog-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid var(--accent-border);
+  padding: 10px 24px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+.blog-all-link:hover {
+  background-color: var(--accent-dim);
+}
+
 @keyframes ping {
   75%, 100% {
     transform: scale(2);
