@@ -1,0 +1,130 @@
+---
+title: "Getting Started with FAO WaPOR for Water Productivity Analysis"
+date: "2025-04-10"
+excerpt: "A practical guide to using FAO's WaPOR platform to extract and analyse water productivity data for irrigated agriculture — from downloading NDVI products to computing kg/m³ yields."
+tags: ["WaPOR", "FAO", "Water Productivity", "Python", "Remote Sensing"]
+readTime: "9 min read"
+coverColor: "#10b981"
+---
+
+## What is WaPOR?
+
+The FAO Water Productivity Open-access portal (WaPOR) provides satellite-derived data on water consumption, biomass production, and water productivity across Africa and the Near East. It covers three spatial resolutions — continental (250 m), national (100 m), and sub-national (30 m for selected areas) — at dekadal, monthly, and annual temporal scales.
+
+The core equation is straightforward:
+
+```
+WP = Y / ETa
+```
+
+Where **Y** is the harvested yield (kg/ha) and **ETa** is the actual evapotranspiration (mm). The result gives you **kg/m³** — how much crop you produce per cubic metre of water consumed.
+
+## Key Data Products
+
+| Product | Code | Resolution | Description |
+|---------|------|------------|-------------|
+| Actual Evapotranspiration | ETa | 100 m / 250 m | Water consumed by crops and soil |
+| Above-Ground Biomass | AGBP | 100 m / 250 m | Total dry matter produced |
+| Net Primary Production | NPP | 250 m | Carbon fixed by vegetation |
+| Land Cover | LCC | 100 m | Annual cropland classification |
+| Phenology | PHE | 100 m | Start/end of growing season |
+
+## Step 1 — Access the Data via Python
+
+The `wapor` Python package (or direct API) makes downloading straightforward. First, register at [wapor.apps.fao.org](https://wapor.apps.fao.org) to get your API token.
+
+```python
+import requests
+import os
+
+API_TOKEN = "your_wapor_api_key"
+BASE_URL = "https://io.apps.fao.org/gismgr/api/v1"
+
+def download_wapor_raster(crop_code, year, season, output_dir):
+    """
+    Download a WaPOR L2 product for a specific year and season.
+    crop_code: e.g. 'L2_AETI_A' for annual ETa at 100m
+    """
+    headers = {"X-GISMGR-API-KEY": API_TOKEN}
+    
+    # Build query for the specific time period
+    params = {
+        "year": year,
+        "season": season,
+        "format": "GeoTIFF",
+    }
+    
+    url = f"{BASE_URL}/catalog/workspaces/WAPOR_2/{crop_code}/rasters"
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+    
+    raster_url = response.json()["response"]["downloadUrl"]
+    
+    # Download the file
+    out_path = os.path.join(output_dir, f"{crop_code}_{year}.tif")
+    with open(out_path, "wb") as f:
+        f.write(requests.get(raster_url).content)
+    
+    return out_path
+```
+
+## Step 2 — Compute Water Productivity
+
+Once you have ETa (in mm) and AGBP (in kg/ha), calculate water productivity per pixel:
+
+```python
+import rasterio
+import numpy as np
+
+def compute_water_productivity(agbp_path, eta_path, output_path, harvest_index=0.45):
+    """
+    Compute seasonal water productivity (kg/m³).
+    harvest_index: fraction of AGBP that becomes grain yield (wheat ~0.45)
+    """
+    with rasterio.open(agbp_path) as agbp_src:
+        agbp = agbp_src.read(1).astype(np.float32)
+        profile = agbp_src.profile
+        agbp = np.where(agbp == agbp_src.nodata, np.nan, agbp)
+
+    with rasterio.open(eta_path) as eta_src:
+        eta = eta_src.read(1).astype(np.float32)
+        eta = np.where(eta == eta_src.nodata, np.nan, eta)
+
+    # Convert ETa from mm to m³/ha (1 mm/ha = 10 m³/ha)
+    eta_m3_ha = eta * 10
+
+    # Yield estimate using harvest index
+    yield_kg_ha = agbp * harvest_index
+
+    # Water productivity in kg/m³
+    wp = np.where(eta_m3_ha > 0, yield_kg_ha / eta_m3_ha, np.nan)
+
+    profile.update(dtype=rasterio.float32, nodata=-9999)
+    with rasterio.open(output_path, "w", **profile) as dst:
+        dst.write(np.where(np.isnan(wp), -9999, wp).astype(np.float32), 1)
+
+    return wp
+```
+
+## Step 3 — Visualise Results in QGIS
+
+After computing water productivity rasters, load them into QGIS and apply a diverging colour ramp (e.g. `RdYlGn`) to highlight areas of low vs. high water productivity. Key visualisation tips:
+
+- **Clip** the raster to your irrigation scheme boundary to avoid surrounding dryland areas skewing the statistics
+- **Use band statistics per season** — WP varies significantly between winter and summer crops
+- **Compare years** using the QGIS temporal controller to spot productivity trends
+
+## My QGIS Plugin
+
+I packaged this entire workflow — download, compute, visualise — into a QGIS plugin called **wapor-water-productivity**, released as open source. It automates seasonal WP calculation with a simple UI and outputs publication-ready maps directly from QGIS.
+
+You can install it from the QGIS Plugin Repository (search "WaPOR Water Productivity") or from the [GitHub repository](https://github.com/Osman-Geomatics93/wapor-water-productivity).
+
+## Key Takeaways
+
+- WaPOR removes the need for costly field experiments to estimate ETa at scale
+- The 100 m national products are sufficient for irrigation scheme analysis
+- Python + rasterio handles bulk downloads efficiently — 60 dekadal files in under 5 minutes
+- Always validate pixel-level WP estimates against field measurements at sampling points
+
+For questions or collaboration on WaPOR-based water productivity assessment, feel free to [reach out](/contact).

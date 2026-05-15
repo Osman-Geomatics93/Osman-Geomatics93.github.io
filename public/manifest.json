@@ -1,0 +1,56 @@
+{
+  "name": "Osman Ibrahim — Remote Sensing & GIS Expert",
+  "short_name": "Osman Ibrahim",
+  "description": "Portfolio of Osman Ibrahim, Geomatics Engineer specializing in Remote Sensing, GIS, and Water Productivity Analysis.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#070c14",
+  "theme_color": "#10b981",
+  "categories": ["portfolio", "education", "productivity"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/api/og?title=Remote+Sensing+%26+GIS+Expert",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Projects",
+      "url": "/projects",
+      "description": "View field projects and case studies"
+    },
+    {
+      "name": "Blog",
+      "url": "/blog",
+      "description": "Technical articles on GIS and remote sensing"
+    },
+    {
+      "name": "Contact",
+      "url": "/contact",
+      "description": "Get in touch with Osman"
+    }
+  ]
+}

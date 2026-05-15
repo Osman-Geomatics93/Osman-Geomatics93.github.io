@@ -43,10 +43,10 @@ export const metadata: Metadata = {
     siteName: 'Osman Ibrahim Portfolio',
     images: [
       {
-        url: 'https://i.imgur.com/1QHqofS.jpg',
-        width: 800,
-        height: 1000,
-        alt: 'Osman Ibrahim — Geomatics Engineer',
+        url: '/api/og?title=Remote+Sensing+%26+GIS+Expert',
+        width: 1200,
+        height: 630,
+        alt: 'Osman Ibrahim — Remote Sensing & GIS Expert',
       },
     ],
     locale: 'en_US',
@@ -82,6 +82,10 @@ export default function RootLayout({
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#10b981" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         {/* Prevent flash of wrong theme — runs before paint */}
         <script dangerouslySetInnerHTML={{ __html: `(function(){var t=localStorage.getItem('theme')||(window.matchMedia('(prefers-color-scheme:light)').matches?'light':'dark');document.documentElement.setAttribute('data-theme',t);})();` }} />
         <script

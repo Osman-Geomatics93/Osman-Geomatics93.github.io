@@ -13,10 +13,14 @@ const navLinks = [
   { label: 'Home', href: '/', page: 'home' },
   { label: 'About', href: '/about', page: 'about' },
   { label: 'Projects', href: '/projects', page: 'projects' },
+  { label: 'Blog', href: '/blog', page: 'blog' },
   { label: 'Publications', href: '/publications', page: 'publications' },
   { label: 'Certifications', href: '/certifications', page: 'certifications' },
   { label: 'Contact', href: '/contact', page: 'contact' },
 ]
+
+// Toggle this to show/hide the availability badge across the site
+const AVAILABLE_FOR_WORK = true
 
 export default function Nav({ activePage = 'home' }: NavProps) {
   const [scrolled, setScrolled] = useState(false)
@@ -69,22 +73,65 @@ export default function Nav({ activePage = 'home' }: NavProps) {
             justifyContent: 'space-between',
           }}
         >
-          {/* Logo */}
-          <Link
-            href="/"
-            onClick={() => setMenuOpen(false)}
-            className="font-display font-bold"
-            style={{
-              color: 'var(--text-1)',
-              letterSpacing: '-0.02em',
-              fontSize: 'clamp(0.95rem, 3vw, 1.1rem)',
-              transition: 'color 0.2s ease',
-            }}
-            onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--accent)' }}
-            onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-1)' }}
-          >
-            Osman Ibrahim
-          </Link>
+          {/* Logo + availability badge */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <Link
+              href="/"
+              onClick={() => setMenuOpen(false)}
+              className="font-display font-bold"
+              style={{
+                color: 'var(--text-1)',
+                letterSpacing: '-0.02em',
+                fontSize: 'clamp(0.95rem, 3vw, 1.1rem)',
+                transition: 'color 0.2s ease',
+              }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--accent)' }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLElement).style.color = 'var(--text-1)' }}
+            >
+              Osman Ibrahim
+            </Link>
+
+            {AVAILABLE_FOR_WORK && (
+              <Link
+                href="/contact"
+                onClick={() => setMenuOpen(false)}
+                title="Open to consulting & collaboration"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  backgroundColor: 'rgba(16,185,129,0.1)',
+                  border: '1px solid rgba(16,185,129,0.3)',
+                  borderRadius: '20px',
+                  padding: '3px 9px',
+                  fontSize: '0.68rem',
+                  fontWeight: 600,
+                  color: '#10b981',
+                  textDecoration: 'none',
+                  transition: 'background-color 0.2s, border-color 0.2s',
+                  whiteSpace: 'nowrap',
+                }}
+                onMouseEnter={(e) => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.backgroundColor = 'rgba(16,185,129,0.18)'
+                  el.style.borderColor = 'rgba(16,185,129,0.5)'
+                }}
+                onMouseLeave={(e) => {
+                  const el = e.currentTarget as HTMLElement
+                  el.style.backgroundColor = 'rgba(16,185,129,0.1)'
+                  el.style.borderColor = 'rgba(16,185,129,0.3)'
+                }}
+              >
+                <span style={{
+                  width: '6px', height: '6px', borderRadius: '50%',
+                  backgroundColor: '#10b981',
+                  animation: 'availability-pulse 2s ease-in-out infinite',
+                  flexShrink: 0,
+                }} />
+                <span className="hidden sm:inline">Open to work</span>
+              </Link>
+            )}
+          </div>
 
           {/* Desktop Nav Links */}
           <nav className="hidden md:flex items-center" style={{ gap: '32px' }}>

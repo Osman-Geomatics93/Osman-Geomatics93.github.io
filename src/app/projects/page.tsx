@@ -202,11 +202,21 @@ const categoryTextColor: Record<string, string> = {
 
 export default function ProjectsPage() {
   const [activeCategory, setActiveCategory] = useState('All')
+  const [searchQuery, setSearchQuery] = useState('')
 
-  const filtered =
-    activeCategory === 'All'
-      ? professionalProjects
-      : professionalProjects.filter((p) => p.category === activeCategory)
+  const filtered = professionalProjects
+    .filter((p) => activeCategory === 'All' || p.category === activeCategory)
+    .filter((p) => {
+      if (!searchQuery.trim()) return true
+      const q = searchQuery.toLowerCase()
+      return (
+        p.title.toLowerCase().includes(q) ||
+        p.description.toLowerCase().includes(q) ||
+        p.org.toLowerCase().includes(q) ||
+        p.location.toLowerCase().includes(q) ||
+        p.technologies.some((t) => t.toLowerCase().includes(q))
+      )
+    })
 
   const featured = filtered.filter((p) => p.featured)
   const rest = filtered.filter((p) => !p.featured)
@@ -280,12 +290,16 @@ export default function ProjectsPage() {
           </div>
         </section>
 
-        {/* ===================== FILTER ===================== */}
+        {/* ===================== FILTER + SEARCH ===================== */}
         <div
           style={{
-            padding: '24px 24px',
+            padding: '20px 24px',
             backgroundColor: 'var(--bg)',
             borderBottom: '1px solid var(--border)',
+            position: 'sticky',
+            top: '64px',
+            zIndex: 30,
+            backdropFilter: 'blur(12px)',
           }}
         >
           <div
@@ -294,31 +308,118 @@ export default function ProjectsPage() {
               margin: '0 auto',
               display: 'flex',
               flexWrap: 'wrap',
-              gap: '8px',
+              gap: '12px',
+              alignItems: 'center',
             }}
           >
-            {categories.map((cat) => {
-              const isActive = activeCategory === cat
-              return (
+            {/* Category filters */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+              {categories.map((cat) => {
+                const isActive = activeCategory === cat
+                return (
+                  <button
+                    key={cat}
+                    onClick={() => setActiveCategory(cat)}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '6px',
+                      fontSize: '0.83rem',
+                      fontWeight: 500,
+                      cursor: 'pointer',
+                      transition: 'all 0.2s ease',
+                      border: isActive ? 'none' : '1px solid var(--border-bright)',
+                      backgroundColor: isActive ? 'var(--accent)' : 'transparent',
+                      color: isActive ? '#070c14' : 'var(--text-2)',
+                      fontFamily: 'inherit',
+                    }}
+                  >
+                    {cat}
+                  </button>
+                )
+              })}
+            </div>
+
+            {/* Divider */}
+            <div style={{ width: '1px', height: '28px', backgroundColor: 'var(--border)', flexShrink: 0 }} className="hidden sm:block" />
+
+            {/* Search input */}
+            <div
+              style={{
+                position: 'relative',
+                flex: '1 1 200px',
+                maxWidth: '340px',
+              }}
+            >
+              <svg
+                style={{
+                  position: 'absolute',
+                  left: '12px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  pointerEvents: 'none',
+                  color: 'var(--text-3)',
+                }}
+                width="15" height="15" viewBox="0 0 24 24"
+                fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search projects, tools, orgs…"
+                style={{
+                  width: '100%',
+                  paddingLeft: '36px',
+                  paddingRight: searchQuery ? '32px' : '12px',
+                  paddingTop: '8px',
+                  paddingBottom: '8px',
+                  borderRadius: '6px',
+                  border: '1px solid var(--border-bright)',
+                  backgroundColor: 'var(--bg-card)',
+                  color: 'var(--text-1)',
+                  fontSize: '0.83rem',
+                  outline: 'none',
+                  fontFamily: 'inherit',
+                  transition: 'border-color 0.2s',
+                  boxSizing: 'border-box',
+                }}
+                onFocus={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'rgba(16,185,129,0.5)' }}
+                onBlur={(e) => { (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-bright)' }}
+              />
+              {searchQuery && (
                 <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => setSearchQuery('')}
+                  aria-label="Clear search"
                   style={{
-                    padding: '8px 18px',
-                    borderRadius: '6px',
-                    fontSize: '0.85rem',
-                    fontWeight: 500,
+                    position: 'absolute',
+                    right: '10px',
+                    top: '50%',
+                    transform: 'translateY(-50%)',
+                    background: 'none',
+                    border: 'none',
                     cursor: 'pointer',
-                    transition: 'all 0.2s ease',
-                    border: isActive ? 'none' : '1px solid var(--border-bright)',
-                    backgroundColor: isActive ? 'var(--accent)' : 'transparent',
-                    color: isActive ? '#070c14' : 'var(--text-2)',
+                    color: 'var(--text-3)',
+                    padding: '2px',
+                    display: 'flex',
+                    alignItems: 'center',
                   }}
                 >
-                  {cat}
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+                    <path d="M18 6 6 18M6 6l12 12" />
+                  </svg>
                 </button>
-              )
-            })}
+              )}
+            </div>
+
+            {/* Results count */}
+            {(searchQuery || activeCategory !== 'All') && (
+              <span style={{ fontSize: '0.78rem', color: 'var(--text-3)', flexShrink: 0 }}>
+                {filtered.length} project{filtered.length !== 1 ? 's' : ''}
+              </span>
+            )}
           </div>
         </div>
 

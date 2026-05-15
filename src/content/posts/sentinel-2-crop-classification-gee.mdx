@@ -1,0 +1,168 @@
+---
+title: "Sentinel-2 Crop Classification with SVM in Google Earth Engine"
+date: "2025-02-20"
+excerpt: "Step-by-step walkthrough of building a Support Vector Machine classifier for wheat mapping using Sentinel-2 time-series in Google Earth Engine — from image collection to accuracy assessment."
+tags: ["Google Earth Engine", "Sentinel-2", "Machine Learning", "Crop Mapping", "SVM"]
+readTime: "11 min read"
+coverColor: "#f59e0b"
+---
+
+## Why Sentinel-2 + SVM for Crop Mapping?
+
+Sentinel-2 provides free 10 m multispectral imagery with a 5-day revisit time — ideal for capturing the phenological dynamics that distinguish crop types. Support Vector Machines remain competitive with deep learning methods when training data is limited, which is often the case in data-scarce regions like Sudan.
+
+In my FAO project (2023–2024), SVM on Sentinel-2 time-series achieved **94.2% overall accuracy** for wheat classification across the Gezira Scheme — outperforming Random Forest by 2.3% with far less training data.
+
+## Building the Image Collection
+
+The key is capturing multiple phenological stages — sowing, peak vegetation, and senescence:
+
+```javascript
+// Google Earth Engine script
+var gezira = ee.FeatureCollection('users/osmangeomatics/gezira_boundary');
+var startDate = '2023-10-01';
+var endDate = '2024-04-30';
+
+// Load Sentinel-2 Surface Reflectance with cloud masking
+function maskS2clouds(image) {
+  var qa = image.select('QA60');
+  var cloudBitMask = 1 << 10;
+  var cirrusBitMask = 1 << 11;
+  var mask = qa.bitwiseAnd(cloudBitMask).eq(0)
+    .and(qa.bitwiseAnd(cirrusBitMask).eq(0));
+  return image.updateMask(mask)
+    .divide(10000)
+    .copyProperties(image, ['system:time_start']);
+}
+
+var s2 = ee.ImageCollection('COPERNICUS/S2_SR_HARMONIZED')
+  .filterDate(startDate, endDate)
+  .filterBounds(gezira)
+  .filter(ee.Filter.lt('CLOUDY_PIXEL_PERCENTAGE', 20))
+  .map(maskS2clouds);
+
+print('Images in collection:', s2.size());
+```
+
+## Engineering Spectral Features
+
+Rather than using individual bands, compute vegetation indices per dekad and stack them:
+
+```javascript
+function addIndices(image) {
+  var ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI');
+  var lswi = image.normalizedDifference(['B8', 'B11']).rename('LSWI');  // moisture
+  var evi = image.expression(
+    '2.5 * ((NIR - RED) / (NIR + 6 * RED - 7.5 * BLUE + 1))',
+    { NIR: image.select('B8'), RED: image.select('B4'), BLUE: image.select('B2') }
+  ).rename('EVI');
+  var ndwi = image.normalizedDifference(['B3', 'B8']).rename('NDWI');
+  return image.addBands([ndvi, lswi, evi, ndwi]);
+}
+
+// Compute monthly composites (median) across the growing season
+var months = ee.List.sequence(10, 4); // Oct–Apr
+var monthlyComposites = months.map(function(m) {
+  var month = ee.Number(m);
+  var year = month.lte(12) ? 2023 : 2024;
+  return s2.filter(ee.Filter.calendarRange(month, month, 'month'))
+    .map(addIndices)
+    .median()
+    .set('month', month);
+});
+
+// Stack all monthly composites into a single multi-band image
+var featureStack = ee.ImageCollection(monthlyComposites)
+  .toBands()
+  .clip(gezira);
+
+print('Total feature bands:', featureStack.bandNames().size());
+// Result: 7 months × 4 indices = 28 features + original bands
+```
+
+## Training the SVM Classifier
+
+```javascript
+// Load training samples (field-collected ground truth)
+var trainingPoints = ee.FeatureCollection('users/osmangeomatics/gezira_training_2024');
+
+// Sample the feature stack at training locations
+var training = featureStack.sampleRegions({
+  collection: trainingPoints,
+  properties: ['class_id'],  // 0=wheat, 1=other crops, 2=fallow, 3=water
+  scale: 10,
+  geometries: true,
+});
+
+// Split 70/30 for training and validation
+var withRandom = training.randomColumn('random');
+var trainSet = withRandom.filter(ee.Filter.lt('random', 0.7));
+var testSet  = withRandom.filter(ee.Filter.gte('random', 0.7));
+
+// Train SVM with RBF kernel
+var classifier = ee.Classifier.libsvm({
+  kernelType: 'RBF',
+  gamma: 0.5,
+  cost: 10,
+}).train({
+  features: trainSet,
+  classProperty: 'class_id',
+  inputProperties: featureStack.bandNames(),
+});
+
+// Classify the full image
+var classified = featureStack.classify(classifier);
+```
+
+## Accuracy Assessment
+
+```javascript
+// Apply classifier to test set
+var testClassified = testSet.classify(classifier);
+
+// Confusion matrix
+var confMatrix = testClassified.errorMatrix('class_id', 'classification');
+print('Overall Accuracy:', confMatrix.accuracy());
+print('Kappa Coefficient:', confMatrix.kappa());
+print('Confusion Matrix:', confMatrix);
+
+// Per-class accuracy
+print('Producers Accuracy:', confMatrix.producersAccuracy());
+print('Users Accuracy:', confMatrix.consumersAccuracy());
+```
+
+Our results on the Gezira dataset:
+
+| Class | Producer's Acc. | User's Acc. |
+|-------|----------------|-------------|
+| Wheat | 96.1% | 93.8% |
+| Other Crops | 91.4% | 94.2% |
+| Fallow | 95.7% | 96.1% |
+| Water | 99.2% | 99.0% |
+| **Overall** | **94.2%** | — |
+
+## Exporting Results
+
+```javascript
+// Export classified map to Google Drive
+Export.image.toDrive({
+  image: classified.toByte(),
+  description: 'Gezira_Wheat_Map_2024',
+  folder: 'GEE_exports',
+  region: gezira.geometry(),
+  scale: 10,
+  crs: 'EPSG:32636',  // UTM Zone 36N
+  maxPixels: 1e13,
+});
+```
+
+## Lessons Learned
+
+1. **LSWI is critical** for wheat detection in irrigated areas — it captures soil moisture differences between irrigated wheat and dry fallow much better than NDVI alone
+2. **Dekadal composites > monthly** for capturing the fast phenological window of short-season wheat (~120 days)
+3. **Cost parameter tuning** matters significantly — test Cost values of 1, 10, 100 before settling
+4. **Minimum 50 samples per class** for reliable SVM training in GEE; below this, accuracy degrades rapidly
+
+I've open-sourced the complete GEE script and the accuracy assessment tool ([GeoAccuRate](https://github.com/Osman-Geomatics93/GeoAccuRate)) that implements the Olofsson et al. (2014) methodology for unbiased area estimation.
+
+Feel free to [contact me](/contact) if you're working on crop mapping in arid/semi-arid irrigated systems.
